@@ -13,7 +13,7 @@ import { Modal } from 'bootstrap';
 export class ListaBotonesComponent implements OnInit {
   idArea: number = 0;
   trimestres = [
-    { id: 1, nombre: '1er. Trim', activo: true, registrado: false },
+    { id: 1, nombre: '1er. Trim', activo: false, registrado: false },
     { id: 2, nombre: '2do. Trim', activo: false, registrado: false },
     { id: 3, nombre: '3er. Trim', activo: false, registrado: false },
     { id: 4, nombre: '4to. Trim', activo: false, registrado: false },
@@ -49,17 +49,17 @@ export class ListaBotonesComponent implements OnInit {
         if (response.length > 0) {
           const trimActivo = response[0];
           // Mapear los datos al array de trimestres
-          // this.trimestres.forEach((trimestre) => {
-          //   const key = `trim${trimestre.id}`;
-          //   trimestre.activo = trimActivo[key] === 1 || trimActivo.anual === 1;
-          //   if( trimestre.activo){
-          //     trimestre.registrado = trimestre.activo;
-          //     console.log(trimestre.registrado);
-          //   }else{
-          //     trimestre.registrado = false;
-          //   }
+          this.trimestres.forEach((trimestre) => {
+            const key = `trim${trimestre.id}`;
+            trimestre.activo = trimActivo[key] === 1 || trimActivo.anual === 1;
+            if( trimestre.activo){
+              trimestre.registrado = trimestre.activo;
+              console.log(trimestre.registrado);
+            }else{
+              trimestre.registrado = false;
+            }
        
-          // });
+          });
         } else {
           this.toastr.warning('No se encontraron datos de trimestres activos.', 'Advertencia', {
             positionClass: 'toast-bottom-right',

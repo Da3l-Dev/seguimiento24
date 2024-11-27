@@ -50,8 +50,7 @@
                   "maximumError": "4kB"
                 }
               ],
-              
-              "baseHref": "/seguimiento24/",
+              "baseHref": "/seguimiento24/",    
               "outputHashing": "all"
             },
             "development": {

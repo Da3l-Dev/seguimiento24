@@ -12,6 +12,7 @@ export interface Indicador {
     rn?: string;
     indicador?: string;
     numca?: string;
+    // Medios de verificacion
     mv?: string;
     supuestos?: string;
     formula?: string;

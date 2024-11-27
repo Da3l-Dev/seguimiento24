@@ -1,0 +1,77 @@
+<div class="container row">
+    <!-- Botones para abrir los offcanvas -->
+    <a class="link-offset-2 link-underline link-underline-opacity-0" role="button" (click)="abrirOffCanvas('FichaTecnica')">
+        <img width="35" height="35" src="https://img.icons8.com/material-rounded/24/view.png" alt="view"/>
+        <span>Ver ficha técnica</span>
+    </a>
+
+    <a class="link-offset-2 link-underline link-underline-opacity-0" role="button" (click)="abrirOffCanvas('Variables')">
+        <img width="35" height="35" src="https://img.icons8.com/material-rounded/24/view.png" alt="view"/>
+        <span>Ver variables</span>
+    </a>
+</div>
+
+<!-- Canvas para mostrar la ficha tecnica -->
+<div class="offcanvas custom-offcanvas" data-bs-scroll="true" data-bs-backdrop="false" id="FichaTecnica">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Ficha tecnica</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul class="list-group mb-3" *ngIf="indicador">
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">{{indicador.rn}}</h6>
+                <small class="font-weight-bold" style="color: #691B31;" >Resumen Narrativo</small>
+              </div>
+              <!-- <span class="text-muted">$12</span> -->
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">{{indicador.indicador}}</h6>
+                <small class="font-weight-bold" style="color: #691B31;">Indicador</small>
+              </div>
+              <!-- <span class="text-muted">$8</span> -->
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">{{indicador.mv}}</h6>
+                <small class="font-weight-bold" style="color: #691B31;">Medio de Verificación</small>
+              </div>
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">{{indicador.supuestos}}</h6>
+                <small class="font-weight-bold" style="color: #691B31;">Supuestos</small>
+              </div>
+              <!-- <span class="text-success">-$5</span> -->
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">{{indicador.formula}}</h6>
+                <small class="font-weight-bold" style="color: #691B31;">Formula de Cálculo</small>
+              </div>
+              <!-- <span class="text-muted">$5</span> -->
+            </li>
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0">{{indicador.defindicador}}</h6>
+                <small class="font-weight-bold" style="color: #691B31;">Definición del Indicador</small>
+              </div>
+              <!-- <span class="text-muted">$5</span> -->
+            </li>
+
+            
+        </ul>		
+    </div>
+</div>
+
+<div class="offcanvas custom-offcanvas" data-bs-scroll="true" data-bs-backdrop="false" id="Variables">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="offcanvasScrollingLabel">Variables</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+    	
+    </div>
+</div>

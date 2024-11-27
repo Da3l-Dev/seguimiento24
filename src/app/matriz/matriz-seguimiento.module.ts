@@ -15,6 +15,7 @@ import { ModalMirFirmadaComponent } from './modal-mir-firmada/modal-mir-firmada.
 import { Modal } from 'bootstrap';
 import { ModalCausaEfectoComponent } from './modal-causa-efecto/modal-causa-efecto.component';
 import { ModalSeguimientoEvaluacionComponent } from './modal-seguimiento-evaluacion/modal-seguimiento-evaluacion.component';
+import { FichaIndicadorComponent } from './ficha-indicador/ficha-indicador.component';
 
 @NgModule({
   declarations: [
@@ -29,7 +30,8 @@ import { ModalSeguimientoEvaluacionComponent } from './modal-seguimiento-evaluac
     ModalMetasAlcanzadasComponent,
     ModalMirFirmadaComponent,
     ModalCausaEfectoComponent,
-    ModalSeguimientoEvaluacionComponent
+    ModalSeguimientoEvaluacionComponent,
+    FichaIndicadorComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +50,8 @@ import { ModalSeguimientoEvaluacionComponent } from './modal-seguimiento-evaluac
     ModalMetasAlcanzadasComponent,
     ModalMirFirmadaComponent,
     ModalCausaEfectoComponent,
-    ModalSeguimientoEvaluacionComponent
+    ModalSeguimientoEvaluacionComponent,
+    FichaIndicadorComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
