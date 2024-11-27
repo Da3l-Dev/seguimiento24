@@ -2,6 +2,7 @@
   "name": "seguimiento24",
   "version": "0.0.0",
   "scripts": {
+    "deploy": "ng build --prod --base-href=/seguimiento24/",
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
