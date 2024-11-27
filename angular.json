@@ -51,7 +51,7 @@
                 }
               ],
               
-              "baseHref": "/seguimiento24",
+              "baseHref": "/seguimiento24/",
               "outputHashing": "all"
             },
             "development": {
