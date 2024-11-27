@@ -1,0 +1,51 @@
+@import "bootstrap/dist/css/bootstrap.min.css";
+@import 'ngx-toastr/toastr';
+
+#circulo{
+    height:100px;
+    width:100px;
+    -moz-border-radius:50px;
+    -webkit-border-radius:50px;
+    background-color: darkblue;
+    border-radius:80px;
+    border-color: #ffffff;
+        
+}   
+
+.gris-theme {
+    color: black;
+    background-color: #575757;
+}
+
+.carousel-control-prev,
+.carousel-control-next{
+    height: 25px;
+    width: 25px;
+    outline: color-white;
+    background-size: 100%, 100%;
+    border-radius: 50%;
+    border: 1px solid color-white;
+    background-color: color-white;
+}
+
+.carousel-control-prev-icon { 
+    background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23009be1' viewBox='0 0 8 8'%3E%3Cpath d='M5.25 0l-4 4 4 4 1.5-1.5-2.5-2.5 2.5-2.5-1.5-1.5z'/%3E%3C/svg%3E"); 
+    width: 30px;
+    height: 48px;
+}
+.carousel-control-next-icon { 
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23009be1' viewBox='0 0 8 8'%3E%3Cpath d='M2.75 0l-1.5 1.5 2.5 2.5-2.5 2.5 1.5 1.5 4-4-4-4z'/%3E%3C/svg%3E");
+    width: 30px;
+    height: 48px;
+}
+
+#grad3 {
+    background: '#A02142'; /* For browsers that do not support gradients */
+    background: linear-gradient(0deg, #A02142, #691B31);
+    color: #ffffff;
+    
+}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+

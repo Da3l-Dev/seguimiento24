@@ -1,0 +1,89 @@
+<!-- Card Metas -->
+<div class="card">
+    <div class="card-body">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-1 mb-1 text-white" style="background-color: #575757;">Metas</h5>
+        <table class="table table-bordered table-sm">
+          <thead>
+            <tr>
+              <th rowspan="2" class="align-middle text-center" style="background-color:#691B31; color:#ffffff">Concepto</th>
+              <th colspan="4" class="align-middle text-center" >Trimestre</th>	
+              <th rowspan="2" class="align-middle text-center" style="background-color:#DDC9A3; color:#000000">Anual</th>
+            </tr>
+            <tr class="tr_trimestre">
+              <th>Ene - Mar</th>
+              <th>Abr - Jun</th>
+              <th>Jul - Sep</th>
+              <th>Oct - Dic</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Meta Programada -->
+            <tr>
+              <td style="font-style: italic;">Meta Programada</td>
+              <td class="font-weight-bold text-right">{{ metaProgramadas?.m1_p ?? '-' }}</td>
+              <td class="font-weight-bold text-right">{{ metaProgramadas?.m2_p ?? '-' }}</td>
+              <td class="font-weight-bold text-right">{{ metaProgramadas?.m3_p ?? '-' }}</td>
+              <td class="font-weight-bold text-right">{{ metaProgramadas?.m4_p ?? '-' }}</td>
+              <td class="font-weight-bold text-right">{{ metaProgramadas?.ma_p ?? '-' }}</td>
+            </tr>
+    
+            <!-- Meta Alcanzada -->
+            <tr>
+              <td style="font-style: italic;">Meta Alcanzada</td>
+              <td class="font-weight-bold text-right">{{ metasAlcanzadas?.M1 ?? '-' }}</td>
+              <td class="font-weight-bold text-right">{{ metasAlcanzadas?.M2 ?? '-' }}</td>
+              <td class="font-weight-bold text-right">{{ metasAlcanzadas?.M3 ?? '-' }}</td>
+              <td class="font-weight-bold text-right">{{ metasAlcanzadas?.M4 ?? '-' }}</td>
+              <td class="font-weight-bold text-right">{{ metasAlcanzadas?.la ?? '-' }}</td>
+            </tr>
+    
+            <!-- Porcentaje de Avance -->
+            <tr>
+                <td style="font-style: italic;">Porcentaje de Avance</td>
+              
+                <!-- Primer Trimestre -->
+                <td class="text-right" style="font-style: italic;">
+                  <div class="d-flex flex-column justify-content-center align-items-center">
+                    <span>{{ getPorcentaje(metasAlcanzadas?.M1, metaProgramadas?.m1_p) }}</span>
+                    <i class="fa-solid fa-circle" [style.color]="getCircleColor(metasAlcanzadas?.M1, metaProgramadas?.m1_p)" style="font-size: 150%;"></i>
+                  </div>
+                </td>
+              
+                <!-- Segundo Trimestre -->
+                <td class="text-right" style="font-style: italic;">
+                  <div class="d-flex flex-column justify-content-center align-items-center">
+                    <span class="">{{ getPorcentaje(metasAlcanzadas?.M2, metaProgramadas?.m2_p) }}</span>
+                    <i class="fa-solid fa-circle" [style.color]="getCircleColor(metasAlcanzadas?.M2, metaProgramadas?.m2_p)" style="font-size: 150%;"></i>
+                  </div>
+                </td>
+              
+                <!-- Tercer Trimestre -->
+                <td class="text-right" style="font-style: italic;">
+                  <div class="d-flex flex-column justify-content-center align-items-center">
+                    <span>{{ getPorcentaje(metasAlcanzadas?.M3, metaProgramadas?.m3_p) }}</span>
+                    <i class="fa-solid fa-circle" [style.color]="getCircleColor(metasAlcanzadas?.M3, metaProgramadas?.m3_p)" style="font-size: 150%;"></i>
+                  </div>
+                </td>
+              
+                <!-- Cuarto Trimestre -->
+                <td class="text-right" style="font-style: italic;">
+                  <div class="d-flex flex-column justify-content-center align-items-center">
+                    <span>{{ getPorcentaje(metasAlcanzadas?.M4, metaProgramadas?.m4_p) }}</span>
+                    <i class="fa-solid fa-circle" [style.color]="getCircleColor(metasAlcanzadas?.M4, metaProgramadas?.m4_p)" style="font-size: 150%;"></i>
+                  </div>
+                </td>
+              
+                <!-- Meta Anual -->
+                <td class="text-right" style="font-style: italic;">
+                  <div class="d-flex flex-column justify-content-center align-items-center">
+                    <span>{{ getPorcentaje(metasAlcanzadas?.la, metaProgramadas?.ma_p) }}</span>
+                    <i class="fa-solid fa-circle" [style.color]="getCircleColor(metasAlcanzadas?.la, metaProgramadas?.ma_p)" style="font-size: 150%;"></i>
+                  </div>
+                </td>
+            </tr> 
+          </tbody>
+        </table>
+    </div>
+</div>
+
+  

@@ -1,0 +1,59 @@
+<div class="container-fluid d-flex flex-column p-0 content-text" style="min-height: 100vh;">
+  <!-- Barra de navegación superior -->
+  <app-nav class="w-100"></app-nav>
+
+  <!-- Contenedor principal para Sidebar y Contenido -->
+  <div class="d-flex flex-grow-1" style="overflow: hidden; padding: 0 12px;">
+    <!-- Sidebar -->
+    <app-sidebar class="sidebar"></app-sidebar>
+
+    <!-- Contenido Principal -->
+    <div class="flex-grow-1 content">
+      <app-nav-main></app-nav-main>
+
+      <!-- Mensaje del Indicador -->
+      <div class="alert alert-light contentMessage" role="alert" id="contentMessage">
+        <div *ngIf="indicadorModel">
+          <span class="font-weight-bold mb-0" style="color: #691B31;">
+            <h5>{{ indicadorModel.tipo }} {{ indicadorModel.numca }}</h5>
+          </span>
+          <span class="font-weight-bold mb-0" *ngIf="indicadorModel.visualizar == 1">
+            <h5 class="font-weight-bold mb-0" style="color: #000000;">{{ indicadorModel.indicador }}</h5>
+          </span>
+        </div>
+      </div>
+      <hr class="sidebar-heading d-flex justify-content-between align-items-center text-black" style="background-color: #DDC9A3;">
+
+      <app-lista-botones></app-lista-botones>
+
+      <app-modal-cedula-evidencia></app-modal-cedula-evidencia>
+      <app-modal-metas-alcanzadas></app-modal-metas-alcanzadas>
+      <app-modal-mir-firmada></app-modal-mir-firmada>
+      <app-modal-causa-efecto></app-modal-causa-efecto>
+      <app-modal-seguimiento-evaluacion></app-modal-seguimiento-evaluacion>
+
+		  <hr class="sidebar-heading d-flex justify-content-between align-items-center px-3 text-black" style="background-color: #DDC9A3;">  
+
+      <!-- Apartado de Avances del proyecto -->
+      <div class="col-12 mt-2">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-white gap-2" style="background-color: #575757;">Avance del Indicador</h5>
+
+        
+        <!-- Div para alinear los componentes -->
+        <div class="row">
+          <!-- Card Metas -->
+          <div class="col-md-6 col-12 mb-4">
+            <app-card-metas class="w-100"></app-card-metas>
+          </div>
+
+          <!-- Card Avance Gráfica -->
+          <div class="col-md-6 col-12 mb-4">
+            <app-card-avance-grafica class="w-100"></app-card-avance-grafica>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+</div>

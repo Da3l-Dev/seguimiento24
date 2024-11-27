@@ -1,0 +1,36 @@
+<!-- Nav principal del sistema Simplaneva -->
+
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6">
+        <div style="background-color: #ffffff;">
+          <img src="/img/IHE4T.png" class="img-fluid" style="padding-bottom: 0%;" />
+        </div>
+      </div>
+  
+      <div class="col-sm-6">
+        <div style="background-color: #ffffff;">
+          <img src="/img/medicion.png" class="img-fluid" style="padding-top: 2%; padding-left: 20%; padding-right: 5%;" />
+        </div>
+      </div>
+
+      <!-- Boton para poder cerrar session y quitar la autenficacion -->
+      <div class="col-sm-12">
+        <div style="background-color: #575757; padding-top: 1%; padding-bottom: 0.5%; padding-left: 0.5%; padding-right: 0.5%;">
+          <h5 style="color: white;" class="d-flex align-items-center justify-content-between">
+            {{ currentYear }} - {{ cUnidadOperante }}
+            <a title="Cerrar Sesión" (click)="logout()" style="color: #fff; font-size: 15px; cursor: pointer;" class="ml-auto">
+              <span class="align-middle">
+                <i class="material-icons">settings_power</i>
+              </span>
+            </a>
+          </h5>
+  
+          <!-- Mensajes del servidor -->
+          <h5 *ngIf="mensajeMarquee" style="color: white;">
+            <marquee>{{ mensajeMarquee }}</marquee>
+          </h5>
+        </div>
+      </div>
+    </div>
+</div>  

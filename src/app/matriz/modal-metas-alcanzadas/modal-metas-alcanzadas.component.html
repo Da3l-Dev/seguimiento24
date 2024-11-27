@@ -1,0 +1,152 @@
+
+
+<div class="modal fade" id="ingresarMetasAlcanzadas" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 1200px!important" role="document">
+        <div class="modal-content">
+            <!-- Encabezado del Modal -->
+            <div class="modal-header">
+                <div class="col-11">
+                    <div *ngIf="indicador">
+                        <div class="alert alert-dark" role="alert">
+                            <h5 class="modal-title"><strong>{{ indicador.indicador }}</strong> - Metas Alcanzadas</h5>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+    
+            <!-- Cuerpo del Modal -->
+            <div class="modal-body">
+                <div class="alert alert-primary d-flex align-items-center" role="alert" *ngIf="messageinfo">
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="30" height="30" viewBox="0,0,256,256">
+                        <g fill="#6ea8fe" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal"><g transform="scale(8.53333,8.53333)"><path d="M15,3c-6.627,0 -12,5.373 -12,12c0,6.627 5.373,12 12,12c6.627,0 12,-5.373 12,-12c0,-6.627 -5.373,-12 -12,-12zM16,21h-2v-7h2zM15,11.5c-0.828,0 -1.5,-0.672 -1.5,-1.5c0,-0.828 0.672,-1.5 1.5,-1.5c0.828,0 1.5,0.672 1.5,1.5c0,0.828 -0.672,1.5 -1.5,1.5z"></path></g></g>
+                    </svg>
+                    <div>
+                       {{messageinfo}}
+                    </div>
+                </div>
+                
+                <form id="alta_datosEvidenciasCedulaFile" class="form-horizontal">
+
+                   
+                    <!-- Botones de Trimestre -->
+                    <div>
+                        <div *ngFor="let t of trimActivo">
+                            <button
+                            *ngFor="let trim of [t.trim1, t.trim2, t.trim3, t.trim4]; let i = index"
+                            [disabled]="trim === 0"
+                            [style.backgroundColor]="trim === 1 ? '#691B31' : '#575757'"
+                            style="color: #ffffff;"
+                            class="btn btn-sm"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#collapseMetas"
+                            aria-expanded="false"
+                            aria-controls="collapseMetas"
+                            (click)="setTrimestre(i + 1);">
+                            {{ ['ENE - MAR', 'ABR - JUN', 'JUL - SEP', 'OCT - DIC'][i] }}
+                            </button>
+                        </div>
+                    </div>
+    
+                    <!-- Colapsable para Subir Archivo -->
+                    <div class="collapse" id="collapseMetas">
+                        <hr>
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="form-row align-items-center">
+                                    <div class="col-2">
+                                        <label class="" for="inlineFormInput"><h5>Meta Alcanzada</h5></label>
+                                        <input type="text" class="form-control shadow-sm p-3 mb-5 bg-white rounded" id="logro" name="logro" [(ngModel)]="logro" mask="999?9?9?9?" restrict="reject" limit="false"value="{{logro}}" required>
+                                    </div>
+                                    <div class="col-1"></div>
+
+                                    <div class="col-9 mb-1">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <!-- Tabla -->
+                                                <div class="table-responsive table-sm table-striped table-bordered">
+                                                    <table class="table">    
+                                                        <!-- Encabezado  -->
+                                                        <thead class="thead-light">
+                                                            <tr>
+                                                                <th scope="col">#</th>
+                                                                <th scope="col">Descripcion</th>
+                                                                <th scope="col">Fuente</th>
+                                                                <th scope="col">Observacion</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody *ngIf="metasProgramadas && variables">
+                                                            
+                                                            <tr>
+                                                                <td>{{logro}}</td>
+                                                                <td>{{variables.descripcionV1}}</td>
+                                                                <td>{{variables.fuenteV1}}</td>
+                                                                <td>{{ob1}}</td>
+                                                            </tr>
+                                                            <tr>
+                                                                <td>{{metasProgramadas.ma_p}}</td>
+                                                                <td>{{variables.descripcionV2}}</td>
+                                                                <td>{{variables.fuenteV2}}</td>
+                                                                <td>{{ob2}}</td>
+                                                            </tr>
+                                                            
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>   
+                                
+                                <hr>
+                                <div class="form-row align-items-center mt-2" >
+                                    <div class="col-6">
+                                        <label class="" for="inlineFormInput">Causas de las variaciones</label>
+                                        <textarea class="form-control" name="causa" id="causa" [(ngModel)]="causa" rows="3"></textarea>
+                                        <span *ngIf="messageError && !causa"><label style="color: #cf112d">{{messageError}}</label></span>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label class="" for="inlineFormInput">Efecto de las variaciones</label>
+                                        <textarea class="form-control" name="efecto" id="efecto" [(ngModel)]="efecto" rows="3"></textarea>
+                                        <span *ngIf="messageError && !efecto"><label style="color: #cf112d">{{messageError}}</label></span>
+                                    </div>
+                                </div>
+
+                                <hr>
+                                <div class="form-row align-items-center mt-2">
+                                    <div class="col-6">
+                                        <label class="" for="inlineFormInput">Observaciones Variable 1 (Anexo)</label>
+                                        <textarea class="form-control" name="Ob1" id="Ob1" [(ngModel)]="ob1" rows="3"></textarea>
+                                        
+                                        <span *ngIf="messageError && !ob1"><label style="color: #cf112d">{{messageError}}</label></span>
+                                    </div>
+
+                                    <div class="col-6">
+                                        <label class="" for="inlineFormInput">Observaciones Variable 2 (Anexo)</label>
+                                        <textarea class="form-control" name="Ob2" id="Ob2" [(ngModel)]="ob2" rows="3"></textarea>
+                                        <span *ngIf="messageError && !ob2"><label style="color: #cf112d">{{messageError}}</label></span>
+                                    </div>
+                                </div>
+
+                                <hr>
+                                <span *ngIf="messageErrorGlobal"><label style="color: #cf112d">{{messageErrorGlobal}}</label></span>
+                                    
+                            </div>
+                        </div>
+
+                        <div class="form-row align-items-center mt-3">
+                            <div class="col-12 text-center">
+                              <button type="button" (click)="subirMetasProgramadas()" style="background-color: #691B31; color:#ffffff" class="btn btn-primary col-12 btn-lg btn-block">
+                                <i class="fas fa-save"></i> Subir Cédula
+                              </button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+  

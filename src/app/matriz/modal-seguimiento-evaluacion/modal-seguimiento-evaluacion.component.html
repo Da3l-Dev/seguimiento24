@@ -1,0 +1,95 @@
+<div class="modal fade" id="modalSeguimientoEval" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle"><strong>{{tituloIndicador}}</strong><br> Seguimiento y Evaluación</h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body">
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item" *ngFor="let tab of tabData; let i = index">
+                    <a
+                     (click)="seguimientoSelect(i + 1, tab.label)"
+                     role="button"
+                     class="nav-link"
+                     [ngClass]="{ active: i === 0 }"
+                     style="background-color: #691B31; color:#ffffff">
+                     {{ tab.label }}
+                    </a>
+                </li>
+              </ul>
+
+              <div class="tab-pane" role="tabpanel">
+                  <h5 class="mt-2 text-center"></h5>
+                  <hr>
+                  <div class="form-row align-items-center">
+                    <div class="col-12">
+                        <label class="" for="inlineFormInput">Resumen Narrativo: <strong>{{resumenNarrativo}}</strong></label>   
+                    </div>
+                  </div>
+
+                  <hr>
+
+								  <div class="form-row align-items-center mt-2">
+									  <div class="col-12">
+										  <label class="" for="inlineFormInput">Indicador/Fórmula</label>
+                      <br>
+										  <label class="" for="inlineFormInput"><strong>{{indicadorFormula}}</strong></label>
+									  </div>
+								  </div>
+
+                  <hr>
+
+                  <div class="form-row align-items-center mt-2">
+									  <div class="col-12">
+                      <label class="" for="inlineFormInput">Meta</label>
+                      <br>
+                      <label class="" for="inlineFormInput"><strong>{{meta}}</strong></label>
+									  </div>
+								  </div>
+
+                  <hr>
+
+                  <div class="form-row align-items-center mt-2">
+									  <div class="col-12">
+                      <label class="" for="inlineFormInput">Justiticación de Causas y Efectos</label>
+                      <br>
+                      <label class="" for="inlineFormInput"><strong>{{justificacionCE}}</strong></label>  
+									  </div>
+								  </div>
+
+                  <hr>
+
+                  <div class="form-row align-items-center mt-2">
+									  <div class="col-12">
+                      <label class="" for="inlineFormInput">Medios de Verificación</label>
+                      <br>
+                      <label class="" for="inlineFormInput"><strong>{{medioVerificacion}}</strong></label>  
+									  </div>
+								  </div>
+
+                  <hr>
+
+                  <div class="form-row align-items-center mt-2">
+									  <div class="col-12">
+                      <label class="" for="inlineFormInput">Otros Hallazgos encontrados</label>
+                      <br>
+                      <label class="" for="inlineFormInput"><strong>{{hallazgoEncontrado}}</strong></label>  
+									  </div>
+								  </div>
+
+                  <hr>
+
+                  <div class="form-row align-items-center mt-2">
+									  <div class="col-12">
+                      <label class="" for="inlineFormInput">Aspectos suceptibles de mejora</label>
+                      <br>
+                      <label class="" for="inlineFormInput"><strong>{{mejora}}</strong></label>  
+									  </div>
+								  </div>
+              </div>
+            </div>
+        </div>
+    </div>
+</div>    

@@ -1,0 +1,42 @@
+<div class="container">
+        <div class="d-flex gap-1">
+          <!-- Botones dinámicos de los trimestres -->
+          <ng-container *ngFor="let trimestre of trimestres">
+            <div *ngIf="trimestre.activo">
+              <button
+                class="btn"
+                style="background-color: #575757; color: #ffffff; min-width: 250px;"
+                (click)="gestionarTrimestre(trimestre)">
+                {{ trimestre.registrado ? 'Modificar' : 'Ingresar' }} {{'meta alcanzada ' + trimestre.nombre }}
+              </button>
+            </div>
+          </ng-container>
+      
+          <!-- Botones adicionales -->
+          <button
+            (click)="abrirModal('cedulaEvidenciaDos')"
+            class="btn"
+            style="background-color: #691B31; color:#ffffff; min-width: 150px;">
+            Subir Cédula de Evidencia
+          </button>
+          <button
+            (click)="abrirModal('MirFirmada')"
+            class="btn"
+            style="background-color: #691B31; color:#ffffff; min-width: 150px;">
+            Subir MIR Firmada
+          </button>
+          <button
+            (click)="abrirModal('modalCausasEfectos')"
+            class="btn"
+            style="background-color: #691B31; color:#ffffff; min-width: 150px;">
+            Causas y Efectos reportados
+          </button>
+          <button
+            (click)="abrirModal('modalSeguimientoEval')"
+            class="btn"
+            style="background-color: #691B31; color:#ffffff; min-width: 150px;">
+            Seguimiento y Evaluación
+          </button>
+        </div>
+      </div>
+      

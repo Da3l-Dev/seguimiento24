@@ -1,0 +1,91 @@
+<div class="modal fade" id="cedulaEvidenciaDos" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <!-- Encabezado del Modal -->
+      <div class="modal-header">
+        <div class="col-11">
+          <div *ngIf="indicador">
+            <div class="alert alert-dark" role="alert">
+              <h5 class="modal-title"><strong>{{ indicador.indicador }}</strong> - Subir Cédula de Evidencia</h5>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <!-- Cuerpo del Modal -->
+      <div class="modal-body">
+        <form id="alta_datosEvidenciasCedulaFile" class="form-horizontal">
+          <!-- Botones de Trimestre -->
+          <div>
+            <div *ngFor="let t of trimActivo">
+              <button
+                *ngFor="let trim of [t.trim1, t.trim2, t.trim3, t.trim4]; let i = index"
+                [style.backgroundColor]="trim === 1 ? '#691B31' : '#575757'"
+                [disabled]="trim === 0"
+                style="color: #ffffff;"
+                class="btn btn-sm"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#CollapseCedula"
+                aria-expanded="false"
+                aria-controls="CollapseCedula"
+                (click)="setTrimestre(i + 1); closeCollapse();">
+                {{ ['ENE - MAR', 'ABR - JUN', 'JUL - SEP', 'OCT - DIC'][i] }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Colapsable para Subir Archivo -->
+          <div class="collapse" id="CollapseCedula">
+            <hr>
+            <div class="form-row align-items-center">
+              <div class="col-12">
+                <div class="card">
+                  <div class="card-body">
+                    <!-- Input para Seleccionar Archivo -->
+                    <div class="form-row align-items-center mt-2">
+                      <div class="col-12">
+                        <label for="nuevoDocumento"><strong>Subir cédula de evidencias</strong></label>
+                        <input type="file" id="nuevoDocumento" (change)="onFileSelected($event)" class="form-control">
+                        <span class="messages" *ngIf="messageError && !nuevoDocumento">
+                          <label style="color: #cf112d">{{ messageError }}</label>
+                        </span>
+                      </div>
+                    </div>
+
+                    <!-- Textarea para la Descripción -->
+                    <div class="form-row align-items-center mt-2">
+                      <div class="col-12">
+                        <label for="descripcionEvidencia">Descripción de la evidencia</label>
+                        <textarea
+                          class="form-control"
+                          id="descripcionEvidencia"
+                          name="descripcionEvidencia"
+                          [(ngModel)]="descripcionEvidencia"
+                          rows="3"
+                          required>
+                        </textarea>
+                        <span class="messages" *ngIf="messageError && !descripcionEvidencia">
+                          <label style="color: #cf112d">{{ messageError }}</label>
+                        </span>
+                      </div>
+                    </div>
+                    <!-- Botón para Subir Archivo -->
+                    <div class="form-row align-items-center mt-3">
+                      <div class="col-12 text-center">
+                        <button type="button" (click)="subirArchivoEvidencia()" style="background-color: #691B31; color:#ffffff" class="btn btn-primary col-12 btn-lg btn-block">
+                          <i class="fas fa-save"></i> Subir Cédula
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

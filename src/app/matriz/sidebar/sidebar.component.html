@@ -1,0 +1,143 @@
+<!--  Barra lateral donde se muestran indicadores 
+      Ids HTML:
+        - 1 -> FIN
+        - 2 -> PROPOSITO
+        - 3 -> COMPONENTE
+        - 4 -> ACTIVIDAD
+-->
+<div class="container-fluid" id="Barra_lateral">
+  <div class="row">
+    <aside class="col-md-12 sidebar" style="background-color: #691B31; color: #ffffff;">
+      <!-- Estado del servidor -->
+      <div *ngIf="loading" class="loading-indicator">
+        <p>Cargando datos, por favor espera...</p>
+      </div>
+      <div *ngIf="!loading" class="loading-indicator">
+        <label style="color: #ffffff;">Estado del servidor: {{ serverStatus }}</label>
+      </div>
+
+      <!-- Sección de Indicadores -->
+      <section class="sidebar-section">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-black" style="background-color: #DDC9A3;">
+          <span>Indicadores</span>
+        </h5>
+        <hr class="bg-light">
+        <ul class="nav flex-column">
+          <!-- Apartado de FIN -->
+          <li class="nav-item">
+            <a class="nav-link" id="F" role="tab" aria-controls="v-pills-actividad" aria-selected="false" style="color:#ffffff;">
+              <span data-feather="layers"></span>
+              FIN
+            </a>
+            <ng-container *ngFor="let task of proyectoData">
+              <li class="nav-item" *ngIf="task.idEjercicio === 2024 && task.idNivelIndicador === 1 && task.idArea === idArea">
+                <a role="button" (click)="setDataArea(task.idNivelIndicador); cambiarEstilos('F');">
+                  <span class="d-inline-block text-truncate text-white" style="max-width: 180px; font-size: 100%;">
+                    - {{ task.numCA }} {{ task.Indicador }}
+                  </span>
+                </a>
+              </li>
+            </ng-container>
+          </li>
+
+          <!-- Apartado de PROPOSITO -->
+          <li class="nav-item">
+            <a class="nav-link" id="P" role="tab" aria-controls="v-pills-actividad" aria-selected="false" style="color:#ffffff;">
+              <span data-feather="layers"></span>
+              PROPÓSITO
+            </a>
+            <ng-container *ngFor="let task of proyectoData">
+              <li class="nav-item" *ngIf="task.idEjercicio === 2024 && task.idNivelIndicador === 2 && task.idArea === idArea">
+                <a role="button" (click)="setDataArea(task.idNivelIndicador); cambiarEstilos('P');">
+                  <span class="d-inline-block text-truncate text-white" style="max-width: 180px; font-size: 100%;">
+                    - {{ task.numCA }} {{ task.Indicador }}
+                  </span>
+                </a>
+              </li>
+            </ng-container>
+          </li>
+
+          <!-- Apartado de COMPONENTES -->
+          <li class="nav-item">
+            <a class="nav-link" id="C" role="tab" aria-controls="v-pills-actividad" aria-selected="false" style="color:#ffffff;">
+              <span data-feather="layers"></span>
+              COMPONENTES
+            </a>
+            <ng-container *ngFor="let task of proyectoData">
+              <li class="nav-item" *ngIf="task.idEjercicio === 2024 && task.idNivelIndicador === 3 && task.idArea === idArea">
+                <a *ngIf="!loading"  role="button" (click)="cambiarEstilos('C'); selectComponent(3, task.idComponente);">
+                  <span class="d-inline-block text-truncate text-white" style="max-width: 180px; font-size: 100%;">
+                    - {{ task.numCA }} {{ task.Indicador }}
+                  </span>
+                </a>
+              </li>
+            </ng-container>
+          </li>
+
+          <!-- Apartado de ACTIVIDADES -->
+          <li class="nav-item">
+            <a class="nav-link" id="A" style="color:#ffffff;" (click)="cambiarEstilos('A')">
+              ACTIVIDADES
+            </a>
+            <ng-container *ngFor="let task of proyectoData">
+              <li class="nav-item" *ngIf="task.idEjercicio === 2024 && task.idNivelIndicador === 4 && task.idArea === idArea && task.idComponente === selectedComponenteId">
+                <a *ngIf="!loading" role="button" (click)="selectComponent(4, selectedComponenteId, task.idActividad); cambiarEstilos('A');">
+                  <span class="d-inline-block text-truncate text-white" style="max-width: 180px;">
+                    - {{ task.numCA }} {{ task.Indicador }}
+                  </span>
+                </a>
+              </li>
+            </ng-container>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Sección de Catálogos -->
+      <section class="sidebar-section">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-black" style="background-color: #DDC9A3;">
+          <span>Catálogos</span>
+        </h5>
+        <hr class="bg-light">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" style="color:#ffffff;">Firmas</a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Sección de Repositorio -->
+      <section class="sidebar-section">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-black" style="background-color: #DDC9A3;">
+          <span>Repositorio</span>
+        </h5>
+        <hr class="bg-light">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" style="color:#ffffff;">MIR Firmada - Trim.</a>
+          </li>
+        </ul>
+      </section>
+
+      <!-- Sección de Manuales -->
+      <section class="sidebar-section">
+        <h5 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-black" style="background-color: #DDC9A3;">
+          <span>Manual</span>
+        </h5>
+        <hr class="bg-light">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link active" href="../manual/Manual de Usuario SIPLANEVA3.0.pdf" target="_blank" style="color:#ffffff;">Manual de Usuario Unidad Administrativa</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" style="color:#ffffff;">Presentación "Reducir el tamaño de un archivo digital"</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="../manual/GuiaReducirArchivoDigital.pdf" target="_blank" style="color:#ffffff;">Guía "Reducir el tamaño de un archivo digital"</a>
+          </li>
+        </ul>
+      </section>
+    </aside>
+  </div>
+</div>
+
+  

@@ -1,0 +1,98 @@
+<div class="modal fade" id="MirFirmada" tabindex="-1" aria-labelledby="exampleModalCenterTitle" arial-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <!-- Encabezado de Modal -->
+            <div class="modal-header">
+                <div class="col-11">
+                  <div *ngIf="datosIndicador">
+                    <div class="alert alert-dark" role="alert">
+                      <h5 class="modal-title"><strong>{{datosIndicador.indicador}}</strong><br>MIR</h5>
+                    </div>
+                  </div>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!-- Cuerpo del Modal -->
+            <div class="modal-body">
+                <form id="alta_datosEvidenciasCedulaFile" name="alta_datosEvidenciasCedulaFile" class="form-horizontal"  novalidate>
+                    <div>
+                        <div *ngFor="let t of trimActivo">
+                          <button
+                            *ngFor="let trim of [t.trim1, t.trim2, t.trim3, t.trim4]; let i = index"
+                            [style.backgroundColor]="trim === 1 ? '#691B31' : '#575757'"
+                            [disabled]="trim === 0"
+                            style="color: #ffffff;"
+                            class="btn btn-sm"
+                            type="button"
+                            data-bs-toggle="collapse"
+                            data-bs-target="#CollapseMIR"
+                            aria-expanded="false"
+                            aria-controls="CollapseMIR"
+                            (click)="setTrimestre(i + 1); closeCollapse();">
+                            {{ ['ENE - MAR', 'ABR - JUN', 'JUL - SEP', 'OCT - DIC'][i] }}
+                          </button>
+                        </div>
+                    </div>
+    
+                    <div class="collapse" id="CollapseMIR" *ngIf="datosIndicador">
+                        <hr>
+                        <div class="form-row align-items-center">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                            <div>
+                                                <h6 class="my-0">{{datosIndicador.mv}}</h6>
+                                                <small class="font-weight-bold" style="color: #691B31;" >Medio de Verificación</small>
+                                            </div>
+                                        </li>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row align-items-center">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-body">
+                                        <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                            <div>
+                                                <h6 class="my-0">{{datosIndicador.formula}}</h6>
+                                                <small class="font-weight-bold" style="color: #691B31;">Formula de Cálculo</small>
+                                            </div>
+                                        </li>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+
+                        <div class="form-row align-items-center mt-2">
+                            <div class="col-12">
+                              <div class="card">
+                                <div class="card-body">
+                                    <label for="nuevoDocumento"><strong>Subir MIR Firmada</strong></label>
+                                    <input type="file" id="nuevoDocumento" (change)="onFileSelected($event)" class="form-control">
+                                    <span class="messages" *ngIf="messageError && !nuevoDocumento">
+                                        <label style="color: #cf112d">{{ messageError }}</label>
+                                    </span>
+                                </div>
+                              </div>
+                            </div>
+                        </div>
+
+                        <div class="form-row align-items-center mt-3">
+                            <div class="col-12 text-center">
+                              <button type="button" (click)="subirArchivoEvidencia()" style="background-color: #691B31; color:#ffffff" class="btn btn-primary col-12 btn-lg btn-block">
+                                <i class="fas fa-save"></i> Guardar datos
+                              </button>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
