@@ -1,10 +1,11 @@
-<div class="container row">
+<!-- Apartado de los links activadores de los offCanvas -->
+<div class="container">
     <!-- Botones para abrir los offcanvas -->
     <a class="link-offset-2 link-underline link-underline-opacity-0" role="button" (click)="abrirOffCanvas('FichaTecnica')">
         <img width="35" height="35" src="https://img.icons8.com/material-rounded/24/view.png" alt="view"/>
         <span>Ver ficha técnica</span>
     </a>
-
+    <br>
     <a class="link-offset-2 link-underline link-underline-opacity-0" role="button" (click)="abrirOffCanvas('Variables')">
         <img width="35" height="35" src="https://img.icons8.com/material-rounded/24/view.png" alt="view"/>
         <span>Ver variables</span>
@@ -61,7 +62,38 @@
               <!-- <span class="text-muted">$5</span> -->
             </li>
 
+            <div class="card" style="margin-top: 3px; padding: .5rem;">
+              <div class="container text-center">
+                <div class="row">
+                  <div class="col-6 col-sm-4">
+                    <h6 class="card-title">{{indicador.umedida}}</h6>
+				            <small class="font-weight-bold" style="color: #691B31;">Unidad Medida</small>
+                  </div>
+                  <div class="col-6 col-sm-4">
+                    <h6 class="card-title">{{indicador.umedible}}</h6>
+				            <small class="font-weight-bold" style="color: #691B31;">Unidad Medible</small>
+                  </div>
+                  <div class="col-6 col-sm-4">
+                    <h6 class="card-title">{{indicador.cdm}}</h6>
+                    <small class="font-weight-bold" style="color: #691B31;">Dimensión a Medir</small>
+                  </div>
             
+              
+                  <div class="col-6 col-sm-4">
+                    <h6 class="card-title">{{indicador.csi}}</h6>
+                    <small class="font-weight-bold" style="color: #691B31;">Sentido del Indicador</small>
+                  </div>
+                  <div class="col-6 col-sm-4">
+                    <h6 class="card-title">{{indicador.ccm}}</h6>
+                    <small class="font-weight-bold" style="color: #691B31;">Clasificación de Meta</small>
+                  </div>
+                  <div class="col-6 col-sm-4">
+                    <h6 class="card-title">{{indicador.cfm}}</h6>
+                    <small class="font-weight-bold" style="color: #691B31;">Frecuencia de Medición</small>
+                  </div>
+                </div>
+              </div>
+            </div>
         </ul>		
     </div>
 </div>
@@ -72,6 +104,34 @@
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body">
-    	
+    	<div class="card">
+				<div class="card-body">
+					<table class="table table-cusstom" *ngIf="variables">
+					  <thead class="thead-light">
+						<tr>
+						  <th scope="col">#</th>
+						  <th scope="col">Descripción</th>
+						  <th scope="col">Valor</th>
+						  <th scope="col">Fuente</th>
+						</tr>
+					  </thead>
+					  <tbody>
+						<tr>
+						  <th scope="row">1</th>
+						  <td>{{variables.descripcionV1}}</td>
+						  <td>{{variables.valorV1}}</td>
+						  <td class="fuente">{{variables.fuenteV1}}</td>
+						</tr>
+						<tr>
+						  <th scope="row">2</th>
+						  <td>{{variables.descripcionV2}}</td>
+						  <td>{{variables.valorV2}}</td>
+						  <td class="fuente">{{variables.fuenteV2}}</td>
+						</tr>
+						
+					  </tbody>
+					</table>
+				</div>
+			</div>
     </div>
 </div>

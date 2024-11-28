@@ -13,6 +13,9 @@
     transition: opacity 0.3s ease, transform 0.3s ease; 
   }
   
+  li{
+    margin-top: .2rem;
+  }
 
   .custom-offcanvas:not(:hover) {
     opacity: 0.5; 
@@ -58,4 +61,15 @@
     color: #fff; /* Cambia el color del icono al blanco */
   }
 
-  
+  .col-6{
+    border: solid .2rem #cfcfcf;
+    padding: 0;
+  }
+
+  .table-cusstom{
+    font-size: 1.6rem;
+  }
+
+  .fuente{
+    text-align: justify;
+  }

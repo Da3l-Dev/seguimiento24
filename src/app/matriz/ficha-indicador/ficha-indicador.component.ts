@@ -5,6 +5,7 @@ import { Offcanvas } from 'bootstrap';
 import { SharedDataService } from '../../services/shared-data.service';
 import { Indicador } from '../model/indicador.model';
 import { ToastrService } from 'ngx-toastr';
+import { Variables } from '../model/variables.model';
 
 @Component({
   selector: 'app-ficha-indicador',
@@ -14,6 +15,7 @@ import { ToastrService } from 'ngx-toastr';
 export class FichaIndicadorComponent {
 
   indicador: Indicador | null = null;
+  variables: Variables | null = null;
 
   constructor(
     private sharedDataService: SharedDataService,
@@ -35,6 +37,12 @@ export class FichaIndicadorComponent {
 
       // Obtener el offcanvas que se desea abrir
     const offCanvasToOpen = document.getElementById(nameOffCanvas);
+    
+    if(nameOffCanvas === "Variables"){
+      this.sharedDataService.variablesModel$.subscribe(data => {
+        this.variables = data;
+      });
+    }
     
     if (offCanvasToOpen) {
       // Crear una nueva instancia de Offcanvas para abrir el deseado
