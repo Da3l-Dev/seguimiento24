@@ -66,7 +66,7 @@ export class ModalMetasAlcanzadasComponent implements OnInit {
   }
 
   setupModalEvents(): void {
-    const modal = document.getElementById('ingresarMetasAlcanzadas');
+    const modal = document.getElementById('metaAlcanzada');
     if (modal) {
       modal.addEventListener('hidden.bs.modal', () => {
         this.messageinfo = "";
@@ -241,7 +241,7 @@ export class ModalMetasAlcanzadasComponent implements OnInit {
 
         console.log(response);
 
-        const modal = document.getElementById('cedulaEvidenciaDos');
+        const modal = document.getElementById('metaAlcanzada');
         if (modal) {
           let bootstrapModal = bootstrap.Modal.getInstance(modal);
           if (!bootstrapModal) {

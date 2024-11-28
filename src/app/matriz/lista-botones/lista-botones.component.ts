@@ -48,18 +48,19 @@ export class ListaBotonesComponent implements OnInit {
       (response: any) => {
         if (response.length > 0) {
           const trimActivo = response[0];
+
           // Mapear los datos al array de trimestres
           this.trimestres.forEach((trimestre) => {
             const key = `trim${trimestre.id}`;
             trimestre.activo = trimActivo[key] === 1 || trimActivo.anual === 1;
             if( trimestre.activo){
               trimestre.registrado = trimestre.activo;
-              console.log(trimestre.registrado);
+              console.log("Trimestre: "+trimestre.registrado);
             }else{
               trimestre.registrado = false;
             }
-       
           });
+
         } else {
           this.toastr.warning('No se encontraron datos de trimestres activos.', 'Advertencia', {
             positionClass: 'toast-bottom-right',
@@ -83,7 +84,7 @@ export class ListaBotonesComponent implements OnInit {
       return;
     }
 
-    const modalId = trimestre.registrado ? 'modificaMetaAlcanzada' : 'ingresarMetasAlcanzadas';
+    const modalId = trimestre.registrado ? 'metaAlcanzada' : 'metaAlcanzada';
     console.log(modalId);
     this.abrirModal(modalId);
   }

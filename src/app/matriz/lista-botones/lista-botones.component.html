@@ -5,7 +5,7 @@
             <div *ngIf="trimestre.activo">
               <button
                 class="btn"
-                style="background-color: #575757; color: #ffffff; min-width: 250px;"
+                style="background-color: #575757; color: #ffffff; min-width: 15rem;"
                 (click)="gestionarTrimestre(trimestre)">
                 {{ trimestre.registrado ? 'Modificar' : 'Ingresar' }} {{'meta alcanzada ' + trimestre.nombre }}
               </button>
@@ -16,25 +16,25 @@
           <button
             (click)="abrirModal('cedulaEvidenciaDos')"
             class="btn"
-            style="background-color: #691B31; color:#ffffff; min-width: 150px;">
+            style="background-color: #691B31; color:#ffffff; min-width: 15rem;">
             Subir Cédula de Evidencia
           </button>
           <button
             (click)="abrirModal('MirFirmada')"
             class="btn"
-            style="background-color: #691B31; color:#ffffff; min-width: 150px;">
+            style="background-color: #691B31; color:#ffffff; min-width: 15rem;">
             Subir MIR Firmada
           </button>
           <button
             (click)="abrirModal('modalCausasEfectos')"
             class="btn"
-            style="background-color: #691B31; color:#ffffff; min-width: 150px;">
+            style="background-color: #691B31; color:#ffffff; min-width: 15rem;">
             Causas y Efectos reportados
           </button>
           <button
             (click)="abrirModal('modalSeguimientoEval')"
             class="btn"
-            style="background-color: #691B31; color:#ffffff; min-width: 150px;">
+            style="background-color: #691B31; color:#ffffff; min-width: 15rem;">
             Seguimiento y Evaluación
           </button>
         </div>

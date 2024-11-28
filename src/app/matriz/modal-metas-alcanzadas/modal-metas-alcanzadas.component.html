@@ -1,6 +1,6 @@
 
 
-<div class="modal fade" id="ingresarMetasAlcanzadas" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="metaAlcanzada" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 1200px!important" role="document">
         <div class="modal-content">
             <!-- Encabezado del Modal -->
@@ -37,7 +37,7 @@
                             [disabled]="trim === 0"
                             [style.backgroundColor]="trim === 1 ? '#691B31' : '#575757'"
                             style="color: #ffffff;"
-                            class="btn btn-sm"
+                            class="btn btn-sm btn-FsCustom"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target="#collapseMetas"
@@ -138,8 +138,9 @@
 
                         <div class="form-row align-items-center mt-3">
                             <div class="col-12 text-center">
-                              <button type="button" (click)="subirMetasProgramadas()" style="background-color: #691B31; color:#ffffff" class="btn btn-primary col-12 btn-lg btn-block">
-                                <i class="fas fa-save"></i> Subir Cédula
+                              <button type="button" (click)="subirMetasProgramadas()" style="background-color: #691B31; color:#ffffff" class="btn btn-primary col-12 btn-lg btn-block btn-guardar">
+                                <img class="incon-save" src="https://img.icons8.com/ios/50/save--v1.png" alt="save--v1"/>
+                                Subir Cédula
                               </button>
                             </div>
                         </div>
