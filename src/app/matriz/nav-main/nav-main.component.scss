@@ -1,0 +1,21 @@
+.dropdown-item{
+    font-size: 1.9rem;
+}
+
+/* Estilo de hover para los items del dropdown */
+.navbar-nav .dropdown-item:hover {
+    background-color: #DDC9A3 !important; 
+    color: #691B31 !important; 
+    border-radius: .5rem;  
+}
+
+
+.navbar-nav .dropdown-menu {
+    background-color: #fff;  
+}
+
+
+.navbar-nav .dropdown-toggle:hover {
+    color: #DDC9A3 !important;  
+}
+

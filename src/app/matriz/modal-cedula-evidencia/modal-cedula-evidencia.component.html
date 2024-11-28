@@ -1,5 +1,5 @@
 <div class="modal fade" id="cedulaEvidenciaDos" tabindex="-1" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 100rem" >
     <div class="modal-content">
       <!-- Encabezado del Modal -->
       <div class="modal-header">
@@ -24,7 +24,7 @@
                 [style.backgroundColor]="trim === 1 ? '#691B31' : '#575757'"
                 [disabled]="trim === 0"
                 style="color: #ffffff;"
-                class="btn btn-sm"
+                class="btn btn-sm btn-FsCustom"
                 type="button"
                 data-bs-toggle="collapse"
                 data-bs-target="#CollapseCedula"
@@ -55,15 +55,15 @@
                     </div>
 
                     <!-- Textarea para la Descripción -->
-                    <div class="form-row align-items-center mt-2">
+                    <div class="form-row align-items-center mt-4">
                       <div class="col-12">
-                        <label for="descripcionEvidencia">Descripción de la evidencia</label>
+                        <label for="descripcionEvidencia"><strong>Descripción de la evidencia</strong></label>
                         <textarea
                           class="form-control"
                           id="descripcionEvidencia"
                           name="descripcionEvidencia"
                           [(ngModel)]="descripcionEvidencia"
-                          rows="3"
+                          rows="4"
                           required>
                         </textarea>
                         <span class="messages" *ngIf="messageError && !descripcionEvidencia">
@@ -74,7 +74,7 @@
                     <!-- Botón para Subir Archivo -->
                     <div class="form-row align-items-center mt-3">
                       <div class="col-12 text-center">
-                        <button type="button" (click)="subirArchivoEvidencia()" style="background-color: #691B31; color:#ffffff" class="btn btn-primary col-12 btn-lg btn-block">
+                        <button type="button" (click)="subirArchivoEvidencia()" style="background-color: #691B31; color:#ffffff" class="btn btn-primary col-12 btn-lg btn-block btn-guardar">
                           <i class="fas fa-save"></i> Subir Cédula
                         </button>
                       </div>

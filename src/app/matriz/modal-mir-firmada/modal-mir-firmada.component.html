@@ -1,5 +1,5 @@
 <div class="modal fade" id="MirFirmada" tabindex="-1" aria-labelledby="exampleModalCenterTitle" arial-hidden="true">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+    <div class="modal-dialog modal-lg modal-dialog-centered" style="max-width: 100rem" role="document">
         <div class="modal-content">
             <!-- Encabezado de Modal -->
             <div class="modal-header">
@@ -10,6 +10,7 @@
                     </div>
                   </div>
                 </div>
+                
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -23,7 +24,7 @@
                             [style.backgroundColor]="trim === 1 ? '#691B31' : '#575757'"
                             [disabled]="trim === 0"
                             style="color: #ffffff;"
-                            class="btn btn-sm"
+                            class="btn btn-sm btn-FsCustom"
                             type="button"
                             data-bs-toggle="collapse"
                             data-bs-target="#CollapseMIR"
@@ -84,7 +85,7 @@
 
                         <div class="form-row align-items-center mt-3">
                             <div class="col-12 text-center">
-                              <button type="button" (click)="subirArchivoEvidencia()" style="background-color: #691B31; color:#ffffff" class="btn btn-primary col-12 btn-lg btn-block">
+                              <button type="button" (click)="subirArchivoEvidencia()" style="background-color: #691B31; color:#ffffff" class="btn btn-primary col-12 btn-lg btn-block btn-guardar">
                                 <i class="fas fa-save"></i> Guardar datos
                               </button>
                             </div>

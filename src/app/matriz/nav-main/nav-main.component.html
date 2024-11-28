@@ -1,24 +1,24 @@
-<nav class="navbar sticky-top navbar-expand-lg p-3 text-reset" style="background-color: #691B31; color: #ffffff; ">
-  <a class="navbar-brand text-white text-nowrap" role="button" style="font-size: 1.5em;">SIPLANEVA 3.1</a>
-  
-  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-  </button>
+<nav class="navbar sticky-top navbar-expand-lg p-2 text-reset" style="background-color: #691B31; color: #ffffff;">
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent" style="flex-wrap: wrap; width: 100%;">
-    <ul class="navbar-nav mr-auto">
+  <div class="collapse navbar-collapse d-flex align-items-center" id="navbarSupportedContent" style="flex-wrap: wrap; width: 100%;">
+    <ul class="navbar-nav d-flex align-items-center" style="width: 100%;">
 
-      <!-- Reportes -->
-      <li class="nav-item active">
-        <a class="nav-link text-white text-nowrap text-truncate"  style="font-size: 1.2em;">Reportes</a>
+      <!-- Reportes con un estilo destacado -->
+      <li class="nav-item active" style="margin-right: 2rem;">
+        <a class="nav-link text-white text-nowrap" style="font-size: 2rem; font-weight: bold; border-right: 2px solid #ffffff; padding-right: 1.5rem;">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 25 25" stroke-width="1" stroke="currentColor" style="width: 4rem; height: 4rem;">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Z" />
+          </svg>
+          Reportes
+        </a>
       </li>
 
       <!-- Cédulas de Evidencia Dropdown -->
       <li class="nav-item dropdown active">
-        <a class="nav-link dropdown-toggle text-white text-nowrap text-truncate"  role="button" data-toggle="dropdown" aria-expanded="false" style="font-size: 1.2em;">
+        <a class="nav-link dropdown-toggle text-white text-nowrap text-truncate" role="button" data-toggle="dropdown" aria-expanded="false" style="font-size: 1.2em;">
           Cédulas de Evidencia
         </a>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border: 1px solid #fff;">
           <a class="dropdown-item" href="../reportes/ejecutaCedula.php" target="_blank">Cédulas de Evidencia 1er. Trimestre</a>
           <a class="dropdown-item" href="../reportes/ejecutaCedula2.php" target="_blank">Cédulas de Evidencia 2do. Trimestre</a>
           <a class="dropdown-item" href="../reportes/ejecutaCedula3.php" target="_blank">Cédulas de Evidencia 3er. Trimestre</a>
@@ -28,10 +28,10 @@
 
       <!-- Seguimiento Matriz Indicadores Dropdown -->
       <li class="nav-item dropdown active">
-        <a class="nav-link dropdown-toggle text-white text-nowrap text-truncate" role="button" role="button" data-toggle="dropdown" aria-expanded="false" style="font-size: 1.2em;">
+        <a class="nav-link dropdown-toggle text-white text-nowrap text-truncate" role="button" data-toggle="dropdown" aria-expanded="false" style="font-size: 1.2em;">
           Seguimiento Matriz Indicadores (SED 1 MIR)
         </a>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border: 1px solid #fff;">
           <a class="dropdown-item" href="../reportes/ejecutaSed1.php" target="_blank">Seguimiento Matriz Indicadores 1er. Trimestre</a>
           <a class="dropdown-item" href="../reportes/ejecutaSed1_2.php" target="_blank">Seguimiento Matriz Indicadores 2do. Trimestre</a>
           <a class="dropdown-item" href="../reportes/ejecutaSed1_3.php" target="_blank">Seguimiento Matriz Indicadores 3er. Trimestre</a>
@@ -42,10 +42,10 @@
 
       <!-- Resultados por Indicador Dropdown -->
       <li class="nav-item dropdown active">
-        <a class="nav-link dropdown-toggle text-white text-nowrap text-truncate" role="button" role="button" data-toggle="dropdown" aria-expanded="false" style="font-size: 1.2em;">
+        <a class="nav-link dropdown-toggle text-white text-nowrap text-truncate" role="button" data-toggle="dropdown" aria-expanded="false" style="font-size: 1.2em;">
           Resultados por Indicador (SED 2 -RR1)
         </a>
-        <div class="dropdown-menu">
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border: 1px solid #fff;">
           <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador.php" target="_blank" style="background-color: #DDC9A3;">(SED 2 -RR1) 1er. Trimestre</a>
           <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador2.php" target="_blank" style="background-color: #691B31; color: #ffffff;">(SED 2 -RR1) 2do. Trimestre <span class="badge badge-pill badge-light">¡Reporte Disponible!</span></a>
           <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador3.php" target="_blank">(SED 2 -RR1) 3er. Trimestre</a>

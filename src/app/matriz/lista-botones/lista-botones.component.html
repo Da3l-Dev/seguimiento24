@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container content-custom">
         <div class="d-flex gap-1">
           <!-- Botones dinámicos de los trimestres -->
           <ng-container *ngFor="let trimestre of trimestres">
@@ -36,6 +36,13 @@
             class="btn"
             style="background-color: #691B31; color:#ffffff; min-width: 15rem;">
             Seguimiento y Evaluación
+          </button>
+
+          <button
+            (click)="abrirModal('')"
+            class="btn"
+            style="background-color: #691B31; color:#ffffff; min-width: 15rem;">
+            Aspectos de Mejora
           </button>
         </div>
       </div>
