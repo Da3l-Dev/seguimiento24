@@ -3,7 +3,9 @@ import { UserService } from '../../services/user.service';
 import { DatosProyectosService } from '../../services/datos-proyectos.service';
 import { ToastrService } from 'ngx-toastr';
 import { SharedDataService } from '../../services/shared-data.service';
-import { Modal } from 'bootstrap';
+import * as bootstrap from 'bootstrap';
+import { Offcanvas } from 'bootstrap';
+import { Seguimiento } from '../model/seguimiento.model';
 
 @Component({
   selector: 'app-lista-botones',
@@ -12,6 +14,8 @@ import { Modal } from 'bootstrap';
 })
 export class ListaBotonesComponent implements OnInit {
   idArea: number = 0;
+  seguimiento: Seguimiento | null = null;
+
   trimestres = [
     { id: 1, nombre: '1er. Trim', activo: false, registrado: false },
     { id: 2, nombre: '2do. Trim', activo: false, registrado: false },
@@ -99,8 +103,34 @@ export class ListaBotonesComponent implements OnInit {
 
     const modalElement = document.getElementById(nameModal);
     if (modalElement) {
-      const modalInstance = new Modal(modalElement);
+      const modalInstance = new bootstrap.Modal(modalElement);
       modalInstance.show();
+    }
+  }
+
+  public abrirOffCanvas(nameOffCanvas: string): void {
+    this.sharedDataService.seguimientoModel$.subscribe(data => {
+      this.seguimiento = data;
+    });
+    
+    if (!this.indicador || Object.keys(this.indicador).length === 0) {
+      this.toastr.warning('Recuerda seleccionar un indicador.', 'Advertencia', {
+        positionClass: 'toast-bottom-right',
+      });
+      return;
+    }else{
+      const offCanvasToOpen = document.getElementById(nameOffCanvas);
+      if (offCanvasToOpen) {
+        const modalInstanceToOpen = new Offcanvas(offCanvasToOpen);
+        const openOffCanvas = document.querySelector('.offcanvas.show') as HTMLElement; 
+        if (openOffCanvas && openOffCanvas !== offCanvasToOpen) {
+          const bootstrapInstanceToClose = bootstrap.Offcanvas.getInstance(openOffCanvas); // Obtener la instancia de Bootstrap existente
+          if (bootstrapInstanceToClose) {
+            bootstrapInstanceToClose.hide(); // Cerrar el offcanvas
+          }
+        }
+        modalInstanceToOpen.show();
+      }
     }
   }
 }

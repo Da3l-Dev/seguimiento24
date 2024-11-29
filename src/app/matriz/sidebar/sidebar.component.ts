@@ -225,9 +225,9 @@ export class SidebarComponent {
       JS4: seguimiento.justificaTrim4,
       // Asignar medios
       MDS1: seguimiento.mediosTrim1,
-      MDS2: seguimiento.mediosTrim1,
-      MDS3: seguimiento.mediosTrim1,
-      MDS4: seguimiento.mediosTrim1,
+      MDS2: seguimiento.mediosTrim2,
+      MDS3: seguimiento.mediosTrim3,
+      MDS4: seguimiento.mediosTrim4,
       // Asignar hallazgos
       HS1: seguimiento.hallazgosTrim1,
       HS2: seguimiento.hallazgosTrim2,
@@ -235,9 +235,9 @@ export class SidebarComponent {
       HS4: seguimiento.hallazgosTrim4,
       // Asignar mejoras
       MJS1: seguimiento.mejoraTrim1,
-      MJS2: seguimiento.mejoraTrim1,
-      MJS3: seguimiento.mejoraTrim1,
-      MJS4: seguimiento.mejoraTrim1,
+      MJS2: seguimiento.mejoraTrim2,
+      MJS3: seguimiento.mejoraTrim3,
+      MJS4: seguimiento.mejoraTrim4,
       // Asignar evaluador
       ES1: seguimiento.evaluadorTrim1,
       ES2: seguimiento.evaluadorTrim2,
