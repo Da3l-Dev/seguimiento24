@@ -51,7 +51,6 @@ export class ModalCausaEfectoComponent implements OnInit{
   
   // Funcion para poder otorgar los datos necesarios para el modal
   cuasaEfectoSeleccionado(idSelected: number, periodo: string) :void {
-
     this.sharedDataService.metasAlcanzadasModel$.subscribe(data => {
       if(data){
         this.metasAlcanzadas = data;
@@ -72,6 +71,7 @@ export class ModalCausaEfectoComponent implements OnInit{
         this.efecto = this.metasAlcanzadas?.E1 ?? "";
         this.evidencia = this.metasAlcanzadas?.EV1 ?? "";
         this.ruta = this.metasAlcanzadas?.R1 ?? "";
+        console.log(this.ruta);
         break;
       case 2:
         this.trimSelect = idSelected;
@@ -81,6 +81,7 @@ export class ModalCausaEfectoComponent implements OnInit{
         this.efecto = this.metasAlcanzadas?.E2 ?? "";
         this.evidencia = this.metasAlcanzadas?.EV2 ?? "";
         this.ruta = this.metasAlcanzadas?.R2 ?? "";
+        console.log(this.ruta);
         break;
       case 3:
         this.trimSelect = idSelected;
@@ -90,6 +91,7 @@ export class ModalCausaEfectoComponent implements OnInit{
         this.efecto = this.metasAlcanzadas?.E3 ?? "";
         this.evidencia = this.metasAlcanzadas?.EV3 ?? "";
         this.ruta = this.metasAlcanzadas?.R3 ?? "";
+        console.log(this.ruta);
         break;
       case 4:
         this.trimSelect = idSelected;
@@ -99,6 +101,7 @@ export class ModalCausaEfectoComponent implements OnInit{
         this.efecto = this.metasAlcanzadas?.E4 ?? "";
         this.evidencia = this.metasAlcanzadas?.EV4 ?? "";
         this.ruta = this.metasAlcanzadas?.R4 ?? "";
+        console.log(this.ruta);
         break;
       case 5:
         this.trimSelect = idSelected;

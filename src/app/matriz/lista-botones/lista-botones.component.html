@@ -53,14 +53,16 @@
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body" *ngIf="seguimiento">
-    
-      <div class="card-body">
-        <div class="card-tite font-weight-bold" style="color: #691B31;" >Aspectos de mejora - Trim 1</div>
-        <h6 class="my-0">{{seguimiento.MJS1}}</h6>
-      </div>
 
       <ul class="list-group mb-3" *ngIf="seguimiento">
 
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <small class="font-weight-bold" style="color: #691B31;" >Aspectos de mejora - Trim 1</small>
+            <h6 class="my-0">{{seguimiento.MJS1}}</h6>
+          </div>
+        </li>
+        
         <li class="list-group-item d-flex justify-content-between lh-condensed">
           <div>
             <small class="font-weight-bold" style="color: #691B31;" >Aspectos de mejora - Trim 2</small>

@@ -2,13 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { SharedDataService } from '../../services/shared-data.service';
 import { Variables } from '../model/variables.model';
 import { UserService } from '../../services/user.service';
-import { forkJoin } from 'rxjs';
+import { forkJoin, from } from 'rxjs';
 import { DatosProyectosService } from '../../services/datos-proyectos.service';
 import { Indicador } from '../model/indicador.model';
 import { ToastrService } from 'ngx-toastr';
 import { FilesServicesService } from '../../services/files-services.service';
 import * as bootstrap from 'bootstrap';
 import { metasAlcanzadas } from '../model/metasAlcanzadas.model';
+import { error } from 'console';
 
 @Component({
   selector: 'app-modal-cedula-evidencia',
@@ -26,6 +27,8 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
   nuevoDocumento: File | null = null;
   descripcionEvidencia: string = '';
   year: number = new Date().getFullYear();
+
+  ruta: String = "";
 
   constructor(
     private proyectoServiceData: DatosProyectosService,
@@ -93,6 +96,7 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
 
   setTrimestre(trim: number): void {
     this.trimestre = trim;
+    this.obtenerRuta();
     console.log(`Trimestre seleccionado: ${this.trimestre}`);
   }
 
@@ -173,4 +177,52 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
       }
     );
   }
+
+  obtenerRuta() : void{
+    // Crear el objeto con los parámetros necesarios
+    const params = {
+      idEjercicio: this.year.toString(),
+      idIndicador: this.indicador?.idIndicador?.toString() || '',
+      idArea: this.idArea.toString(),
+      idPrograma: this.indicador?.idPrograma?.toString() || '',
+      idTrimestre: this.trimestre.toString()
+    };
+
+    this.fileService.obtenerEvidenciaRuta(params).subscribe(
+      response => {
+        this.ruta = response.ruta;
+      },
+      (error) => {
+        this.ruta = "";
+      }
+
+  )
+  }
+
+  eliminarArchivo(): void {
+    // Crear el objeto con los parámetros necesarios
+    const params = {
+      idEjercicio: this.year.toString(),
+      idIndicador: this.indicador?.idIndicador?.toString() || '',
+      idArea: this.idArea.toString(),
+      idPrograma: this.indicador?.idPrograma?.toString() || '',
+      idTrimestre: this.trimestre.toString()
+    };
+  
+    this.fileService.eliminarRuta(params).subscribe(response => {
+      this.toastr.success('Archivo Eliminado exitosamente', 'Éxito', {
+        positionClass: 'toast-bottom-right'
+      });
+
+      this.obtenerRuta();
+    }, error => {
+      console.error('Error al eliminar archivo:', error);
+      this.toastr.error('Hubo un problema al eliminar el archivo', 'Error', {
+        positionClass: 'toast-bottom-right'
+      });
+    });
+
+    
+  }
+  
 }

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -20,7 +20,15 @@ export class FilesServicesService {
     return this.http.get<{ success: boolean; ruta: string }>(`${this.baseUrl}/obtenerEvidenciaRuta`, { params });
   }
 
-  obtenerEvidencia(params: any): Observable<{ success: boolean; ruta: string }> {
-    return this.http.get<{ success: boolean; ruta: string }>(`${this.baseUrl}/obtenerPDF`, { params });
-  }
+  // Método DELETE para eliminar el archivo
+  eliminarRuta(params: any): Observable<any> {
+    const httpParams = new HttpParams()
+      .set('idEjercicio', params.idEjercicio)
+      .set('idIndicador', params.idIndicador)
+      .set('idArea', params.idArea)
+      .set('idPrograma', params.idPrograma)
+      .set('idTrimestre', params.idTrimestre);
+  
+    return this.http.delete(`${this.baseUrl}/eliminarRuta`, { params: httpParams });
+  }  
 }

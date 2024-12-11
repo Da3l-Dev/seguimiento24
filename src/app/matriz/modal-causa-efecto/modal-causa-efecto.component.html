@@ -53,11 +53,11 @@
                     </div>
 
                     <div class="form-row align-items-center mt-2">
-                        <div class="col-12" *ngIf="!(trimSelect === 5)">
+                        <div class="col-12" *ngIf="!(trimSelect === 5) && !(trimSelect === 0)">
                            <label class="" for="inlineFormInput">Evidencias</label>
                            <label class="" for="inlineFormInput"><strong>{{evidencia}}</strong></label> <br>
                            <label class="" for="inlineFormInput"><i class="fas fa-link"></i></label>
-                           <a href="{{ruta}}" target="_blanck">Evidencia Trimestre 1</a>
+                           <a href="http://localhost{{ruta}}" target="_blanck">Evidencia Trimestre {{trimSelect}}</a>
                         </div>
                     </div>
                 </div>
