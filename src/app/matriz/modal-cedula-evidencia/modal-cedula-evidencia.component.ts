@@ -10,6 +10,7 @@ import { FilesServicesService } from '../../services/files-services.service';
 import * as bootstrap from 'bootstrap';
 import { metasAlcanzadas } from '../model/metasAlcanzadas.model';
 import { error } from 'console';
+import { ConfirmationService } from '../../services/confirmation.service';
 
 @Component({
   selector: 'app-modal-cedula-evidencia',
@@ -35,6 +36,7 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
     private userServiceData: UserService,
     private sharedDataService: SharedDataService,
     private toastr: ToastrService,
+    private confirmDialog : ConfirmationService,
     private fileService: FilesServicesService
   ) {}
 
@@ -200,29 +202,7 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
   }
 
   eliminarArchivo(): void {
-    // Crear el objeto con los parámetros necesarios
-    const params = {
-      idEjercicio: this.year.toString(),
-      idIndicador: this.indicador?.idIndicador?.toString() || '',
-      idArea: this.idArea.toString(),
-      idPrograma: this.indicador?.idPrograma?.toString() || '',
-      idTrimestre: this.trimestre.toString()
-    };
-  
-    this.fileService.eliminarRuta(params).subscribe(response => {
-      this.toastr.success('Archivo Eliminado exitosamente', 'Éxito', {
-        positionClass: 'toast-bottom-right'
-      });
-
-      this.obtenerRuta();
-    }, error => {
-      console.error('Error al eliminar archivo:', error);
-      this.toastr.error('Hubo un problema al eliminar el archivo', 'Error', {
-        positionClass: 'toast-bottom-right'
-      });
-    });
-
-    
+    // Abre el modal con el mensaje
+    this.confirmDialog.open('¿Estás seguro de eliminar el archivo del trimestre ' + this.trimestre + '?');
   }
-  
 }
