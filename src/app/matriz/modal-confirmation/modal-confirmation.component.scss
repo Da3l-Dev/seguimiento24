@@ -1,0 +1,144 @@
+/* Fondo semitransparente (backdrop) */
+.modal {
+    background-color: rgba(0, 0, 0, 0.4); /* Fondo oscuro con opacidad */
+    position: fixed; /* Asegura que el fondo cubra toda la pantalla */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1060;  /* Asegura que el fondo esté encima de otros elementos y modales previos */
+}
+
+/* Modal general */
+.modal-content {
+    border-radius: 1rem;
+    box-shadow: 0 .4rem .8rem rgba(0, 0, 0, 0.1);
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1070;  /* Asegura que el modal actual esté encima del fondo y otros modales previos */
+}
+
+/* Header del modal */
+.modal-header {
+    background-color: #691B31;
+    color: white;
+    border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+/* Título */
+.modal-title {
+    font-size: 1.8rem;
+    font-weight: bold;
+    margin: 0;
+}
+
+/* Botón de cerrar */
+.close {
+    color: white;
+    font-size: 3rem;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
+
+/* Cuerpo del modal */
+.modal-body {
+    padding: 2rem;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+}
+
+/* Icono dentro del cuerpo */
+.modal-body i {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Footer del modal */
+.modal-footer {
+    border-top: .2rem solid #ddd;
+    padding: 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+/* Botones con iconos */
+.btn {
+    font-size: 1.4rem;
+    padding: 1rem 2rem;
+    border-radius: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+}
+
+/* Estilos para el botón Cancelar */
+.btn-cancel {
+    background-color: #757575; /* Gris oscuro */
+    color: white;
+}
+
+.btn-cancel:hover {
+    background-color: #616161; /* Gris más oscuro */
+}
+
+.btn-cancel i {
+    margin-right: .8rem;
+}
+
+/* Estilos para el botón Confirmar */
+.btn-confirm {
+    background-color: #691B31; /* Rojo oscuro */
+    color: white;
+}
+
+.btn-confirm:hover {
+    background-color: #5C1528; /* Rojo más oscuro, similar pero con un tono más suave */
+}
+
+.btn-confirm i {
+    margin-right: .8rem;
+}
+
+/* Añadir transición en los iconos */
+i {
+    font-size: 1.8rem;
+    transition: transform 0.3s ease;
+}
+
+.btn:hover i {
+    transform: scale(1.1);
+}
+
+
+/* Animaciones de entrada y salida */
+.modal.fade .modal-dialog {
+    transform: translate(0, -50px);
+    transition: transform 0.3s ease-out;
+}
+
+.modal.show .modal-dialog {
+    transform: translate(0, 0);
+}
+
+p{
+    font-size: 2.3rem;
+}

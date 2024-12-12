@@ -1,43 +1,58 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as bootstrap from 'bootstrap';
+import { SharedDataService } from '../../services/shared-data.service';
+import { DialogConfirm } from '../model/dialogCofirm.model';
+import { ConfirmationService } from '../../services/confirmation.service';
 
 @Component({
   selector: 'app-modal-confirmation',
   templateUrl: './modal-confirmation.component.html',
   styleUrls: ['./modal-confirmation.component.scss']
 })
-export class ModalConfirmationComponent {
+export class ModalConfirmationComponent implements OnInit {
 
-  @Output() onConfirm = new EventEmitter<boolean>(); // Evento para emitir la confirmación
-  message: string = '';  // El mensaje que se pasa al modal
+  message: string = "";
+  dialogConfirmModel: DialogConfirm | null = null;
 
-  // Método para abrir el modal
-  open() {
-    const modalElement = document.getElementById('modalConfirmation');
-    if (modalElement) {
-      const modalInstance = new bootstrap.Modal(modalElement); // Inicializamos el modal de Bootstrap
-      modalInstance.show();  // Mostramos el modal
+  constructor(
+    private sharedData: SharedDataService,
+    private confirmDialogService: ConfirmationService
+  ) {}
+
+  ngOnInit(): void {
+    this.sharedData.confirmDialog$.subscribe(data => {
+      this.dialogConfirmModel = data;
+      this.message = data?.message ?? "";  // Actualiza el mensaje
+    });
+  }
+
+  confirm(): void {
+    
+    if (this.dialogConfirmModel) {
+      
+      const updatedDialogConfirm: DialogConfirm = {
+        ...this.dialogConfirmModel, 
+        confirm: true,    
+        cancel: false     
+      };
+      
+      this.confirmDialogService.close();
+      this.sharedData.setDataDialogConfirm(updatedDialogConfirm);
     }
   }
 
-  // Método para cerrar el modal
-  close() {
-    const modalElement = document.getElementById('modalConfirmation');
-    if (modalElement) {
-      const modalInstance = bootstrap.Modal.getInstance(modalElement);
-      modalInstance?.hide();  // Ocultamos el modal
+  cancel(): void {
+    
+    if (this.dialogConfirmModel) {
+      const updatedDialogConfirm: DialogConfirm = {
+        ...this.dialogConfirmModel, 
+        confirm: false,   
+        cancel: true      
+      };
+
+      // Pasamos el objeto actualizado al servicio
+      this.confirmDialogService.close();
+      this.sharedData.setDataDialogConfirm(updatedDialogConfirm);
     }
-  }
-
-  // Emitir la respuesta de confirmación
-  confirm() {
-    this.onConfirm.emit(true);  // Emitimos "true" si el usuario confirma
-    this.close();  // Cerramos el modal
-  }
-
-  // Emitir la respuesta de cancelación
-  cancel() {
-    this.onConfirm.emit(false);  // Emitimos "false" si el usuario cancela
-    this.close();  // Cerramos el modal
   }
 }

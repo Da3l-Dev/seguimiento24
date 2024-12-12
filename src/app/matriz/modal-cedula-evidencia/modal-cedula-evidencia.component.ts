@@ -11,6 +11,7 @@ import * as bootstrap from 'bootstrap';
 import { metasAlcanzadas } from '../model/metasAlcanzadas.model';
 import { error } from 'console';
 import { ConfirmationService } from '../../services/confirmation.service';
+import { DialogConfirm } from '../model/dialogCofirm.model';
 
 @Component({
   selector: 'app-modal-cedula-evidencia',
@@ -23,6 +24,7 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
   indicador: Indicador | null = null;
   metasAlcanzadas: metasAlcanzadas | null = null;
   trimActivo: any[] = [];
+  datosConfirmDialog: DialogConfirm | null = null;
   trimestre: number = 0;
   messageError: string = '';
   nuevoDocumento: File | null = null;
@@ -53,6 +55,7 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
       this.indicador = data;
     });
 
+    
     // Obtener los trimestres activos
     forkJoin({
       trimActivo: this.proyectoServiceData.getTrimActivo(this.idArea),
@@ -202,7 +205,37 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
   }
 
   eliminarArchivo(): void {
-    // Abre el modal con el mensaje
+
     this.confirmDialog.open('¿Estás seguro de eliminar el archivo del trimestre ' + this.trimestre + '?');
+  
+    
+    this.sharedDataService.confirmDialog$.subscribe(data => {
+      if (data) {
+        if (data.confirm && data.cancel === false) {
+
+          const params = {
+            idEjercicio: this.year.toString(),
+            idIndicador: this.indicador?.idIndicador?.toString() || '',
+            idArea: this.idArea.toString(),
+            idPrograma: this.indicador?.idPrograma?.toString() || '',
+            idTrimestre: this.trimestre.toString()
+          };
+        
+          this.fileService.eliminarRuta(params).subscribe(response => {
+            this.toastr.success('Archivo Eliminado exitosamente', 'Éxito', {
+              positionClass: 'toast-bottom-right'
+            });
+          
+          
+          }, error => {
+            console.error('Error al eliminar archivo:', error);
+          });
+
+        } else if (data.cancel && data.confirm === false) {
+          console.log('El archivo NO ha sido eliminado');
+        }
+      }
+    });
   }
+  
 }

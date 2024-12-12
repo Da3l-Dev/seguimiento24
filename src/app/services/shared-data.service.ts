@@ -11,6 +11,7 @@ import { Seguimiento } from '../matriz/model/seguimiento.model';
 import { metasAlcanzadas } from '../matriz/model/metasAlcanzadas.model';
 import { Indicador } from '../matriz/model/indicador.model';
 import { User } from '../matriz/model/user.model';
+import { DialogConfirm } from '../matriz/model/dialogCofirm.model';
 
 
 @Injectable({
@@ -35,6 +36,9 @@ export class SharedDataService {
 
   private seguimientoModelSource = new BehaviorSubject<Seguimiento | null>(null);
   seguimientoModel$ = this.seguimientoModelSource.asObservable();
+
+  private confirmDialogModelSource = new BehaviorSubject<DialogConfirm | null>(null);
+  confirmDialog$ = this.confirmDialogModelSource.asObservable();
 
   // Métodos para actualizar los datos
 
@@ -61,5 +65,11 @@ export class SharedDataService {
   setSeguimientoModel(model: Seguimiento){
     this.seguimientoModelSource.next(model);
   }
+
+  setDataDialogConfirm(model: DialogConfirm) {
+    const updatedModel = { ...model };
+    this.confirmDialogModelSource.next(updatedModel);
+  }
+  
 
 }

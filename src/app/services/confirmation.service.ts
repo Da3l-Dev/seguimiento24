@@ -3,6 +3,9 @@ import { ComponentFactoryResolver, ApplicationRef, Injector } from '@angular/cor
 import { Subject } from 'rxjs';
 import { ModalConfirmationComponent } from '../matriz/modal-confirmation/modal-confirmation.component';
 import { ToastrService } from 'ngx-toastr';
+import * as bootstrap from 'bootstrap';
+import { SharedDataService } from './shared-data.service';
+import { DialogConfirm } from '../matriz/model/dialogCofirm.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,43 +14,44 @@ export class ConfirmationService {
 
   private confirmSubject = new Subject<boolean>();  // El Subject para emitir la respuesta
 
+  dialogConfirmModel: DialogConfirm | null = null;
+
   constructor(
     private resolver: ComponentFactoryResolver, 
     private appRef: ApplicationRef,
     private injector: Injector,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private sharedData: SharedDataService
   ) { }
 
   open(message: string) {
-    // Creamos la instancia del componente del modal
-    const factory = this.resolver.resolveComponentFactory(ModalConfirmationComponent);
-    const componentRef = factory.create(this.injector);
-    
-    // Pasamos el mensaje al modal
-    componentRef.instance.message = message;
-
-    // Añadimos el componente al DOM
-    this.appRef.attachView(componentRef.hostView);
-    const domElem = componentRef.location.nativeElement;
-    document.body.appendChild(domElem);
-
-    // Suscribimos al evento de confirmación
-    componentRef.instance.onConfirm.subscribe((confirmed: boolean) => {
-      this.confirmSubject.next(confirmed);
-      this.close(componentRef);
-    });
-    
-    // Abrir el modal de Bootstrap dinámicamente
-    setTimeout(() => componentRef.instance.open(), 0); // Usamos setTimeout para asegurarnos que el DOM se haya actualizado
+    // Crear un nuevo objeto con el mensaje recibido y las propiedades predeterminadas
+    const updatedDialogConfirm: DialogConfirm = {
+      message: message, // Aseguramos que el mensaje no se pierda
+      confirm: false,    // Confirm default value
+      cancel: false     // Cancel default value
+    };
+  
+    // Pasamos el nuevo objeto al servicio
+    this.sharedData.setDataDialogConfirm(updatedDialogConfirm);
+  
+    // Inicializamos y mostramos el modal de Bootstrap
+    const modalElement = document.getElementById('modalConfirmation');
+    if (modalElement) {
+      const modalInstance = new bootstrap.Modal(modalElement); // Inicializamos el modal de Bootstrap
+      modalInstance.show();  // Mostramos el modal
+    }
   }
 
-  close(componentRef: any) {
-    // Cerrar y destruir el modal
-    this.appRef.detachView(componentRef.hostView);
-    componentRef.destroy();
+  close() {
+    const modal = document.getElementById('modalConfirmation');
+    if (modal) {
+      let bootstrapModal = bootstrap.Modal.getInstance(modal);
+      if (!bootstrapModal) {
+        bootstrapModal = new bootstrap.Modal(modal); // Inicializar el modal si no existe
+      }
+      bootstrapModal.hide();
+    }
   }
 
-  getConfirmation(): Subject<boolean> {
-    return this.confirmSubject;
-  }
 }
