@@ -39,7 +39,8 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
     private sharedDataService: SharedDataService,
     private toastr: ToastrService,
     private confirmDialog : ConfirmationService,
-    private fileService: FilesServicesService
+    private fileService: FilesServicesService,
+    private confirmDialogService: ConfirmationService
   ) {}
 
   ngOnInit(): void {
@@ -122,6 +123,7 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
   }
 
   subirArchivoEvidencia(): void {
+    let subirArchivo = true;
     if (!this.nuevoDocumento && !this.descripcionEvidencia) {
       this.messageError = 'Debe seleccionar un archivo y una descripcion.';
       return;
@@ -144,43 +146,55 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
       return;
     }
 
-    // Crear FormData
     const formData = new FormData();
-    formData.append('idEjercicio', this.year.toString());
-    formData.append('idRamo', this.indicador.idRamo?.toString() || '');
-    formData.append('idFuenteFinan', this.indicador.idFuenteFinan?.toString() || '');
-    formData.append('idPrograma', this.indicador.idPrograma?.toString() || '');
-    formData.append('idArea', this.idArea.toString());
-    formData.append('idIndicador', this.indicador.idIndicador?.toString() || '');
-    formData.append('idTrimestre', this.trimestre.toString());
-    formData.append('rutaFiles', this.nuevoDocumento);
-    formData.append('descripcion', this.descripcionEvidencia);
 
-    // Enviar FormData
-    this.fileService.subirArchivo(formData).subscribe(
-      (response) => {
-        this.toastr.success('Archivo subido exitosamente', 'Éxito', {
-          positionClass: 'toast-bottom-right'
-        });
-        console.log(response);
-        this.limpiarFormulario();
+    this.confirmDialog.open('¿Estas seguro de que quieres guardar el archivo?');
 
-        const modal = document.getElementById('cedulaEvidenciaDos');
-        if (modal) {
-          let bootstrapModal = bootstrap.Modal.getInstance(modal);
-          if (!bootstrapModal) {
-            bootstrapModal = new bootstrap.Modal(modal); // Inicializar el modal si no existe
-          }
-          bootstrapModal.hide();
+    this.sharedDataService.confirmDialog$.subscribe(data => {
+      if(data){
+        if (data.confirm && data.cancel === false && subirArchivo) {
+
+          // Crear FormData
+          formData.append('idEjercicio', this.year.toString());
+          formData.append('idRamo', this.indicador?.idRamo?.toString() || '');
+          formData.append('idFuenteFinan', this.indicador?.idFuenteFinan?.toString() || '');
+          formData.append('idPrograma', this.indicador?.idPrograma?.toString() || '');
+          formData.append('idArea', this.idArea.toString());
+          formData.append('idIndicador', this.indicador?.idIndicador?.toString() || '');
+          formData.append('idTrimestre', this.trimestre.toString());
+          formData.append('rutaFiles', this.nuevoDocumento?? "");
+          formData.append('descripcion', this.descripcionEvidencia);
+
+          // Enviar FormData
+          this.fileService.subirArchivo(formData).subscribe(
+            (response) => {
+              this.toastr.success('Archivo subido exitosamente', 'Éxito', {
+                positionClass: 'toast-bottom-right'
+              });
+              console.log(response);
+              this.limpiarFormulario();
+
+              const modal = document.getElementById('cedulaEvidenciaDos');
+              if (modal) {
+                let bootstrapModal = bootstrap.Modal.getInstance(modal);
+                if (!bootstrapModal) {
+                  bootstrapModal = new bootstrap.Modal(modal); // Inicializar el modal si no existe
+                }
+                bootstrapModal.hide();
+              }
+            },
+            (error) => {
+              this.toastr.error('Error al subir el archivo', 'Error' , {
+                positionClass: 'toast-bottom-right'
+              });
+              console.error(error);
+            }
+          );
+
+          subirArchivo = false;
         }
-      },
-      (error) => {
-        this.toastr.error('Error al subir el archivo', 'Error' , {
-          positionClass: 'toast-bottom-right'
-        });
-        console.error(error);
       }
-    );
+    });
   }
 
   obtenerRuta() : void{
@@ -205,14 +219,14 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
   }
 
   eliminarArchivo(): void {
-
+    let eliminar = true;
     this.confirmDialog.open('¿Estás seguro de eliminar el archivo del trimestre ' + this.trimestre + '?');
   
     
     this.sharedDataService.confirmDialog$.subscribe(data => {
       if (data) {
-        if (data.confirm && data.cancel === false) {
-
+        if (data.confirm && data.cancel === false && eliminar) {
+          eliminar = false;
           const params = {
             idEjercicio: this.year.toString(),
             idIndicador: this.indicador?.idIndicador?.toString() || '',
@@ -225,12 +239,14 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
             this.toastr.success('Archivo Eliminado exitosamente', 'Éxito', {
               positionClass: 'toast-bottom-right'
             });
-          
-          
+
+            this.obtenerRuta();
           }, error => {
             console.error('Error al eliminar archivo:', error);
           });
 
+          
+          
         } else if (data.cancel && data.confirm === false) {
           console.log('El archivo NO ha sido eliminado');
         }

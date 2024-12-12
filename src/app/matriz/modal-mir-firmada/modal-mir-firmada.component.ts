@@ -4,6 +4,7 @@ import { Indicador } from '../model/indicador.model';
 import { DatosProyectosService } from '../../services/datos-proyectos.service';
 import { UserService } from '../../services/user.service';
 import * as bootstrap from 'bootstrap';
+import { ConfirmationService } from '../../services/confirmation.service';
 
 
 @Component({
@@ -22,7 +23,8 @@ export class ModalMirFirmadaComponent implements OnInit{
   constructor(
     private sharedDataService: SharedDataService,
     private datosProyectoService: DatosProyectosService,
-    private userServiceData: UserService
+    private userServiceData: UserService,
+    private confirmDialog: ConfirmationService
   ){}
 
   ngOnInit(): void {
@@ -85,5 +87,10 @@ export class ModalMirFirmadaComponent implements OnInit{
     }
   }
 
+  subirArchivoEvidencia(): void{
+    let subirMir = true;
+    this.confirmDialog.open('¿Estas seguro de guardar el archivo?');
+
+  }
 
 }
