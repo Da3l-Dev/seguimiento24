@@ -166,7 +166,7 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
           formData.append('descripcion', this.descripcionEvidencia);
 
           // Enviar FormData
-          this.fileService.subirArchivo(formData).subscribe(
+          this.fileService.subirArchivoEvidencia(formData).subscribe(
             (response) => {
               this.toastr.success('Archivo subido exitosamente', 'Éxito', {
                 positionClass: 'toast-bottom-right'
@@ -235,7 +235,7 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
             idTrimestre: this.trimestre.toString()
           };
         
-          this.fileService.eliminarRuta(params).subscribe(response => {
+          this.fileService.eliminarRutaEvidencia(params).subscribe(response => {
             this.toastr.success('Archivo Eliminado exitosamente', 'Éxito', {
               positionClass: 'toast-bottom-right'
             });

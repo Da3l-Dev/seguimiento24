@@ -5,6 +5,9 @@ import { DatosProyectosService } from '../../services/datos-proyectos.service';
 import { UserService } from '../../services/user.service';
 import * as bootstrap from 'bootstrap';
 import { ConfirmationService } from '../../services/confirmation.service';
+import { FilesServicesService } from '../../services/files-services.service';
+import { response } from 'express';
+import { ToastrService } from 'ngx-toastr';
 
 
 @Component({
@@ -18,13 +21,17 @@ export class ModalMirFirmadaComponent implements OnInit{
   trimActivo: any[] = [];
   trimestre: number = 0;
   nuevoDocumento: File | null = null;
+  year: number = new Date().getFullYear();
+
 
 
   constructor(
     private sharedDataService: SharedDataService,
     private datosProyectoService: DatosProyectosService,
     private userServiceData: UserService,
-    private confirmDialog: ConfirmationService
+    private confirmDialog: ConfirmationService,
+    private filesService: FilesServicesService,
+    private toastr: ToastrService
   ){}
 
   ngOnInit(): void {
@@ -81,15 +88,55 @@ export class ModalMirFirmadaComponent implements OnInit{
 
   onFileSelected(event: any): void {
     const file = event.target.files[0];
-    console.log("file: " + file)
+    console.log("Archivo seleccionado:", file);
+  
     if (file) {
       this.nuevoDocumento = file;
     }
   }
+  
 
   subirArchivoEvidencia(): void{
     let subirMir = true;
+    const formData = new FormData();
+
     this.confirmDialog.open('¿Estas seguro de guardar el archivo?');
+
+
+    this.sharedDataService.confirmDialog$.subscribe( data => {
+      if(data){
+        if (data.confirm && data.cancel === false && subirMir) {
+          
+          this.sharedDataService.indicadorModel$.subscribe( indicador => {
+            // Crear FormData
+            formData.append('idEjercicio', this.year.toString());
+            formData.append('idRamo', indicador?.idRamo?.toString() || '');
+            formData.append('idFuenteFinan', indicador?.idFuenteFinan?.toString() || '');
+            formData.append('idPrograma', indicador?.idPrograma?.toString() || '');
+            formData.append('idArea', this.idArea.toString());
+            formData.append('idTrimestre', this.trimestre.toString());
+            formData.append('rutaFiles', this.nuevoDocumento?? '');
+
+            this.filesService.subirArchivoMir(formData).subscribe(
+              response => {
+                this.toastr.success('Archivo subido exitosamente', 'Éxito', {
+                  positionClass: 'toast-bottom-right'
+                });
+                console.log(response);
+              },
+              (error) => {
+                this.toastr.error('Error al subir el archivo', 'Error' , {
+                  positionClass: 'toast-bottom-right'
+                });
+                console.error(error);
+              }
+            );
+
+            subirMir = false;
+          });
+        }
+    }
+  });
 
   }
 

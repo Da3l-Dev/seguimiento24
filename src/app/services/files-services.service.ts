@@ -10,18 +10,21 @@ export class FilesServicesService {
 
   constructor(private http: HttpClient) {}
 
-  // Método POST para subir la evidencia del indicador
-  subirArchivo(data: FormData): Observable<any> {
+  /**
+   * Subir Archivo de Cedulas de evidencias por trimestre
+   */
+  
+  subirArchivoEvidencia(data: FormData): Observable<any> {
     return this.http.post(`${this.baseUrl}/subirEvidencia`, data);
   }
 
-  // Método GET para obtener la ruta del archivo si existe
+
   obtenerEvidenciaRuta(params: any): Observable<{ success: boolean; ruta: string }> {
     return this.http.get<{ success: boolean; ruta: string }>(`${this.baseUrl}/obtenerEvidenciaRuta`, { params });
   }
 
-  // Método DELETE para eliminar el archivo
-  eliminarRuta(params: any): Observable<any> {
+  
+  eliminarRutaEvidencia(params: any): Observable<any> {
     const httpParams = new HttpParams()
       .set('idEjercicio', params.idEjercicio)
       .set('idIndicador', params.idIndicador)
@@ -31,4 +34,12 @@ export class FilesServicesService {
   
     return this.http.delete(`${this.baseUrl}/eliminarRuta`, { params: httpParams });
   }  
+
+  /**
+   * Subir Archivos de la MIR Firmada
+   */
+
+  subirArchivoMir(data: FormData): Observable<any> {
+    return this.http.post(`${this.baseUrl}/subirMir`, data);
+  }
 }
