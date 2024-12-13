@@ -101,11 +101,11 @@
           <span class="title-aside">Catálogos</span>
         </h5>
         <hr class="bg-light">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active text-aside" style="color:#ffffff;">Firmas</a>
-          </li>
-        </ul>
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active text-aside" style="color:#ffffff;">Firmas</a>
+            </li>
+          </ul>  
       </section>
 
       <!-- Sección de Repositorio -->
@@ -114,11 +114,16 @@
           <span class="title-aside">Repositorio</span>
         </h5>
         <hr class="bg-light">
-        <ul class="nav flex-column">
-          <li class="nav-item">
-            <a class="nav-link active text-aside" style="color:#ffffff;">MIR Firmada - Trim.</a>
-          </li>
-        </ul>
+
+        <ng-container *ngFor="let ruta of rutasMirArea">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" [href]="'http://localhost' + ruta.rutaFiles" style="color:#ffffff;" role="button" target="_blank">
+                MIR Firmada - Trim {{ruta.trim}}.
+              </a>
+            </li>
+          </ul>
+        </ng-container>        
       </section>
 
       <!-- Sección de Manuales -->

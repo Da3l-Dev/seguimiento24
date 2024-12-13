@@ -122,7 +122,7 @@ export class ModalMirFirmadaComponent implements OnInit{
                 this.toastr.success('Archivo subido exitosamente', 'Éxito', {
                   positionClass: 'toast-bottom-right'
                 });
-                console.log(response);
+                (document.getElementById('nuevoDocumento') as HTMLInputElement).value = '';
               },
               (error) => {
                 this.toastr.error('Error al subir el archivo', 'Error' , {

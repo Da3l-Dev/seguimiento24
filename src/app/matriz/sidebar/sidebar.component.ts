@@ -10,6 +10,7 @@ import { metasAlcanzadas } from '../model/metasAlcanzadas.model';
 import { Indicador } from '../model/indicador.model';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
+import { FilesServicesService } from '../../services/files-services.service';
 
 
 @Component({
@@ -32,6 +33,7 @@ export class SidebarComponent {
   metasProgData: any[] = [];
   metasAlcanzadasData: any[] = [];
   seguimientoData: any[] = [];
+  rutasMirArea: any[] = [];
 
   cUnidadOperante: string = '';
   idArea: number = 0;
@@ -47,7 +49,7 @@ export class SidebarComponent {
     private userService: UserService,
     private datosService: DatosProyectosService,
     private renderer: Renderer2,
-    private router: Router,
+    private filesService: FilesServicesService,
     private sharedata: SharedDataService,
     private toastr: ToastrService
   ) {}
@@ -55,10 +57,12 @@ export class SidebarComponent {
   ngOnInit(): void {
     this.loading = true; // Indicador de carga para bloquear la interacción
 
+    
     this.userService.getUserData().subscribe(user => {
       if (user) {
         this.cUnidadOperante = user.cUnidadOperante;
         this.idArea = user.idArea;
+        this.obtenerRutasMir();
       }
     });
 
@@ -320,4 +324,14 @@ export class SidebarComponent {
       }
     });
   }  
+
+  obtenerRutasMir() : void{
+    this.filesService.obtenerRutasMirArea(this.idArea).subscribe(data => {
+      if(data){
+        this.rutasMirArea = data;
+      }else{
+        console.error('Error no se encotraron rutas');
+      }
+    });
+  }
 }

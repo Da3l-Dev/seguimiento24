@@ -11,6 +11,8 @@ import { MetaProgramas } from '../model/metasProgramadas.model';
 import { Variables } from '../model/variables.model';
 import { response } from 'express';
 import { error } from 'console';
+import { ConfirmationService } from '../../services/confirmation.service';
+import { runInThisContext } from 'vm';
 
 @Component({
   selector: 'app-modal-metas-alcanzadas',
@@ -22,7 +24,8 @@ export class ModalMetasAlcanzadasComponent implements OnInit {
     private proyectoServiceData: DatosProyectosService,
     private userServiceData: UserService,
     private sharedDataService: SharedDataService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private confirmService: ConfirmationService
   ) {}
 
  
@@ -172,6 +175,9 @@ export class ModalMetasAlcanzadasComponent implements OnInit {
   }
 
   subirMetasProgramadas() :void{
+
+    let subirMetasProg = true
+
     if(!this.causa && !this.efecto && !this.ob1 && !this.ob2){
       this.messageErrorGlobal = "Recuerda agregar informacion en todos los campos";
     } else if (!this.causa){
@@ -189,73 +195,83 @@ export class ModalMetasAlcanzadasComponent implements OnInit {
       return;
     }
 
-
-
-
-    // Crear FormData
+    this.confirmService.open('Estas seguro de guardar los cambios');
     const formData = new FormData();
-    formData.append('idEjercicio', this.year.toString());
-    formData.append('idRamo', this.indicador.idRamo?.toString() || '');
-    formData.append('idFuenteFinan', this.indicador.idFuenteFinan?.toString() || '');
-    formData.append('idPrograma', this.indicador.idPrograma?.toString() || '');
-    formData.append('idArea', this.idArea.toString());
-    formData.append('idIndicador', this.indicador.idIndicador?.toString() || '');
-    formData.append('idTrimestre', this.trimestre.toString());
-    formData.append('logro', this.logro.toString());
-    formData.append('causa', this.causa);
-    formData.append('efecto', this.efecto);
-    formData.append('obs1', this.ob1);
-    formData.append('obs2', this.ob2);
 
-    
 
-    if (this.metasAlcanzadas) {
-      switch (this.trimestre){
-        case 1:
-          this.metasAlcanzadas.M1 = this.logro;
-          break;
-        case 2:
-          this.metasAlcanzadas.M2 = this.logro;
-          break;
-        case 3:
-          this.metasAlcanzadas.M3 = this.logro;
-          break;
-        case 4:
-          this.metasAlcanzadas.M4 = this.logro;
-          break;
-        default:
-          this.metasAlcanzadas.M1 = 0;
-          break;
-      }
-      this.sharedDataService.setMetasAlcanzadasModel(this.metasAlcanzadas);
-    }
-    
+    this.sharedDataService.confirmDialog$.subscribe(data => {
 
-  
+      if(data){
+        if(data.confirm && data.cancel === false && subirMetasProg){
+          
+          // Crear FormData
+          formData.append('idEjercicio', this.year.toString());
+          formData.append('idRamo', this.indicador?.idRamo?.toString() || '');
+          formData.append('idFuenteFinan', this.indicador?.idFuenteFinan?.toString() || '');
+          formData.append('idPrograma', this.indicador?.idPrograma?.toString() || '');
+          formData.append('idArea', this.idArea.toString());
+          formData.append('idIndicador', this.indicador?.idIndicador?.toString() || '');
+          formData.append('idTrimestre', this.trimestre.toString());
+          formData.append('logro', this.logro.toString());
+          formData.append('causa', this.causa);
+          formData.append('efecto', this.efecto);
+          formData.append('obs1', this.ob1);
+          formData.append('obs2', this.ob2);
 
-    this.proyectoServiceData.subirLogro(formData).subscribe(
-      (response) => {
-        this.toastr.success("Datos guardados exitosamente", 'Éxito', {
-          positionClass: 'toast-bottom-right'
-        });
+          
 
-        console.log(response);
-
-        const modal = document.getElementById('metaAlcanzada');
-        if (modal) {
-          let bootstrapModal = bootstrap.Modal.getInstance(modal);
-          if (!bootstrapModal) {
-            bootstrapModal = new bootstrap.Modal(modal); // Inicializar el modal si no existe
+          if (this.metasAlcanzadas) {
+            switch (this.trimestre){
+              case 1:
+                this.metasAlcanzadas.M1 = this.logro;
+                break;
+              case 2:
+                this.metasAlcanzadas.M2 = this.logro;
+                break;
+              case 3:
+                this.metasAlcanzadas.M3 = this.logro;
+                break;
+              case 4:
+                this.metasAlcanzadas.M4 = this.logro;
+                break;
+              default:
+                this.metasAlcanzadas.M1 = 0;
+                break;
+            }
+            this.sharedDataService.setMetasAlcanzadasModel(this.metasAlcanzadas);
           }
-          bootstrapModal.hide();
+          
+
+        
+
+          this.proyectoServiceData.subirLogro(formData).subscribe(
+            (response) => {
+              this.toastr.success("Datos guardados exitosamente", 'Éxito', {
+                positionClass: 'toast-bottom-right'
+              });
+
+              console.log(response);
+
+              const modal = document.getElementById('metaAlcanzada');
+              if (modal) {
+                let bootstrapModal = bootstrap.Modal.getInstance(modal);
+                if (!bootstrapModal) {
+                  bootstrapModal = new bootstrap.Modal(modal); // Inicializar el modal si no existe
+                }
+                bootstrapModal.hide();
+              }
+            },
+            (error) => {
+              this.toastr.error('Error al subir el archivo', 'Error' , {
+                positionClass: 'toast-bottom-right'
+              });
+              console.error(error);
+            }
+          );
         }
-      },
-      (error) => {
-        this.toastr.error('Error al subir el archivo', 'Error' , {
-          positionClass: 'toast-bottom-right'
-        });
-        console.error(error);
       }
-    );
+    });
   }
 }
+
+

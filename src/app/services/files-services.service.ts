@@ -1,13 +1,12 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesServicesService {
   private baseUrl = 'http://localhost/files'; // URL base del servidor
-
   constructor(private http: HttpClient) {}
 
   /**
@@ -42,4 +41,15 @@ export class FilesServicesService {
   subirArchivoMir(data: FormData): Observable<any> {
     return this.http.post(`${this.baseUrl}/subirMir`, data);
   }
+
+  // Obtener ruta de los archivos de las MIR Firmadas
+
+  obtenerRutasMirArea(idArea: number): Observable<any> {
+    const params = new HttpParams().set('idArea', idArea.toString());
+
+    return this.http.get<any>(`${this.baseUrl}/rutasMir`,{params}).pipe(
+          map((response: { data: any; }) => Array.isArray(response) ? response : response.data || [])
+        );
+  }
+
 }
