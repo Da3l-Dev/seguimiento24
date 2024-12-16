@@ -1,0 +1,275 @@
+<div class="modal fade" id="modalFirmas" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document" style="max-width: 100rem;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title" id="exampleModalCenterTitle">{{unidadOperante}} - REGISTRO DE FIRMAS</h2>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+        
+            <div class="modal-body">
+                <!-- Botón para activar y desactivar el collapse -->
+                <button (click)="abrirCollapseAgregarFirma()" style="background-color: #691B31; color:#ffffff" class="btn btn-info" type="button">
+                    Agregar Firmas
+                </button>
+
+                
+
+                <!-- Tabla de firmas -->
+                <div class="d-flex justify-content-center">
+                    <table class="table table-sm table-bordered table-responsive table-striped" style="width: 100%; table-layout: fixed; margin-bottom: 0;">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Cargo</th>
+                                <th>Email</th>
+                                <th>Actualizar</th>
+                                <th>Eliminar</th>
+                            </tr>
+                        </thead>
+
+                        <tbody *ngFor="let firma of firmas; let i = index">
+                            <tr>
+                                <td style="font-style: italic;">
+                                    <label>{{ (firma.cNombre + ' ' + firma.cPaterno + ' ' + firma.cMaterno) | uppercase }}</label>
+                                </td>
+                                <td style="font-style: italic;">
+                                    <label>{{firma.cPuesto}}</label>
+                                </td>
+                                <td style="font-style: italic;">
+                                    <label>{{firma.cEmail}}</label>
+                                </td>
+                                <td class="actions">
+                                    <a role="button" aria-selected="true" style="color:#691B31;" (click)="abrirCollapseEditarFirma(i)">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                </td>
+                                <td class="actions">
+                                    <a href="#" class="" style="color:#691B31;">
+                                        <i class="fas fa-trash-alt"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+				<form id="alta_datos" name="alta_datos" class="form-horizontal"  novalidate>
+                    
+                    <!-- Inicio del collapse para agregar una nueva firma -->
+                    <div class="collapse content-collapse" id="collapseAgregarFirma">
+                        <div class="collapse-header">
+                            <h2 class="modal-title" id="exampleModalCenterTitle">INGRESAR DATOS</h2>
+                        </div>
+
+                        
+                        <br>
+                        <hr>
+                        <!-- Datos personales -->
+                        <div class="form-row align-items-center">
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" ng-model ="user.nombre" placeholder="" value="firmaEditar.cNombre" onkeyup="this.value = this.value.toUpperCase();" required>
+                            </div> 
+
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">A. Paterno</label>
+								<input type="text" class="form-control" id="paterno" name="paterno" ng-model ="user.paterno" placeholder="" value="" onkeyup="this.value = this.value.toUpperCase();" required>
+                              </div>
+							  <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">A. Materno</label>
+								<input type="text" class="form-control" id="materno" name="materno" ng-model ="user.materno" placeholder="" value="" onkeyup="this.value = this.value.toUpperCase();" required>
+                              </div>
+                        </div>
+
+                        <div class="form-row align-items-center">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label class="label-title" for="inlineFormInput">CURP</label>
+								<input type="text" class="form-control" id="curp" name="curp" ng-model ="user.curp" placeholder="" value="" onkeyup="this.value = this.value.toUpperCase();" required>
+                            </div>
+
+                            <div class="col-1"></div>
+
+                        </div>
+
+                        <br>
+                        <hr>
+
+                        <!--Datos Cargo y correo -->
+                        <div class="form-row align-items-center">
+                            <div class="col-12">
+                                <label class="label-title" for="inlineFormInput">Cargo</label>
+								<select  class="form-control" name="" id="" required>
+                                    <option>Elija El Cargo</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="label-title" for="inlineFormInput">Correo Electrónico</label>
+								<input type="email" class="form-control" id="correo" name="correo" ng-model="user.correo" placeholder="" value="" required>
+                            </div>
+                        </div>
+
+                        <br>
+                        <hr>
+                        <!-- Datos Telefono -->
+
+                        <div class="form-row align-items-center">
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Celular</label>
+                                <input type="tel" class="form-control">
+                            </div>
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Teléfono</label>
+                                <input type="tel" class="form-control">
+                            </div>
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Extensión</label>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+
+                        <br>
+                        <hr>
+
+                        <!-- Datos de puesto y titulo -->
+
+                        <div class="form-row align-items-center">
+                            <div class="col-2"></div>
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Título</label>
+                                <input type="text" class="form-control">
+                            </div>
+
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Puesto</label>
+                                <input type="text" class="form-control">
+                            </div>
+                            <div class="col-2"></div>
+                        </div>
+
+                        <!-- Boton Agregar firma -->
+                        
+                        <div class="col-12">
+                            <button class="btn btn-primary btn-lg btn-block btnSave" style="max-width: 100%;" (click)="agregarFirma()">
+                                <img width="35" height="35" src="https://img.icons8.com/ios-filled/100/add-user-male.png" alt="add-user-male"/>
+                                Agregar Firma
+                            </button>
+                            
+                        </div>
+        
+                    </div> <!-- Fin del collapse para agregar una nueva firma -->
+
+
+                    <!-- Inicio del colappse para poder actualizar una firma -->
+
+                    <div class="collapse content-collapse" id="collapseEditarFirma" *ngIf="firmaEditar">
+                        <div class="collapse-header">
+                            <h2 class="modal-title" id="exampleModalCenterTitle">ACTUALIZAR DATOS</h2>
+                        </div>
+
+                        
+                        <br>
+                        <hr>
+                        <!-- Datos personales -->
+                        <div class="form-row align-items-center">
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Nombre</label>
+                                <input type="text" class="form-control" id="nombre" name="nombre" [(ngModel)]="firmaEditar.cNombre"  onkeyup="this.value = this.value.toUpperCase();" required>
+                            </div> 
+
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">A. Paterno</label>
+								<input type="text" class="form-control" id="paterno" name="paterno" [(ngModel)]="firmaEditar.cPaterno" onkeyup="this.value = this.value.toUpperCase();" required>
+                              </div>
+							  <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">A. Materno</label>
+								<input type="text" class="form-control" id="materno" name="materno" [(ngModel)]="firmaEditar.cMaterno" onkeyup="this.value = this.value.toUpperCase();" required>
+                              </div>
+                        </div>
+
+                        <div class="form-row align-items-center">
+                            <div class="col-1"></div>
+                            <div class="col-10">
+                                <label class="label-title" for="inlineFormInput">CURP</label>
+								<input type="text" class="form-control" id="curp" name="curp" [(ngModel)]="firmaEditar.cCurp" onkeyup="this.value = this.value.toUpperCase();" disabled>
+                            </div>
+
+                            <div class="col-1"></div>
+
+                        </div>
+
+                        <br>
+                        <hr>
+
+                        <!--Datos Cargo y correo -->
+                        <div class="form-row align-items-center">
+                            <div class="col-12">
+                                <label class="label-title" for="inlineFormInput">Cargo</label>
+								<select  class="form-control" name="cargo" id="cargo" [(ngModel)]="firmaEditar.cPuesto" disabled>
+                                    <option>Elija El Cargo</option>
+                                </select>
+                            </div>
+
+                            <div class="col-12">
+                                <label class="label-title" for="inlineFormInput">Correo Electrónico</label>
+								<input type="email" class="form-control" id="correo" name="correo" [(ngModel)]="firmaEditar.cEmail" required>
+                            </div>
+                        </div>
+
+                        <br>
+                        <hr>
+                        <!-- Datos Telefono -->
+
+                        <div class="form-row align-items-center">
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Celular</label>
+                                <input type="tel" name="cel" id="cel" [(ngModel)]="firmaEditar.cCelular" class="form-control">
+                            </div>
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Teléfono</label>
+                                <input type="tel" class="form-control" name="tel" id="tel" [(ngModel)]="firmaEditar.cTelefono">
+                            </div>
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Extensión</label>
+                                <input type="text" class="form-control" name="extension" id="extension" [(ngModel)]="firmaEditar.cExtension">
+                            </div>
+                        </div>
+
+                        <br>
+                        <hr>
+
+                        <!-- Datos de puesto y titulo -->
+
+                        <div class="form-row align-items-center">
+                            <div class="col-2"></div>
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Título</label>
+                                <input type="text" class="form-control" name="titulo" id="titulo" [(ngModel)]="firmaEditar.cTitulo">
+                            </div>
+
+                            <div class="col-4">
+                                <label class="label-title" for="inlineFormInput">Puesto</label>
+                                <input type="text" class="form-control" name="puesto" id="puesto" [(ngModel)]="firmaEditar.cPuesto">
+                            </div>
+                            <div class="col-2"></div>
+                        </div>
+
+                        <!-- Boton Agregar firma -->
+                        
+                        <div class="col-12">
+                            <button class="btn btn-primary btn-lg btn-block btnSave" style="max-width: 100%;" (click)="agregarFirma()">
+                                <img width="35" height="35" src="https://img.icons8.com/ios-filled/100/add-user-male.png" alt="add-user-male"/>
+                                Actualizar Datos
+                            </button>
+                            
+                        </div>
+                    </div>
+
+                </form>
+
+
+            </div>
+        </div>
+    </div>
+</div>

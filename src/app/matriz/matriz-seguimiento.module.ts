@@ -17,6 +17,8 @@ import { ModalCausaEfectoComponent } from './modal-causa-efecto/modal-causa-efec
 import { ModalSeguimientoEvaluacionComponent } from './modal-seguimiento-evaluacion/modal-seguimiento-evaluacion.component';
 import { FichaIndicadorComponent } from './ficha-indicador/ficha-indicador.component';
 import { ModalConfirmationComponent } from './modal-confirmation/modal-confirmation.component';
+import { ModalReducirFileComponent } from './modal-reducir-file/modal-reducir-file.component';
+import { ModalFirmasComponent } from './modal-firmas/modal-firmas.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import { ModalConfirmationComponent } from './modal-confirmation/modal-confirmat
     ModalCausaEfectoComponent,
     ModalSeguimientoEvaluacionComponent,
     FichaIndicadorComponent,
-    ModalConfirmationComponent
+    ModalConfirmationComponent,
+    ModalReducirFileComponent,
+    ModalFirmasComponent
   ],
   imports: [
     CommonModule,
@@ -54,7 +58,8 @@ import { ModalConfirmationComponent } from './modal-confirmation/modal-confirmat
     ModalCausaEfectoComponent,
     ModalSeguimientoEvaluacionComponent,
     FichaIndicadorComponent,
-    ModalConfirmationComponent
+    ModalConfirmationComponent,
+    ModalFirmasComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

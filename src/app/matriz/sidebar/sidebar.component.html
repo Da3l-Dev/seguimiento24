@@ -103,7 +103,7 @@
         <hr class="bg-light">
           <ul class="nav flex-column">
             <li class="nav-item">
-              <a class="nav-link active text-aside" style="color:#ffffff;">Firmas</a>
+              <a class="nav-link" style="color:#ffffff;" role="button" (click)="abrirModalFirmas()">Firmas</a>
             </li>
           </ul>  
       </section>
@@ -137,10 +137,10 @@
             <a class="nav-link active text-aside" href="../manual/Manual de Usuario SIPLANEVA3.0.pdf" target="_blank" style="color:#ffffff;">Manual de Usuario Unidad Administrativa</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link active text-aside" style="color:#ffffff;">Presentación "Reducir el tamaño de un archivo digital"</a>
+            <a class="nav-link active" role="button" style="color:#ffffff;" (click)="abrirModalReducirFile()">Presentación "Reducir el tamaño de un archivo digital"</a>
           </li>
           <li class="nav-item text-aside">
-            <a class="nav-link active" href="../manual/GuiaReducirArchivoDigital.pdf" target="_blank" style="color:#ffffff;">Guía "Reducir el tamaño de un archivo digital"</a>
+            <a class="nav-link active" href="assets/GuiaReducirArchivoDigital.pdf" target="_blank" style="color:#ffffff;">Guía "Reducir el tamaño de un archivo digital"</a>
           </li>
         </ul>
       </section>

@@ -1,0 +1,69 @@
+
+table {
+    width: 100%;
+    max-width: 90%;   
+}
+
+
+th, td {
+    padding:1rem; 
+    text-align: left;
+    width: 100%;
+}
+
+.name{
+    max-width: 1rem;
+}
+
+.actions{
+    text-align: center;
+}
+
+
+.modal-body {
+    padding: 0; 
+    margin: 0;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.btn{
+    font-size: 1.8rem;
+    margin-left: 4.8rem;
+}
+
+form{
+    padding: 4.8rem;
+}
+
+.collapse-header{
+    background-color: #d9d9d9de;
+    padding-left: 1rem;
+}
+
+input{
+    font-size: 1.7rem;
+
+}
+
+.label-title{
+    margin-top: 1rem;
+    font-size: 2rem;
+}
+
+.form-control{
+    font-size: 1.7rem;
+    margin-bottom: 1rem;
+}
+
+.form-row{
+    margin-bottom: 1.8rem;
+}
+
+.btnSave{
+    margin: 0;
+    max-width: 100%;
+    background-color:#691B31;
+    color: white; 
+
+}

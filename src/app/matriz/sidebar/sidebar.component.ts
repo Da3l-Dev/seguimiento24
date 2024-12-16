@@ -11,6 +11,8 @@ import { Indicador } from '../model/indicador.model';
 import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { FilesServicesService } from '../../services/files-services.service';
+import * as bootstrap from 'bootstrap';
+
 
 
 @Component({
@@ -333,5 +335,24 @@ export class SidebarComponent {
         console.error('Error no se encotraron rutas');
       }
     });
+  }
+
+  abrirModalReducirFile(): void {
+    const modalReducir = document.getElementById('modalReducirFile');
+
+    if(modalReducir) {
+      const modalInstance = new bootstrap.Modal(modalReducir);
+      modalInstance.show();
+    }
+  }
+
+  abrirModalFirmas(): void{
+    console.log('Abriendo Modal');
+    const modalFirma = document.getElementById('modalFirmas');
+
+    if(modalFirma) {
+      const modalInstance = new bootstrap.Modal(modalFirma);
+      modalInstance.show();
+    }
   }
 }
