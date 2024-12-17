@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
-import { map } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -22,5 +22,22 @@ export class FirmasServiceService {
       })
     );
   }
+
+  setFirmaProyecto(data: FormData): Observable<any>{
+    return this.http.post(`${this.baseUrl}/agregarFirma`, data);
+  }
+
+  updateFirmaProyecto(data: FormData): Observable<any>{
+    return this.http.post(`${this.baseUrl}/editarFirma`, data);
+  }
   
+
+  deleteFirmaProyecto(params: any): Observable<any> {
+    const httpParams = new HttpParams()
+      .set('idProyecto', params.idProyecto)  
+      .set('idCargo', params.idCargo)
+      .set('cCurp', params.cCurp);            
+  
+    return this.http.delete(`${this.baseUrl}/eliminarFirma`, { params: httpParams });
+  }
 }
