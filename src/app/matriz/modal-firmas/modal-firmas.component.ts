@@ -3,6 +3,8 @@ import { UserService } from '../../services/user.service';
 import * as bootstrap from 'bootstrap';
 import { FirmasServiceService } from '../../services/firmas-service.service';
 import { ToastrService } from 'ngx-toastr';
+import { ConfirmationService } from '../../services/confirmation.service';
+import { SharedDataService } from '../../services/shared-data.service';
 
 
 @Component({
@@ -32,12 +34,15 @@ export class ModalFirmasComponent implements OnInit{
   unidadOperante: string = '';
   idProyecto: number = 0;
   firmas: any[] = [];
+  catCargos: any[] = [];
   firmaEditar: any = {};
 
   constructor(
     private userService: UserService,
     private firmasService: FirmasServiceService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private confirmService: ConfirmationService,
+    private sharedData: SharedDataService
   ){}
 
 
@@ -46,7 +51,10 @@ export class ModalFirmasComponent implements OnInit{
     
     if (modal) {
       modal.addEventListener('shown.bs.modal', () => {
-        this.cargarFirmas(); // Llamamos a cargarFirmas cada vez que se abre el modal
+        this.cargarFirmas();
+        this.firmasService.getCatCargo().subscribe( data => {
+          this.catCargos = data;
+        });
       });
     }
   }
@@ -66,6 +74,7 @@ cargarFirmas(): void {
 
 
   abrirCollapseAgregarFirma():void{
+
     const collapseElement = document.getElementById('collapseAgregarFirma');
 
     if(collapseElement){
@@ -110,80 +119,97 @@ cargarFirmas(): void {
   }
   
   agregarFirma(): void {
-
+    let agregarFirma = true;
 
     this.firmaNueva.idProyecto = this.idProyecto.toString();
 
 
-    
-    const formData = new FormData();
+    this.confirmService.open("¿Estas seguro de que quieres agregar esta nueva firma?");
+
+    this.sharedData.confirmDialog$.subscribe( response => {
+      if(response){
+        if(response.confirm && !(response.cancel) && agregarFirma){
+          const formData = new FormData();
   
-    formData.append('idProyecto', this.idProyecto.toString());
-    formData.append('cPaterno', this.firmaNueva.cPaterno);
-    formData.append('cMaterno', this.firmaNueva.cMaterno);
-    formData.append('cNombre', this.firmaNueva.cNombre);
-    formData.append('idCargo', this.firmaNueva.idCargo);
-    formData.append('cCelular', this.firmaNueva.cCelular);
-    formData.append('cTelefono', this.firmaNueva.cTelefono);
-    formData.append('cExtension', this.firmaNueva.cExtension);
-    formData.append('cEmail', this.firmaNueva.cEmail);
-    formData.append('cTitulo', this.firmaNueva.cTitulo);
-    formData.append('cCargo', this.firmaNueva.cCargo);
-    formData.append('cCurp', this.firmaNueva.cCurp);
-  
-    this.firmasService.setFirmaProyecto(formData).subscribe(response => {
-      this.toastr.success('Firma creada exitosamente', 'Éxito', {
-        positionClass: 'toast-bottom-right'
-      });
-      this.closeCollapse('collapseAgregarFirma');
-      this.cargarFirmas(); 
-    }, error => {
-      this.toastr.error('Error al crear la firma', 'Error' , {
-        positionClass: 'toast-bottom-right'
-      })
+          formData.append('idProyecto', this.idProyecto.toString());
+          formData.append('cPaterno', this.firmaNueva.cPaterno);
+          formData.append('cMaterno', this.firmaNueva.cMaterno);
+          formData.append('cNombre', this.firmaNueva.cNombre);
+          formData.append('idCargo', this.firmaNueva.idCargo);
+          formData.append('cCelular', this.firmaNueva.cCelular);
+          formData.append('cTelefono', this.firmaNueva.cTelefono);
+          formData.append('cExtension', this.firmaNueva.cExtension);
+          formData.append('cEmail', this.firmaNueva.cEmail);
+          formData.append('cTitulo', this.firmaNueva.cTitulo);
+          formData.append('cCargo', this.firmaNueva.cCargo);
+          formData.append('cCurp', this.firmaNueva.cCurp);
+        
+          this.firmasService.setFirmaProyecto(formData).subscribe(response => {
+            this.toastr.success('Firma creada exitosamente', 'Éxito', {
+              positionClass: 'toast-bottom-right'
+            });
+            this.closeCollapse('collapseAgregarFirma');
+            this.cargarFirmas();
+            this.limpiarFirmaNueva(); 
+            agregarFirma = false;
+          }, error => {
+            this.toastr.error('Error al crear la firma', 'Error' , {
+              positionClass: 'toast-bottom-right'
+            })
+          });
+        }
+      }
     });
   }
 
   editarFirma(): void{
-
-    // Convertir los valores a mayúsculas antes de enviarlos
+    let editarFirma = true
     Object.keys(this.firmaEditar).forEach(key => {
       if (typeof this.firmaEditar[key] === 'string' && key !== 'cEmail') {
         this.firmaEditar[key] = this.firmaEditar[key].toUpperCase();
       }
     });
 
-    const formData = new FormData();
 
-    console.table(this.firmaEditar);
+    this.confirmService.open('¿Estas seguro actualizar los datos?');
 
-    formData.append('idProyecto', this.idProyecto.toString());
-    formData.append('cPaterno', this.firmaEditar.cPaterno);
-    formData.append('cMaterno', this.firmaEditar.cMaterno);
-    formData.append('cNombre', this.firmaEditar.cNombre);
-    formData.append('idCargo', this.firmaEditar.idCargo);
-    formData.append('cCelular', this.firmaEditar.cCelular);
-    formData.append('cTelefono', this.firmaEditar.cTelefono);
-    formData.append('cExtension', this.firmaEditar.cExtension);
-    formData.append('cEmail', this.firmaEditar.cEmail);
-    formData.append('cTitulo', this.firmaEditar.cTitulo);
-    formData.append('cCargo', this.firmaEditar.cCargo);
-    formData.append('cCurp', this.firmaEditar.cCurp);
-
-    this.firmasService.updateFirmaProyecto(formData).subscribe(response => {
-      this.toastr.success('Firma actualizada exitosamente', 'Éxito', {
-        positionClass: 'toast-bottom-right'
-      });
-      this.cargarFirmas(); // Actualizamos la lista de firmas
-    }, error => {
-      this.toastr.error('Error al actualizar firma', 'Error', {
-        positionClass: 'toast-bottom-right'
-      });
+    this.sharedData.confirmDialog$.subscribe(response => {
+      if(response){
+        if(response.confirm && !(response.cancel) && editarFirma){
+          const formData = new FormData();        
+          formData.append('idProyecto', this.idProyecto.toString());
+          formData.append('cPaterno', this.firmaEditar.cPaterno);
+          formData.append('cMaterno', this.firmaEditar.cMaterno);
+          formData.append('cNombre', this.firmaEditar.cNombre);
+          formData.append('idCargo', this.firmaEditar.idCargo);
+          formData.append('cCelular', this.firmaEditar.cCelular);
+          formData.append('cTelefono', this.firmaEditar.cTelefono);
+          formData.append('cExtension', this.firmaEditar.cExtension);
+          formData.append('cEmail', this.firmaEditar.cEmail);
+          formData.append('cTitulo', this.firmaEditar.cTitulo);
+          formData.append('cCargo', this.firmaEditar.cCargo);
+          formData.append('cCurp', this.firmaEditar.cCurp);
+        
+          this.firmasService.updateFirmaProyecto(formData).subscribe(response => {
+            this.toastr.success('Firma actualizada exitosamente', 'Éxito', {
+              positionClass: 'toast-bottom-right'
+            });
+            this.cargarFirmas(); // Actualizamos la lista de firmas
+          }, error => {
+            this.toastr.error('Error al actualizar firma', 'Error', {
+              positionClass: 'toast-bottom-right'
+            });
+          });
+        }
+      }
     });
+
+  
 
   }
 
   eliminarFirma(index: number): void {
+    let eliminarFirma = true;
     this.firmaEditar = this.firmas[index];
   
     const params = {
@@ -192,26 +218,41 @@ cargarFirmas(): void {
       cCurp: this.firmaEditar.cCurp
     };
   
-    console.table(params);
   
     // Verifica que los valores no sean undefined o vacíos
     if (!params.idProyecto || !params.idCargo || !params.cCurp) {
       console.error('Faltan parámetros requeridos');
       return;
     }
-  
-    this.firmasService.deleteFirmaProyecto(params).subscribe(
-      response => {
-        this.toastr.success('Firma eliminada exitosamente', 'Éxito', {
-          positionClass: 'toast-bottom-right'
-        });
-      },
-      error => {
-        this.toastr.error('Error al eliminar la firma', 'Error', {
-          positionClass: 'toast-bottom-right'
-        });
+
+    this.confirmService.open('¿Estas seguro de eliminar esta firma?');
+
+    this.sharedData.confirmDialog$.subscribe(response =>{
+      if(response){
+        if(response.confirm && !(response.cancel) && eliminarFirma){
+          this.firmasService.deleteFirmaProyecto(params).subscribe(
+            response => {
+              this.cargarFirmas();
+              this.toastr.success('Firma eliminada exitosamente', 'Éxito', {
+                positionClass: 'toast-bottom-right'
+              });
+            },
+            error => {
+              this.toastr.error('Error al eliminar la firma', 'Error', {
+                positionClass: 'toast-bottom-right'
+              });
+            }
+          );
+        }
       }
-    );
+    })
+  }
+  
+
+  limpiarFirmaNueva(): void {
+    Object.keys(this.firmaNueva).forEach(key => {
+      (this.firmaNueva as any)[key] = '';
+    });
   }
   
 }

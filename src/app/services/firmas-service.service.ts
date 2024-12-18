@@ -40,4 +40,15 @@ export class FirmasServiceService {
   
     return this.http.delete(`${this.baseUrl}/eliminarFirma`, { params: httpParams });
   }
+
+  getCatCargo(): Observable<any[]> {
+    return this.http.get<any>(`${this.baseUrl}/obtenerCargo`).pipe(
+      map(response => {
+        console.log(response); // Verifica lo que llega del backend
+        // Asegúrate de que 'response.data' sea un array o devuélvelo como un array vacío
+        return Array.isArray(response?.data) ? response.data : [];
+      })
+    );
+  }
+  
 }
