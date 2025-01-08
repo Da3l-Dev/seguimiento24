@@ -54,272 +54,294 @@
                     </table>
                 </div>
 
-				<form id="alta_datos" name="alta_datos" class="form-horizontal" #formAgregarFirma="ngForm" novalidate>
+				
                     
-                    <!-- Inicio del collapse para agregar una nueva firma -->
-                    <div class="collapse content-collapse" id="collapseAgregarFirma">
-                        <div class="collapse-header">
-                            <h2 class="modal-title" id="exampleModalCenterTitle">INGRESAR DATOS</h2>
-                        </div>
-
-                        
-                        <br>
-                        <hr>
-                        <!-- Datos personales -->
-                        <div class="form-row align-items-center">
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Nombre</label>
-                                <input type="text" class="form-control" id="cNombre" name="cNombre" [(ngModel)]="firmaNueva.cNombre" #cNombre="ngModel" (input)="toUpperCase($event)" required>
-                                <div *ngIf="cNombre.invalid && cNombre.touched" class="text-danger">
-                                    <small *ngIf="cNombre.errors?.required">El nombre es obligatorio.</small>
-                                </div>
-                            </div> 
-
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">A. Paterno</label>
-								<input type="text" class="form-control" id="cPaterno" name="cPaterno" [(ngModel)]="firmaNueva.cPaterno" #cPaterno="ngModel" (input)="toUpperCase($event)" required>
-                                <div *ngIf="cPaterno.invalid && cPaterno.touched" class="text-danger">
-                                    <small *ngIf="cPaterno.errors?.required">El apellido paterno es obligatorio</small>
-                                </div>
-                            </div>
-							  <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">A. Materno</label>
-								<input type="text" class="form-control" id="cMaterno" name="cMaterno" [(ngModel)]="firmaNueva.cMaterno" #cMaterno="ngModel" (input)="toUpperCase($event)" required>
-                                <div *ngIf="cMaterno.invalid && cMaterno.touched" class="text-danger">
-                                    <small *ngIf="cMaterno.errors?.required">El apellido materno es obligatorio</small>
-                                </div>  
-                            </div>
-                        </div>
-
-                        <div class="form-row align-items-center">
-                            <div class="col-1"></div>
-                            <div class="col-10">
-                                <label class="label-title" for="inlineFormInput">CURP</label>
-								<input type="text" class="form-control" id="cCurp" name="cCurp" [(ngModel)]="firmaNueva.cCurp" #cCurp="ngModel" (input)="toUpperCase($event)"required>
-                                <div *ngIf="cCurp.invalid && cCurp.touched" class="text-danger">
-                                    <small *ngIf="cCurp.errors?.required">La CURP es obligatoria</small>
-                                </div>
-                            </div>
-
-                            <div class="col-1"></div>
-
-                        </div>
-
-                        <br>
-                        <hr>
-
-                        <!--Datos Cargo y correo -->
-                        <div class="form-row align-items-center">
-                            <div class="col-12">
-                                <label class="label-title" for="idCargo">Cargo</label>
-                                <select 
-                                    class="form-control" 
-                                    id="idCargo" 
-                                    name="idCargo" 
-                                    [(ngModel)]="firmaNueva.idCargo" 
-                                    #idCargo="ngModel" 
-                                    required>
-                                    <option value="" disabled selected>Seleccione un cargo</option>
-                                    <option *ngFor="let cargo of catCargos" [value]="cargo.idPuesto">{{ cargo.cPuesto }}</option>
-                                </select>
-                                <div *ngIf="idCargo.invalid && idCargo.touched" class="text-danger">
-                                    <small *ngIf="idCargo.errors?.required">El cargo es obligatorio.</small>
-                                </div>
-                            </div>
+                
+                        <!-- Inicio del collapse para agregar una nueva firma -->
+                        <div class="collapse content-collapse" id="collapseAgregarFirma">
                             
-                            <!-- &#64; -->
-                            <div class="col-12">
-                                <label for="cEmail" class="label-title">Correo Electrónico</label>
-                                <input
-                                    type="email"
-                                    class="form-control"
-                                    id="cEmail"
-                                    name="cEmail"
-                                    [(ngModel)]="firmaNueva.cEmail"
-                                    #cEmail="ngModel"
-                                    required
-                                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
-                                />
+                            <!-- Formulario para registro de una nueva firma -->
+                            <form #formAgregarFirma="ngForm" novalidate>
 
-                                <div *ngIf="cEmail.invalid && cEmail.touched" class="text-danger">
-                                    <small *ngIf="cEmail.errors?.required">El correo es obligatorio.</small>
-                                    <small *ngIf="cEmail.errors?.pattern">El correo debe ser válido (por ejemplo, usuario&#64;dominio.com).</small>
+                                <div class="collapse-header">
+                                    <h2 class="modal-title" id="exampleModalCenterTitle">INGRESAR DATOS</h2>
                                 </div>
-                            </div>                            
                             
+                                <br>
+                                <hr>
+                                <!-- Datos personales -->
+                                <div class="form-row align-items-center">
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Nombre</label>
+                                        <input type="text" class="form-control" id="cNombre" name="cNombre" [(ngModel)]="firmaNueva.cNombre" #cNombre="ngModel" (input)="toUpperCase($event)" required>
+                                        <div *ngIf="cNombre.invalid && cNombre.touched" class="text-danger">
+                                            <small *ngIf="cNombre.errors?.required">El nombre es obligatorio.</small>
+                                        </div>
+                                    </div> 
 
-                        </div>
-
-                        <br>
-                        <hr>
-                        <!-- Datos Telefono -->
-
-                        <div class="form-row align-items-center">
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Celular</label>
-                                <input type="tel" class="form-control" id="cCelular" name="cCelular" [(ngModel)]="firmaNueva.cCelular" #cCelular="ngModel" pattern="[0-9]{10}">
-                                <div *ngIf="cCelular.invalid && cCelular.touched" class="text-danger">
-                                    <small *ngIf="cCelular.errors?.pattern">Debe ser un número de 10 dígitos.</small>
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">A. Paterno</label>
+                                        <input type="text" class="form-control" id="cPaterno" name="cPaterno" [(ngModel)]="firmaNueva.cPaterno" #cPaterno="ngModel" (input)="toUpperCase($event)" required>
+                                        <div *ngIf="cPaterno.invalid && cPaterno.touched" class="text-danger">
+                                            <small *ngIf="cPaterno.errors?.required">El apellido paterno es obligatorio</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">A. Materno</label>
+                                        <input type="text" class="form-control" id="cMaterno" name="cMaterno" [(ngModel)]="firmaNueva.cMaterno" #cMaterno="ngModel" (input)="toUpperCase($event)" required>
+                                        <div *ngIf="cMaterno.invalid && cMaterno.touched" class="text-danger">
+                                            <small *ngIf="cMaterno.errors?.required">El apellido materno es obligatorio</small>
+                                        </div>  
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Teléfono</label>
-                                <input type="tel" class="form-control" id="cTelefono" name="cTelefono" [(ngModel)]="firmaNueva.cTelefono" #cTelefono="ngModel" pattern="[0-9]{10}" required (input)="toUpperCase($event)">
-                                <div *ngIf="cTelefono.invalid && cTelefono.touched" class="text-danger">
-                                    <small *ngIf="cTelefono.errors?.required">El teléfono es obligatorio.</small>
-                                    <small *ngIf="cTelefono.errors?.pattern">Debe ser un número de 10 dígitos.</small>
+
+                                <div class="form-row align-items-center">
+                                    <div class="col-1"></div>
+                                    <div class="col-10">
+                                        <label class="label-title" for="inlineFormInput">CURP</label>
+                                        <input
+                                        type="text"
+                                        class="form-control"
+                                        id="cCurp"
+                                        name="cCurp"
+                                        [(ngModel)]="firmaNueva.cCurp"
+                                        #cCurp="ngModel"
+                                        (input)="toUpperCase($event)"
+                                        pattern="^[A-Z]{4}\d{6}[HM][A-Z]{5}[A-Z0-9]\d$"
+                                        required
+                                        />
+                                        <div *ngIf="cCurp.invalid && cCurp.touched" class="text-danger">
+                                        <small *ngIf="cCurp.errors?.required">La CURP es obligatoria.</small>
+                                        <small *ngIf="cCurp.errors?.pattern">CURP no es válida.</small>
+                                        </div>
+                                    </div>                                  
+
+                                    <div class="col-1"></div>
+
                                 </div>
-                            </div>
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Extensión</label>
-                                <input type="text" class="form-control" id="cExtension" name="cExtension" [(ngModel)]="firmaNueva.cExtension" #cExtension="ngModel" pattern="[0-9]{1,5}" (input)="toUpperCase($event)">
-                                <div *ngIf="cExtension.invalid && cExtension.touched" class="text-danger">
-                                    <small *ngIf="cExtension.errors?.pattern">Debe ser un número de hasta 5 dígitos.</small>
+
+                                <br>
+                                <hr>
+
+                                <!--Datos Cargo y correo -->
+                                <div class="form-row align-items-center">
+                                    <div class="col-12">
+                                        <label class="label-title" for="idCargo">Cargo</label>
+                                        <select 
+                                            class="form-control" 
+                                            id="idCargo" 
+                                            name="idCargo" 
+                                            [(ngModel)]="firmaNueva.idCargo" 
+                                            #idCargo="ngModel" 
+                                            required>
+                                            <option value="" disabled selected>Seleccione un cargo</option>
+                                            <option *ngFor="let cargo of catCargos" [value]="cargo.idPuesto">{{ cargo.cPuesto }}</option>
+                                        </select>
+                                        <div *ngIf="idCargo.invalid && idCargo.touched" class="text-danger">
+                                            <small *ngIf="idCargo.errors?.required">El cargo es obligatorio.</small>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- &#64; -->
+                                    <div class="col-12">
+                                        <label for="cEmail" class="label-title">Correo Electrónico</label>
+                                        <input
+                                            type="email"
+                                            class="form-control"
+                                            id="cEmail"
+                                            name="cEmail"
+                                            [(ngModel)]="firmaNueva.cEmail"
+                                            #cEmail="ngModel"
+                                            required
+                                            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$"
+                                        />
+
+                                        <div *ngIf="cEmail.invalid && cEmail.touched" class="text-danger">
+                                            <small *ngIf="cEmail.errors?.required">El correo es obligatorio.</small>
+                                            <small *ngIf="cEmail.errors?.pattern">El correo debe ser válido (por ejemplo, usuario&#64;dominio.com).</small>
+                                        </div>
+                                    </div>                            
+                                    
+
                                 </div>
-                            </div>
-                        </div>
 
-                        <br>
-                        <hr>
+                                <br>
+                                <hr>
+                                <!-- Datos Telefono -->
 
-                        <!-- Datos de puesto y titulo -->
+                                <div class="form-row align-items-center">
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Celular</label>
+                                        <input type="tel" class="form-control" id="cCelular" name="cCelular" [(ngModel)]="firmaNueva.cCelular" #cCelular="ngModel" pattern="[0-9]{10}">
+                                        <div *ngIf="cCelular.invalid && cCelular.touched" class="text-danger">
+                                            <small *ngIf="cCelular.errors?.pattern">Debe ser un número de 10 dígitos.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Teléfono</label>
+                                        <input type="tel" class="form-control" id="cTelefono" name="cTelefono" [(ngModel)]="firmaNueva.cTelefono" #cTelefono="ngModel" pattern="[0-9]{10}" required (input)="toUpperCase($event)">
+                                        <div *ngIf="cTelefono.invalid && cTelefono.touched" class="text-danger">
+                                            <small *ngIf="cTelefono.errors?.required">El teléfono es obligatorio.</small>
+                                            <small *ngIf="cTelefono.errors?.pattern">Debe ser un número de 10 dígitos.</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Extensión</label>
+                                        <input type="text" class="form-control" id="cExtension" name="cExtension" [(ngModel)]="firmaNueva.cExtension" #cExtension="ngModel" pattern="[0-9]{1,5}" (input)="toUpperCase($event)">
+                                        <div *ngIf="cExtension.invalid && cExtension.touched" class="text-danger">
+                                            <small *ngIf="cExtension.errors?.pattern">Debe ser un número de hasta 5 dígitos.</small>
+                                        </div>
+                                    </div>
+                                </div>
 
-                        <div class="form-row align-items-center">
-                            <div class="col-2"></div>
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Título</label>
-                                <input type="text" class="form-control" id="cTitulo" name="cTitulo" #cTitulo="ngModel" (input)="toUpperCase($event)" [(ngModel)]="firmaNueva.cTitulo">
+                                <br>
+                                <hr>
+
+                                <!-- Datos de puesto y titulo -->
+
+                                <div class="form-row align-items-center">
+                                    <div class="col-2"></div>
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Título</label>
+                                        <input type="text" class="form-control" id="cTitulo" name="cTitulo" #cTitulo="ngModel" (input)="toUpperCase($event)" [(ngModel)]="firmaNueva.cTitulo"  required>
+                                        <div *ngIf="cTitulo.invalid && cTitulo.touched">
+                                            <small *ngIf="cTitulo.errors?.required">El titulo es obligatorio</small>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Puesto</label>
+                                        <input type="text" class="form-control" id="cPuesto" name="cPuesto" #cPuesto="ngModel" (input)="toUpperCase($event)" [(ngModel)]="firmaNueva.cCargo" required>
+                                        <div *ngIf="cPuesto.invalid && cPuesto.touched">
+                                            <small *ngIf="cPuesto.errors?.required">El puesto es obligatorio</small>
+                                        </div>
+                                    </div>
+                                    <div class="col-2"></div>
+                                </div>
+
+                                <!-- Boton Agregar firma -->
                                 
-                            </div>
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block btnSave" style="max-width: 100%;" (click)="agregarFirma(formAgregarFirma)" [disabled]="formAgregarFirma.invalid">
+                                        <img width="35" height="35" src="https://img.icons8.com/ios-filled/100/add-user-male.png" alt="add-user-male"/>
+                                        Agregar Firma
+                                    </button>
+                                    
+                                </div>
+                            </form>           
+                        </div> <!-- Fin del collapse para agregar una nueva firma -->
 
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Puesto</label>
-                                <input type="text" class="form-control" id="cPuesto" name="cPuesto" (input)="toUpperCase($event)" [(ngModel)]="firmaNueva.cCargo">
-                            </div>
-                            <div class="col-2"></div>
-                        </div>
+                
 
-                        <!-- Boton Agregar firma -->
-                        
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-lg btn-block btnSave" style="max-width: 100%;" (click)="agregarFirma()" [disabled]="formAgregarFirma.invalid">
-                                <img width="35" height="35" src="https://img.icons8.com/ios-filled/100/add-user-male.png" alt="add-user-male"/>
-                                Agregar Firma
-                            </button>
+
+                <!-- Formulario para poder editar el registro de firma -->
+                        <!-- Inicio del colappse para poder actualizar una firma -->
+
+                        <div class="collapse content-collapse" id="collapseEditarFirma" *ngIf="firmaEditar">
+
+
+                            <form #formEditarFirma="ngForm" novalidate>
+                                <div class="collapse-header">
+                                    <h2 class="modal-title" id="exampleModalCenterTitle">ACTUALIZAR DATOS</h2>
+                                </div>
                             
+                                <br>
+                                <hr>
+                                <!-- Datos personales -->
+                                <div class="form-row align-items-center">
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Nombre</label>
+                                        <input type="text" class="form-control" id="nombre" name="nombre" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cNombre" required>
+                                    </div> 
+
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">A. Paterno</label>
+                                        <input type="text" class="form-control" id="paterno" name="paterno" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cPaterno" required>
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">A. Materno</label>
+                                        <input type="text" class="form-control" id="materno" name="materno" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cMaterno" required>
+                                    </div>
+                                </div>
+
+                                <div class="form-row align-items-center">
+                                    <div class="col-1"></div>
+                                    <div class="col-10">
+                                        <label class="label-title" for="inlineFormInput">CURP</label>
+                                        <input type="text" class="form-control" id="curp" name="curp" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cCurp" disabled>
+                                    </div>
+
+                                    <div class="col-1"></div>
+
+                                </div>
+
+                                <br>
+                                <hr>
+
+                                <!--Datos Cargo y correo -->
+                                <div class="form-row align-items-center">
+                                    <div class="col-12">
+                                        <label class="label-title" for="inlineFormInput">Cargo</label>
+                                        <select  class="form-control" name="cargo" id="cargo" disabled>
+                                            <option >{{firmaEditar.cPuesto}}</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="col-12">
+                                        <label class="label-title" for="inlineFormInput">Correo Electrónico</label>
+                                        <input type="email" class="form-control" id="correo" name="correo" [(ngModel)]="firmaEditar.cEmail" required>
+                                    </div>
+                                </div>
+
+                                <br>
+                                <hr>
+                                <!-- Datos Telefono -->
+
+                                <div class="form-row align-items-center">
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Celular</label>
+                                        <input type="tel" name="cel" id="cel" [(ngModel)]="firmaEditar.cCelular" class="form-control">
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Teléfono</label>
+                                        <input type="number" class="form-control" name="tel" id="tel" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cTelefono" >
+                                    </div>
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Extensión</label>
+                                        <input type="text" class="form-control" name="extension" id="extension" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cExtension" >
+                                    </div>
+                                </div>
+
+                                <br>
+                                <hr>
+
+                                <!-- Datos de puesto y titulo -->
+
+                                <div class="form-row align-items-center">
+                                    <div class="col-2"></div>
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Título</label>
+                                        <input type="text" class="form-control" name="titulo" id="titulo" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cTitulo">
+                                    </div>
+
+                                    <div class="col-4">
+                                        <label class="label-title" for="inlineFormInput">Puesto</label>
+                                        <input type="text" class="form-control" name="puesto" id="puesto"  (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cPuesto" >
+                                    </div>
+                                    <div class="col-2"></div>
+                                </div>
+
+                                <!-- Boton Agregar firma -->
+                                
+                                <div class="col-12">
+                                    <button type="submit" class="btn btn-primary btn-lg btn-block btnSave" style="max-width: 100%;" (click)="editarFirma()">
+                                        <img width="35" height="35" src="https://img.icons8.com/ios-filled/100/add-user-male.png" alt="add-user-male"/>
+                                        Actualizar Datos
+                                    </button>
+                                    
+                                </div>
+                            </form>  
                         </div>
-        
-                    </div> <!-- Fin del collapse para agregar una nueva firma -->
-
-
-                    <!-- Inicio del colappse para poder actualizar una firma -->
-
-                    <div class="collapse content-collapse" id="collapseEditarFirma" *ngIf="firmaEditar">
-                        <div class="collapse-header">
-                            <h2 class="modal-title" id="exampleModalCenterTitle">ACTUALIZAR DATOS</h2>
-                        </div>
-
-                        
-                        <br>
-                        <hr>
-                        <!-- Datos personales -->
-                        <div class="form-row align-items-center">
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Nombre</label>
-                                <input type="text" class="form-control" id="nombre" name="nombre" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cNombre" required>
-                            </div> 
-
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">A. Paterno</label>
-								<input type="text" class="form-control" id="paterno" name="paterno" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cPaterno" required>
-                              </div>
-							  <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">A. Materno</label>
-								<input type="text" class="form-control" id="materno" name="materno" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cMaterno" required>
-                              </div>
-                        </div>
-
-                        <div class="form-row align-items-center">
-                            <div class="col-1"></div>
-                            <div class="col-10">
-                                <label class="label-title" for="inlineFormInput">CURP</label>
-								<input type="text" class="form-control" id="curp" name="curp" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cCurp" disabled>
-                            </div>
-
-                            <div class="col-1"></div>
-
-                        </div>
-
-                        <br>
-                        <hr>
-
-                        <!--Datos Cargo y correo -->
-                        <div class="form-row align-items-center">
-                            <div class="col-12">
-                                <label class="label-title" for="inlineFormInput">Cargo</label>
-								<select  class="form-control" name="cargo" id="cargo" disabled>
-                                    <option >{{firmaEditar.cPuesto}}</option>
-                                </select>
-                            </div>
-
-                            <div class="col-12">
-                                <label class="label-title" for="inlineFormInput">Correo Electrónico</label>
-								<input type="email" class="form-control" id="correo" name="correo" [(ngModel)]="firmaEditar.cEmail" required>
-                            </div>
-                        </div>
-
-                        <br>
-                        <hr>
-                        <!-- Datos Telefono -->
-
-                        <div class="form-row align-items-center">
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Celular</label>
-                                <input type="tel" name="cel" id="cel" [(ngModel)]="firmaEditar.cCelular" class="form-control">
-                            </div>
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Teléfono</label>
-                                <input type="number" class="form-control" name="tel" id="tel" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cTelefono" >
-                            </div>
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Extensión</label>
-                                <input type="text" class="form-control" name="extension" id="extension" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cExtension" >
-                            </div>
-                        </div>
-
-                        <br>
-                        <hr>
-
-                        <!-- Datos de puesto y titulo -->
-
-                        <div class="form-row align-items-center">
-                            <div class="col-2"></div>
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Título</label>
-                                <input type="text" class="form-control" name="titulo" id="titulo" (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cTitulo">
-                            </div>
-
-                            <div class="col-4">
-                                <label class="label-title" for="inlineFormInput">Puesto</label>
-                                <input type="text" class="form-control" name="puesto" id="puesto"  (input)="toUpperCase($event)" [(ngModel)]="firmaEditar.cPuesto" >
-                            </div>
-                            <div class="col-2"></div>
-                        </div>
-
-                        <!-- Boton Agregar firma -->
-                        
-                        <div class="col-12">
-                            <button type="submit" class="btn btn-primary btn-lg btn-block btnSave" style="max-width: 100%;" (click)="editarFirma()">
-                                <img width="35" height="35" src="https://img.icons8.com/ios-filled/100/add-user-male.png" alt="add-user-male"/>
-                                Actualizar Datos
-                            </button>
-                            
-                        </div>
-                    </div>
-
-                </form>
-
-
             </div>
         </div>
     </div>

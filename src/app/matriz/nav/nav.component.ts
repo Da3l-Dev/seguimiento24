@@ -14,7 +14,7 @@ export class NavComponent implements OnInit {
   cUnidadOperante: string = '';
   idArea: number = 0;
   programaArea: number = 0;
-  currentYear: number = new Date().getFullYear();
+  currentYear: number = 2024;
   mensajeMarquee: string = '';
   data: any;
 

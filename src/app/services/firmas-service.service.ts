@@ -17,7 +17,6 @@ export class FirmasServiceService {
   
     return this.http.get<any>(`${this.baseUrl}/obtenerFirmas`, { params }).pipe(
       map(response => {
-        console.log(response); // Verifica lo que llega
         return Array.isArray(response) ? response : response.data || [];
       })
     );

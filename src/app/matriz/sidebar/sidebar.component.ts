@@ -40,7 +40,7 @@ export class SidebarComponent {
   cUnidadOperante: string = '';
   idArea: number = 0;
   programaArea: number = 0;
-  year: number = new Date().getFullYear();
+  year: number = 2024;
 
   selectedComponenteId: number | null = null;
   selectedIndicadorId: number | null = null;
@@ -82,6 +82,7 @@ export class SidebarComponent {
       metasAlcanzadasData: this.datosService.getMetasAlcanzadas(this.idArea)
     }).subscribe(
       (result) => {
+        
         
         // Asignar los datos recibidos a las propiedades del componente
         this.proyectoData = result.proyectoData;

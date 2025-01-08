@@ -91,4 +91,13 @@ export class DatosProyectosService {
   subirLogro(data: FormData): Observable<any> {
     return this.http.post(`${this.baseUrl}/subirLogro`, data);
   }
+
+
+  getMirProyecto(idArea: number){
+    const params = new HttpParams().set('idArea', idArea.toString());
+
+    return this.http.get<any>(`${this.baseUrl}/mir`,{params}).pipe(
+      map(response => Array.isArray(response) ? response : response.data || [])
+    );
+  }
 }

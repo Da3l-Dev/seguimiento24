@@ -18,12 +18,52 @@
         <a class="nav-link dropdown-toggle text-white text-nowrap text-truncate" role="button" data-toggle="dropdown" aria-expanded="false" style="font-size: 1.2em;">
           Cédulas de Evidencia
         </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border: 1px solid #fff;">
-          <a class="dropdown-item" href="../reportes/ejecutaCedula.php" target="_blank">Cédulas de Evidencia 1er. Trimestre</a>
-          <a class="dropdown-item" href="../reportes/ejecutaCedula2.php" target="_blank">Cédulas de Evidencia 2do. Trimestre</a>
-          <a class="dropdown-item" href="../reportes/ejecutaCedula3.php" target="_blank">Cédulas de Evidencia 3er. Trimestre</a>
-          <a class="dropdown-item" href="../reportes/ejecutaCedula4.php" target="_blank">Cédulas de Evidencia 4to. Trimestre</a>
-        </div>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border: 1px solid #fff;" *ngIf="trimActivo">
+          <a
+            class="dropdown-item"
+            [ngClass]="trimActivo.trim1 ? 'dropdown-item-active' : 'dropdown-item-inactive'"
+            [class.disabled]="!trimActivo.trim1"
+            (click)="trimActivo.trim1 && generarPdfCedula(1)"
+            role="button"
+            target="_blank"
+          >
+            Cédulas de Evidencia 1er. Trimestre
+            <span *ngIf="trimActivo.trim1" class="badge badge-pill badge-light">¡Trimestre Activo!</span>
+          </a>
+          <a
+            class="dropdown-item"
+            [ngClass]="trimActivo.trim2 ? 'dropdown-item-active' : 'dropdown-item-inactive'"
+            [class.disabled]="!trimActivo.trim2"
+            (click)="trimActivo.trim2 && generarPdfCedula(2)"
+            role="button"
+            target="_blank"
+          >
+            Cédulas de Evidencia 2do. Trimestre
+            <span *ngIf="trimActivo.trim2" class="badge badge-pill badge-light">¡Trimestre Activo!</span>
+          </a>
+          <a
+            class="dropdown-item"
+            [ngClass]="trimActivo.trim3 ? 'dropdown-item-active' : 'dropdown-item-inactive'"
+            [class.disabled]="!trimActivo.trim3"
+            (click)="trimActivo.trim3 && generarPdfCedula(3)"
+            role="button"
+            target="_blank"
+          >
+            Cédulas de Evidencia 3er. Trimestre
+            <span *ngIf="trimActivo.trim3" class="badge badge-pill badge-light">¡Trimestre Activo!</span>
+          </a>
+          <a
+            class="dropdown-item"
+            [ngClass]="trimActivo.trim4 ? 'dropdown-item-active' : 'dropdown-item-inactive'"
+            [class.disabled]="!trimActivo.trim4"
+            (click)="trimActivo.trim4 && generarPdfCedula(4)"
+            role="button"
+            target="_blank"
+          >
+            Cédulas de Evidencia 4to. Trimestre
+            <span *ngIf="trimActivo.trim4" class="badge badge-pill badge-light">¡Trimestre Activo!</span>
+          </a>
+        </div>               
       </li>
 
       <!-- Seguimiento Matriz Indicadores Dropdown -->
@@ -32,11 +72,11 @@
           Seguimiento Matriz Indicadores (SED 1 MIR)
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border: 1px solid #fff;">
-          <a class="dropdown-item" href="../reportes/ejecutaSed1.php" target="_blank">Seguimiento Matriz Indicadores 1er. Trimestre</a>
-          <a class="dropdown-item" href="../reportes/ejecutaSed1_2.php" target="_blank">Seguimiento Matriz Indicadores 2do. Trimestre</a>
-          <a class="dropdown-item" href="../reportes/ejecutaSed1_3.php" target="_blank">Seguimiento Matriz Indicadores 3er. Trimestre</a>
-          <a class="dropdown-item" href="../reportes/ejecutaSed1_4.php" target="_blank">Seguimiento Matriz Indicadores 4to. Trimestre</a>
-          <a class="dropdown-item" href="../reportes/ejecutaSed1_5.php" target="_blank">Seguimiento Matriz Indicadores Anual</a>
+          <a class="dropdown-item" (click)="generarPdfSeguimiento(1)" role="button" target="_blank">Seguimiento Matriz Indicadores 1er. Trimestre</a>
+          <a class="dropdown-item" (click)="generarPdfSeguimiento(2)" role="button" target="_blank">Seguimiento Matriz Indicadores 2do. Trimestre</a>
+          <a class="dropdown-item" (click)="generarPdfSeguimiento(3)" role="button" target="_blank">Seguimiento Matriz Indicadores 3er. Trimestre</a>
+          <a class="dropdown-item" (click)="generarPdfSeguimiento(4)" role="button" target="_blank">Seguimiento Matriz Indicadores 4to. Trimestre</a>
+          <!-- <a class="dropdown-item" (click)="crearPdfSeguimiento(5)" role="button" target="_blank">Seguimiento Matriz Indicadores Anual</a> -->
         </div>
       </li>
 
@@ -46,13 +86,14 @@
           Resultados por Indicador (SED 2 -RR1)
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border: 1px solid #fff;">
-          <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador.php" target="_blank" style="background-color: #DDC9A3;">(SED 2 -RR1) 1er. Trimestre</a>
+          <a class="dropdown-item" (click)="generarPdfResulIndicador()"  role="button" style="background-color: #DDC9A3;">(SED 2 -RR1) 1er. Trimestre</a>
           <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador2.php" target="_blank" style="background-color: #691B31; color: #ffffff;">(SED 2 -RR1) 2do. Trimestre <span class="badge badge-pill badge-light">¡Reporte Disponible!</span></a>
           <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador3.php" target="_blank">(SED 2 -RR1) 3er. Trimestre</a>
           <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador4.php" target="_blank">(SED 2 -RR1) 4to. Trimestre</a>
         </div>
       </li>
 
+      
     </ul>
   </div>
 </nav>

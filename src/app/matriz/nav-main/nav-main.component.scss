@@ -19,3 +19,25 @@
     color: #DDC9A3 !important;  
 }
 
+
+
+.dropdown-item-active {
+    background-color: #691B31;
+    color: #ffffff;
+  }
+  
+  .dropdown-item-inactive {
+    color: #7a7a7a; /* Un color gris apagado */
+    opacity: 0.5; /* Reduce la opacidad para dar el efecto de desactivado */
+    pointer-events: none; /* Opcional: evita que el usuario haga clic */
+    cursor: not-allowed; /* Cambia el cursor para indicar que está deshabilitado */
+  }
+  
+.badge {
+  margin-left: 10px; /* Espaciado a la derecha del texto */
+  font-size: 0.85rem; /* Tamaño de fuente reducido */
+  background-color: #28a745; /* Color verde claro */
+  color: #fff; /* Texto blanco */
+}
+
+  

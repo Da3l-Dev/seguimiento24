@@ -5,6 +5,7 @@ import { FirmasServiceService } from '../../services/firmas-service.service';
 import { ToastrService } from 'ngx-toastr';
 import { ConfirmationService } from '../../services/confirmation.service';
 import { SharedDataService } from '../../services/shared-data.service';
+import { NgForm } from '@angular/forms';
 
 
 @Component({
@@ -118,7 +119,7 @@ cargarFirmas(): void {
         }
   }
   
-  agregarFirma(): void {
+  agregarFirma(form: NgForm): void {
     let agregarFirma = true;
 
     this.firmaNueva.idProyecto = this.idProyecto.toString();
@@ -150,6 +151,7 @@ cargarFirmas(): void {
             });
             this.closeCollapse('collapseAgregarFirma');
             this.cargarFirmas();
+            form.resetForm();
             this.limpiarFirmaNueva(); 
             agregarFirma = false;
           }, error => {
@@ -230,6 +232,7 @@ cargarFirmas(): void {
     this.sharedData.confirmDialog$.subscribe(response =>{
       if(response){
         if(response.confirm && !(response.cancel) && eliminarFirma){
+          eliminarFirma = false;
           this.firmasService.deleteFirmaProyecto(params).subscribe(
             response => {
               this.cargarFirmas();

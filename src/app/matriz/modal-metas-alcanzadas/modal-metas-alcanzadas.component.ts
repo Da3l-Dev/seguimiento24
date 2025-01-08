@@ -30,7 +30,7 @@ export class ModalMetasAlcanzadasComponent implements OnInit {
 
  
   idArea: number = 0;
-  year: number = new Date().getFullYear();
+  year: number = 2024;
   trimActivo: any[] = [];
   logrosArea: any[] = [];
   trimestre: number = 0;

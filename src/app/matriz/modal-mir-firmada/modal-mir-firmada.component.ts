@@ -21,7 +21,7 @@ export class ModalMirFirmadaComponent implements OnInit{
   trimActivo: any[] = [];
   trimestre: number = 0;
   nuevoDocumento: File | null = null;
-  year: number = new Date().getFullYear();
+  year: number = 2024;
 
 
 

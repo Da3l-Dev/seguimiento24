@@ -29,7 +29,7 @@ export class ModalCedulaEvidenciaComponent implements OnInit {
   messageError: string = '';
   nuevoDocumento: File | null = null;
   descripcionEvidencia: string = '';
-  year: number = new Date().getFullYear();
+  year: number = 2024;
 
   ruta: String = "";
 
