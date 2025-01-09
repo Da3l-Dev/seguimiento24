@@ -8,105 +8,18 @@ import 'jspdf-autotable';
 export class PdfGeneratorService {
   constructor() {}
 
-  /**
-   * Agrega el encabezado al PDF con un logo, título y subtítulo.
-   * @param pdf jsPDF instance
-   * @param title Título del PDF
-   * @param subtitle Subtítulo o trimestre
-   * @param logoUrl URL o ruta del logo
-   */
-  addHeader(pdf: jsPDF, title: string, subtitle: string, logoUrl: string): void {
-    const pdfWidth = pdf.internal.pageSize.width;
-    const logo = new Image();
-    logo.src = logoUrl;
-
-    const altoImagen = 28;
-    const marginArriba = 5;
-    const margenIzquierdo = 5;
-    const margenDerecho = 5;
-
-    let posicionY = marginArriba;
-
-    // Agregar logo
-    pdf.addImage(logo, 'JPEG', margenIzquierdo, posicionY, pdfWidth - (margenIzquierdo + margenDerecho + 20), altoImagen);
-
-    posicionY += altoImagen + 5;
-
-    // Agregar título
-    pdf.setFontSize(9);
-    pdf.setFont('Helvetica', 'bold');
-    pdf.text(title, pdfWidth / 2, posicionY, { align: 'center' });
-
-    // Agregar subtítulo
-    let achoTexto = pdf.getTextWidth(subtitle);
-    pdf.setFontSize(9);
-    pdf.setFont('Helvetica', 'bold');
-    pdf.text(subtitle, pdfWidth - (achoTexto + margenIzquierdo), posicionY , { align: 'center' });
-  }
+  margenIzquierdo: number = 5;
+  margenDerecho: number = 5;
+  private newTab: Window | null = null;
 
   /**
-   * Agrega una tabla al PDF.
-   * @param pdf jsPDF instance
-   * @param startY Posición Y inicial
-   * @param headers Encabezados de la tabla
-   * @param data Datos de la tabla
-   * @param columnStyles Estilos personalizados por columna
+   * Abre una ventana con una pantalla de carga.
    */
-  addTable(pdf: jsPDF, startY: number, headers: string[], data: any[][], columnStyles = {}): number {
-    (pdf as any).autoTable({
-      head: [headers],
-      body: data,
-      startY,
-      theme: 'grid',
-      styles: {
-        fontSize: 10,
-        cellPadding: 2,
-      },
-      columnStyles,
-    });
+  showLoadingScreen(): void {
+    this.newTab = window.open('', '_blank'); // Abrir ventana en blanco de inmediato
 
-    return (pdf as any).lastAutoTable.finalY; // Devuelve la última posición Y
-  }
-
-  /**
-   * Agrega las firmas al pie del PDF.
-   * @param pdf jsPDF instance
-   * @param firmas Array de firmas [{ nombre: string, puesto: string }]
-   * @param startY Posición Y inicial para las firmas
-   */
-  addSignatures(pdf: jsPDF, firmas: { nombre: string; puesto: string }[], startY: number): void {
-    const pdfWidth = pdf.internal.pageSize.width;
-    const marginX = 10; // Margen izquierdo
-    const widthAvailable = pdfWidth - marginX * 2; // Ancho disponible
-    const spacePerSignature = widthAvailable / firmas.length;
-
-    firmas.forEach((firma, index) => {
-      const xPosition = marginX + index * spacePerSignature;
-      const centerX = xPosition + spacePerSignature / 2;
-
-      // Dibujar el nombre centrado
-      const nombreWidth = pdf.getTextWidth(firma.nombre);
-      pdf.text(firma.nombre, centerX - nombreWidth / 2, startY);
-
-      // Dibujar el puesto centrado debajo del nombre
-      const puestoWidth = pdf.getTextWidth(firma.puesto);
-      pdf.text(firma.puesto, centerX - puestoWidth / 2, startY + 5);
-    });
-  }
-
-  /**
-   * Genera un Blob a partir del PDF.
-   * @param pdf jsPDF instance
-   * @returns Blob
-   */
-  generateBlob(pdf: jsPDF): void {
-
-    const newTab = window.open('', '_blank'); // Abrir ventana en blanco de inmediato
-
-    // Presentar pantalla de espera para generar el pdf
-    if (newTab) {
-      // Crear una pantalla de carga en la nueva ventana
-      newTab.document.write(`
+    if (this.newTab) {
+      this.newTab.document.write(`
         <!DOCTYPE html>
         <html lang="en">
         <head>
@@ -152,25 +65,156 @@ export class PdfGeneratorService {
         </html>
       `);
 
-      newTab.document.close(); // Asegura que se renderice el contenido
+      this.newTab.document.close(); // Asegura que se renderice el contenido
     }
-
-    const pdfBlob = pdf.output('blob');
-    const url = URL.createObjectURL(pdfBlob);
-        
-        if (newTab) {
-          newTab.location.href = url; // Actualizar la ubicación cuando el PDF esté listo
-        } else {
-          console.error('No se pudo abrir una nueva pestaña.');
-        } 
   }
 
   /**
-   * Descarga el PDF.
-   * @param pdf jsPDF instance
-   * @param fileName Nombre del archivo
+   * Cierra la ventana de carga y muestra el PDF generado.
+   * @param pdfBlob Blob del PDF generado
    */
-  downloadPdf(pdf: jsPDF, fileName: string): void {
-    pdf.save(fileName);
+  showGeneratedPdf(pdfBlob: Blob): void {
+    const url = URL.createObjectURL(pdfBlob);
+
+    if (this.newTab) {
+      this.newTab.location.href = url; // Redirigir a la URL del PDF generado
+    } else {
+      console.error('No se pudo abrir la nueva pestaña.');
+    }
   }
+
+  /**
+   * Genera un Blob a partir del PDF con pantalla de carga.
+   * @param pdf jsPDF instance
+   */
+  async generateBlobWithLoading(pdf: jsPDF): Promise<void> {
+    // Introducir un pequeño retraso para asegurarse de que la pantalla de carga se muestre
+    setTimeout(() => {
+      const pdfBlob = pdf.output('blob'); // Generar el PDF
+      this.showGeneratedPdf(pdfBlob); // Mostrar el PDF en la ventana abierta
+    }, 500); // Retraso de 500 ms
+  }
+
+  /**
+   * Agrega el encabezado al PDF con un logo, título y subtítulo.
+   * @param pdf jsPDF instance
+   * @param title Título del PDF
+   * @param subtitle Subtítulo o trimestre
+   * @param logoUrl URL o ruta del logo
+   */
+  addHeader(pdf: jsPDF, title: string, subtitle: string, logoUrl: string): number {
+    const pdfWidth = pdf.internal.pageSize.width;
+    const logo = new Image();
+    logo.src = logoUrl;
+
+    const altoImagen = 28;
+    const marginArriba = 5;
+    this.margenIzquierdo = 5;
+    this.margenDerecho = 5;
+
+    let posicionY = marginArriba;
+
+    // Agregar logo
+    pdf.addImage(logo, 'JPEG', this.margenIzquierdo, posicionY, pdfWidth - (this.margenIzquierdo + this.margenDerecho + 20), altoImagen);
+
+    posicionY += altoImagen + 5;
+
+    // Agregar título
+    pdf.setFontSize(9);
+    pdf.setFont('Helvetica', 'bold');
+    pdf.text(title, pdfWidth / 2, posicionY, { align: 'center' });
+
+    // Agregar subtítulo
+    let achoTexto = pdf.getTextWidth(subtitle);
+    pdf.setFontSize(9);
+    pdf.setFont('Helvetica', 'bold');
+    pdf.text(subtitle, pdfWidth - (achoTexto + this.margenIzquierdo), posicionY, { align: 'center' });
+
+    posicionY += 4;
+
+    return posicionY;
+  }
+
+  /**
+   * Agrega una tabla al PDF.
+   * @param pdf jsPDF instance
+   * @param startY Posición Y inicial
+   * @param headers Encabezados de la tabla
+   * @param data Datos de la tabla
+   */
+  addTable(pdf: jsPDF, startY: number, headers: string[], data: any[][], margin: number): number {
+    (pdf as any).autoTable({
+      head: [headers],
+      body: data,
+      startY,
+      theme: 'grid',
+      tableLineColor: [105, 105, 105],
+      tableLineWidth: 0.2,
+      headStyles: {
+        fillColor: [87, 87, 87],
+        textColor: [255, 255, 255], // Texto blanco
+        fontSize: 11, // Tamaño de fuente
+        halign: 'center', // Alineación horizontal
+        cellPadding: 2, // Padding en las celdas
+      },
+      bodyStyles: {
+        textColor: [0, 0, 0],
+        fontSize: 11, // Tamaño de fuente para las celdas
+        halign: 'center', // Alineación horizontal
+        cellPadding: 1,
+        fontStyle: "italic", // Solo un valor
+        font: "times"  // Fuente personalizada
+      },
+      margin: { top: 0, left: margin, right: margin },
+    });
+
+    return (pdf as any).lastAutoTable.finalY; // Devuelve la última posición Y
+  }
+
+  /**
+   * Agrega las firmas al pie del PDF.
+   * @param pdf jsPDF instance
+   * @param firmas Array de firmas [{ nombre: string, puesto: string }]
+   * @param startY Posición Y inicial para las firmas
+   */
+  addSignatures(pdf: jsPDF, firmas: any[], margin: number): void {
+    const pdfWidth = pdf.internal.pageSize.width;
+    const pdfHeight = pdf.internal.pageSize.height;
+  
+    const margen = margin; // Margen lateral izquierdo y derecho
+    const anchoDisponible = pdfWidth - margen * 2; // Ancho disponible para todas las firmas
+    const espacioPorFirma = anchoDisponible / firmas.length; // Espacio asignado por firma
+  
+    const yPosition = pdfHeight - 20; // Posición vertical de las firmas (cerca del borde inferior)
+  
+
+    pdf.setTextColor(163, 163, 163)
+    pdf.setFontSize(9);
+    
+    firmas.forEach((firma, index) => {
+      // Posición inicial horizontal para la firma actual
+      const xInicio = margen + index * espacioPorFirma;
+  
+      // Calcular ancho del texto (nombre y puesto)
+      const nombre = `${firma.cNombre} ${firma.cPaterno} ${firma.cMaterno}`;
+      const puesto = firma.cPuesto;
+  
+      const nombreWidth = pdf.getTextWidth(nombre);
+      const puestoWidth = pdf.getTextWidth(puesto);
+  
+      // Calcular posición centrada para el nombre
+      const xNombre = xInicio + (espacioPorFirma - nombreWidth) / 2;
+  
+      // Dibujar el nombre
+      pdf.text(nombre, xNombre, yPosition);
+  
+      // Calcular posición centrada para el puesto (debajo del nombre)
+      const xPuesto = xInicio + (espacioPorFirma - puestoWidth) / 2;
+  
+      // Dibujar el puesto
+      pdf.text(puesto, xPuesto, yPosition + 5);
+    });
+
+    pdf.setTextColor(0,0,0);
+  }  
 }

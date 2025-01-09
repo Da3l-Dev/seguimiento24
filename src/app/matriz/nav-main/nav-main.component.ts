@@ -5,6 +5,8 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { DatosProyectosService } from '../../services/datos-proyectos.service';
 import { FirmasServiceService } from '../../services/firmas-service.service';
 import { PdfGeneratorService } from '../../services/pdf-generator-service.service';
+import { Column } from 'jspdf-autotable';
+import { text } from 'stream/consumers';
 
 
 @Component({
@@ -17,6 +19,7 @@ export class NavMainComponent implements OnInit {
   datosProyecto: any[] = [];
   datos: any[] = [];
   firmas: any[] = [];
+
   variables: any[] = [];
   metasAlcanzadas: any[] = [];
   trimActivo: any[] = [];
@@ -55,58 +58,12 @@ export class NavMainComponent implements OnInit {
     async generarPdfCedula(trimestre: number): Promise<void> {
       try {
 
-        const newTab = window.open('', '_blank'); // Abrir ventana en blanco de inmediato
-
-        // Presentar pantalla de espera para generar el pdf
-        if (newTab) {
-          // Crear una pantalla de carga en la nueva ventana
-          newTab.document.write(`
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Generando PDF...</title>
-              <style>
-                body {
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  height: 100vh;
-                  margin: 0;
-                  font-family: Arial, sans-serif;
-                  background-color: #f4f4f4;
-                  color: #333;
-                }
-                .spinner {
-                  border: 8px solid #f3f3f3; /* Light grey */
-                  border-top: 8px solid #3498db; /* Blue */
-                  border-radius: 50%;
-                  width: 60px;
-                  height: 60px;
-                  animation: spin 1s linear infinite;
-                }
-                @keyframes spin {
-                  0% { transform: rotate(0deg); }
-                  100% { transform: rotate(360deg); }
-                }
-                .message {
-                  margin-top: 20px;
-                  font-size: 18px;
-                  text-align: center;
-                }
-              </style>
-            </head>
-            <body>
-              <div>
-                <div class="spinner"></div>
-                <div class="message">Generando PDF, por favor espera...</div>
-              </div>
-            </body>
-            </html>
-          `);
-          newTab.document.close(); // Asegura que se renderice el contenido
-        }
+      
+        // Inicialización del PDF
+        const pdf = new jsPDF('landscape', 'mm', 'a4'); // PDF en formato A4 horizontal
+        const pdfWidth = 297; // Ancho del PDF en mm
+    
+        this.pdfGenerator.showLoadingScreen();
 
         this.firmas = await new Promise<any[]>((resolve, reject) => {
           this.firmasService.getFirmasProyecto(this.idProyecto).subscribe(
@@ -142,19 +99,11 @@ export class NavMainComponent implements OnInit {
             (error) => reject(error)
           );
         });
-
-
-        
-        
-        
         //endregion
 
-        // Inicialización del PDF
-        const pdf = new jsPDF('landscape', 'mm', 'a4'); // PDF en formato A4 horizontal
-        const pdfWidth = 297; // Ancho del PDF en mm
-    
-        // Iterar sobre los datos y agregar contenido en cada página
+        
 
+        // Iterar sobre los datos y agregar contenido en cada página
         for (let i = 0; i < this.datos.length; i++) {    
         
           // Obtener variables del indicador
@@ -175,12 +124,10 @@ export class NavMainComponent implements OnInit {
 
           // Obtener metas alcanzadas
           const elementMeta = this.metasAlcanzadas.find((metas)=> metas.ejercicio === this.year && metas.idIndica === this.datos[i].idIndicador && metas.idArea === this.idArea);
-          
-      
 
           let maTrim;
           let metaAlTotal;
-          let textTrim;
+          let textTrim = '';
 
           
           switch(trimestre){
@@ -209,48 +156,10 @@ export class NavMainComponent implements OnInit {
               break;
           }
 
+          // Generadar header del pdf
+          let currentY = this.pdfGenerator.addHeader(pdf,this.cUnidadOperante,textTrim, '/img/encabezadosPDF/encabecedula.jpg'); // Reinicia la posición vertical en cada página
 
-
-          let currentY = 5; // Reinicia la posición vertical en cada página
-
-
-          // Agregar Encabezado con Logo
-          const logoUrl = '/img/encabezadosPDF/encabecedula.jpg'; // Ruta relativa del logo
-          const logo = new Image();
-          logo.src = logoUrl;
-    
-          await new Promise((resolve, reject) => {
-            logo.onload = () => {
-              const logoWidth = 280;
-              const logoHeight = 28;
-              const x = ((pdfWidth - logoWidth) / 2) - 16; // Centrar la imagen
-              pdf.addImage(logo, 'JPEG', x, currentY, logoWidth, logoHeight);
-              resolve(true);
-            };
-            logo.onerror = reject;
-          });
-    
-          currentY += 28 + 5; // Altura del logo + margen inferior dinámico
-    
-          // Agregar Título
-          const title = this.cUnidadOperante || "Título por Defecto";
-          pdf.setFontSize(11);
-          pdf.setFont('Helvetica', 'bold');
-          const textWidth = pdf.getTextWidth(title);
-          const textX = (pdfWidth - textWidth) / 2; // Centrar el título
-          pdf.text(title, textX, currentY);
-    
-
-          //Agregar trimestre actual
-          const titleTrim = textTrim || '';
-          pdf.setFontSize(10)
-          pdf.setFont('Helvetica', 'bold');
-          const textTrimWidth = pdf.getTextWidth(titleTrim);
-          const xTrim = (textWidth) + (textTrimWidth) * 4; 
-          pdf.text(titleTrim, xTrim, currentY);
-
-          currentY += 7; // Incrementar según el tamaño del texto
-
+          currentY += 2;
 
           // Define márgenes y configuración
           const marginX = 35; // Márgenes laterales
@@ -326,6 +235,7 @@ export class NavMainComponent implements OnInit {
           // endregion
           
           
+          
           // Generar Tabla con los datos correspondientes
           const headers = ['Variable', 'Número Absoluto', 'Documento/Liga y Ubicación', 'Observación'];
           const data = [
@@ -334,151 +244,45 @@ export class NavMainComponent implements OnInit {
           ];
 
 
+          // Generar Tabla
+          currentY = this.pdfGenerator.addTable(pdf, currentY, headers, data,marginX);
+
+          // generar Firmas
+          this.pdfGenerator.addSignatures(pdf, this.firmas, 30);
           
-
-          // Estilos de la tabla 
-          const tableStartY = currentY;
-          (pdf as any).autoTable({
-            head: [headers],
-            body: data,
-            startY: tableStartY,
-            theme: 'grid', // Asegura que las líneas estén visibles
-            tableLineColor: [105, 105, 105], // Color de las líneas (en RGB, aquí un gris oscuro)
-            tableLineWidth: 0.5, // Grosor de las líneas
-            headStyles: {
-              fillColor: [87, 87, 87],
-              textColor: [255, 255, 255], // Texto blanco
-              fontSize: 10, // Tamaño de fuente
-              halign: 'center', // Alineación horizontal
-              cellPadding: 2, // Padding en las celdas
-            },
-            bodyStyles: {
-              textColor: [0, 0, 0],
-              fontSize: 9, // Tamaño de fuente para las celdas
-              halign: 'center', // Alineación horizontal
-              cellPadding: 1,
-              fontStyle: "italic", // Solo un valor
-              font: "times"  // Fuente personalizada
-          },          
-            margin: { top: 10, left: 35, right: 35 },
-          });
           
-    
-          currentY = (pdf as any).lastAutoTable.finalY + 70; // Posicionar después de la tabla
-
-
-          // region Firmas
-
-          let espaceFirmas = marginX;
-          this.firmas.forEach(element => {
-              const nombre = element.cNombre + ' ' + element.cPaterno + ' ' + element.cMaterno;
-              const sizeNombre = pdf.getTextDimensions(nombre).w;
-
-              pdf.setTextColor(163, 163, 163);
-              pdf.setFontSize(8);
-              pdf.text(nombre, espaceFirmas, currentY);
-
-              const puesto = element.cPuesto;
-              const sizePuesto = pdf.getTextDimensions(puesto).w;
-              
-              // Calcular la posición X para centrar el puesto bajo el nombre
-              const centroNombre = espaceFirmas + (sizeNombre / 2);
-              const posPuesto = centroNombre - (sizePuesto / 2);
-
-              pdf.text(puesto, posPuesto, currentY + 4);
-              espaceFirmas += sizeNombre + (pdfWidth / this.firmas.length);
-          });
-
-          currentY += 13;
-
-
           pdf.setTextColor(0, 0, 0);
           const widthPagina = pdf.getTextDimensions('pagina '+ (i + 1)).w;
-          pdf.text('pagina '+ (i + 1), (pdfWidth - widthPagina) - 20, currentY )
+          pdf.text('pagina '+ (i + 1), (pdfWidth - widthPagina) - 20, pdf.internal.pageSize.height - 7)
 
-          
-          // endregion
+          //endregion
     
           // Si no es la última iteración, agregar nueva página
           if (i < this.datos.length - 1) {
             pdf.addPage(); // Agregar nueva página
           }
         }
-    
-        
-        
-        // Generar el PDF
-        const pdfBlob = pdf.output('blob');
-        const url = URL.createObjectURL(pdfBlob);
-        
-        if (newTab) {
-          newTab.location.href = url; // Actualizar la ubicación cuando el PDF esté listo
-        } else {
-          console.error('No se pudo abrir una nueva pestaña.');
-        }        
+        this.pdfGenerator.generateBlobWithLoading(pdf);
       } catch (error) {
         console.error('Error al generar el PDF:', error);
       }
     }
     
+
     /**
      * Permite crear el pdf de las mir del proyecto
      * @param trimestre 
      */
     async generarPdfSeguimiento( trimestre: number): Promise<void>{
       try{
-        const newTab = window.open('', '_blank'); // Abrir ventana en blanco de inmediato
+        
+        const pdf = new jsPDF({
+          orientation: 'l', // 'portrait' para vertical, 'landscape' para horizontal
+          unit: 'mm',              // Establece las unidades en milímetros
+          format: [216, 356]       // Medidas del tamaño oficio en mm [ancho, alto]
+        });
 
-        // Presentar pantalla de espera para generar el pdf
-        if (newTab) {
-          // Crear una pantalla de carga en la nueva ventana
-          newTab.document.write(`
-            <!DOCTYPE html>
-            <html lang="en">
-            <head>
-              <meta charset="UTF-8">
-              <meta name="viewport" content="width=device-width, initial-scale=1.0">
-              <title>Generando PDF...</title>
-              <style>
-                body {
-                  display: flex;
-                  justify-content: center;
-                  align-items: center;
-                  height: 100vh;
-                  margin: 0;
-                  font-family: Arial, sans-serif;
-                  background-color: #f4f4f4;
-                  color: #333;
-                }
-                .spinner {
-                  border: 8px solid #f3f3f3; /* Light grey */
-                  border-top: 8px solid #3498db; /* Blue */
-                  border-radius: 50%;
-                  width: 60px;
-                  height: 60px;
-                  animation: spin 1s linear infinite;
-                }
-                @keyframes spin {
-                  0% { transform: rotate(0deg); }
-                  100% { transform: rotate(360deg); }
-                }
-                .message {
-                  margin-top: 20px;
-                  font-size: 18px;
-                  text-align: center;
-                }
-              </style>
-            </head>
-            <body>
-              <div>
-                <div class="spinner"></div>
-                <div class="message">Generando PDF, por favor espera...</div>
-              </div>
-            </body>
-            </html>
-          `);
-          newTab.document.close(); // Asegura que se renderice el contenido
-        }
+        this.pdfGenerator.showLoadingScreen();
 
         this.firmas = await new Promise<any[]>((resolve, reject) => {
           this.firmasService.getFirmasProyecto(this.idProyecto).subscribe(
@@ -501,17 +305,14 @@ export class NavMainComponent implements OnInit {
         
         let trimTitle = '';
 
-        const pdf = new jsPDF({
-          orientation: 'l', // 'portrait' para vertical, 'landscape' para horizontal
-          unit: 'mm',              // Establece las unidades en milímetros
-          format: [216, 356]       // Medidas del tamaño oficio en mm [ancho, alto]
-        });
+        
 
         // Definir las longitudes de la hoja Oficio de manera horizontal
         const achoHoja = 356;
         const altoHoja = 216;
 
 
+        
         // Bucle para recorres todos los elementos de la consulta para poder reportar en el pdf
         for(let i = 0; i<this.datosProyecto.length; i++){
           // Variables requeridas dentro de la funcion para los calculos dependuiendo del trimestre
@@ -668,45 +469,10 @@ export class NavMainComponent implements OnInit {
 
           let currentY = 5; 
 
-          // Agregar Encabezado con Logo
-          const logoUrl = '/img/encabezadosPDF/encabezadosed1.jpg'; // Ruta relativa del logo
-          const logo = new Image();
-          logo.src = logoUrl;
-    
-          await new Promise((resolve, reject) => {
-            logo.onload = () => {
-              const logoWidth = 270;
-              const logoHeight = 28;
-              const x = ((achoHoja - logoWidth) / 2) - 16; // Centrar la imagen
-              pdf.addImage(logo, 'JPEG', x, currentY, logoWidth, logoHeight);
-              resolve(true);
-            };
-            logo.onerror = reject;
-          });
-    
-          currentY += 28 + 5; // Altura del logo + margen inferior dinámico
-    
-    
-          // TITULO UNIDAD OPERATIVA
-          const title = this.cUnidadOperante || "Título por Defecto";
-          pdf.setFontSize(9);
-          pdf.setFont('Helvetica', 'bold');
-          const textWidth = pdf.getTextWidth(title);
-          const textX = (achoHoja - textWidth) / 2; // Centrar el título
-          pdf.text(title, textX, currentY);
-    
-          
-          //Agregar trimestre actual
-          const titleTrim = trimTitle || '';
-          pdf.setFontSize(10)
-          pdf.setFont('Helvetica', 'bold');
-          const textTrimWidth = pdf.getTextWidth(titleTrim);
-          const xTrim = (textWidth) + (textTrimWidth) * 5; 
-          pdf.text(titleTrim, xTrim, currentY);
-    
-          currentY += 7; // Incrementar según el tamaño del texto
-    
-
+  
+          currentY = this.pdfGenerator.addHeader(pdf, this.cUnidadOperante, trimTitle, '/img/encabezadosPDF/encabezadosed1.jpg' )
+          currentY += 10; // Altura del logo + margen inferior dinámico
+  
           
           // Generar Tabla con los datos correspondientes
           const headers = ['Nivel', 'Resumen', 'Indicador', 
@@ -733,104 +499,152 @@ export class NavMainComponent implements OnInit {
             [{ content: "Causas de las variaciones", colSpan: 2 }, {content: cuasa, colSpan: 10}],
             [{ content: "Efectos de las variaciones", colSpan: 2 }, {content: efecto, colSpan: 10}],
           ];
-    
-    
-          
-    
-          // Estilos de la tabla 
-          const tableStartY = currentY;
-          (pdf as any).autoTable({
-            head: [headers],
-            body: data,
-            startY: tableStartY,
-            theme: 'grid', // Asegura que las líneas estén visibles
-            tableLineColor: [105, 105, 105], // Color de las líneas (en RGB, aquí un gris oscuro)
-            tableLineWidth: 0.5, // Grosor de las líneas
-            headStyles: {
-              fillColor: [87, 87, 87],
-              textColor: [255, 255, 255], // Texto blanco
-              fontSize: 9, // Tamaño de fuente
-              halign: 'center', // Alineación horizontal
-              cellPadding: 2, // Padding en las celdas
-            },
-            bodyStyles: {
-              textColor: [0, 0, 0],
-              fontSize: 10, // Tamaño de fuente para las celdas
-              halign: 'center',
-              valign: 'middle',
-              cellPadding: 2,
-              fontStyle: "italic", // Solo un valor
-              font: "times"  // Fuente personalizada
-          },          
-            margin: { top: 10, left: 10, right: 10 },
-          });
+
+          this.pdfGenerator.addTable(pdf,currentY,headers,data, 10);
     
           // Colocar firmas
 
-          let margenIzquierdo = 10; // Margen izquierdo
-          let margenDerecho = 10; // Margen derecho
-          let anchoDisponible = achoHoja - margenIzquierdo - margenDerecho; // Ancho disponible entre los márgenes
-          let espacioEntreFirmas = anchoDisponible / this.firmas.length; // Espacio horizontal para cada firma
-          let poscionFirmasY = altoHoja - 20; // Posición Y para las firmas
+          this.pdfGenerator.addSignatures(pdf,this.firmas , 10)
 
-          this.firmas.forEach((element, index) => {
-            // Datos de la firma
-            const nombre = `${element.cNombre} ${element.cPaterno} ${element.cMaterno}`;
-            const puesto = element.cPuesto;
+          pdf.setTextColor(0, 0, 0);
+          const widthPagina = pdf.getTextDimensions('pagina '+ (i + 1)).w;
+          pdf.text('pagina '+ (i + 1), (pdf.internal.pageSize.width - widthPagina) - 20, pdf.internal.pageSize.height - 7)
 
-            // Calcular posición X del centro del espacio asignado para cada firma
-            const espacioFirmaInicio = margenIzquierdo + (index * espacioEntreFirmas);
-            const centroFirma = espacioFirmaInicio + (espacioEntreFirmas / 2);
-
-            // Tamaño del texto
-            const sizeNombre = pdf.getTextWidth(nombre);
-            const sizePuesto = pdf.getTextWidth(puesto);
-
-            // Calcular posiciones ajustadas para que el texto esté centrado
-            const nombreX = centroFirma - (sizeNombre / 2);
-            const puestoX = centroFirma - (sizePuesto / 2);
-
-            // Dibujar el nombre
-            pdf.setTextColor(163, 163, 163);
-            pdf.setFontSize(8);
-            pdf.text(nombre, nombreX, poscionFirmasY);
-
-            // Dibujar el puesto
-            pdf.text(puesto, puestoX, poscionFirmasY + 4);
-            pdf.setTextColor(0, 0, 0);
-          });
-
-
-            
           
           if (i < this.datosProyecto.length - 1) {
             pdf.addPage(); // Agregar nueva página
           } // Posicionar después de la tabla
+
+
         } // Fin bucle
 
+        this.pdfGenerator.generateBlobWithLoading(pdf);
 
-        
-        // Generar el PDF
-        const pdfBlob = pdf.output('blob');
-        const url = URL.createObjectURL(pdfBlob);
-        
-        if (newTab) {
-          newTab.location.href = url; // Actualizar la ubicación cuando el PDF esté listo
-        } else {
-          console.error('No se pudo abrir una nueva pestaña.');
-        }
       }catch (error) {
         console.error('Error al generar el PDF:', error);
       }
             
     }
 
-    async generarPdfResulIndicador(){
-
+    /**
+     * Permite generar el resultado de los indicadores 
+     */
+    async generarPdfResulIndicador() {
       const pdf = new jsPDF('p', 'mm', 'a4'); // PDF en formato A4 Vertical
+      const margen = 10; // Definir el margen izquierdo y derecho
+      const anchoDisponible = pdf.internal.pageSize.width - 2 * margen; // Calcular el ancho disponible
+      let currentY; // Mantener la posición actual en el eje Y
+    
+      // Obtener datos
+      this.datos = await new Promise<any[]>((resolve, reject) => {
+        this.proyectoData.getDataProyects(this.idArea, this.year).subscribe(
+          (data) => resolve(data),
+          (error) => reject(error)
+        );
+      });
+    
+      this.pdfGenerator.showLoadingScreen();
+    
+      for (let i = 0; i < this.datos.length; i++) {
+        this.firmas = await new Promise<any[]>((resolve, reject) => {
+          this.firmasService.getFirmasProyecto(this.idProyecto).subscribe(
+            (data) => resolve(data),
+            (error) => reject(error)
+          );
+        });
+    
+        // Agregar encabezado
+        currentY = this.pdfGenerator.addHeader(
+          pdf,
+          this.cUnidadOperante,
+          'Primer Trimestre',
+          '/img/encabezadosPDF/encabezadosed3.jpg'
+        );
+    
+        // Título de la sección
+        pdf.setFontSize(7);
+        pdf.setTextColor(163, 163, 163);
+        pdf.text('DATOS DE MIR', margen, currentY);
+    
+        currentY += 6; // Añadir espacio después del título
+    
+        // Resumen Narrativo
 
-      this.pdfGenerator.addHeader(pdf,this.cUnidadOperante, 'Primer Trimestre', '/img/encabezadosPDF/encabezadosed3.jpg');
+        // Título del Resumen Narrativo
+        pdf.setFont('Helvetica', 'normal');
+        pdf.setFontSize(9);
 
-      this.pdfGenerator.generateBlob(pdf);
-    }
+
+        pdf.setTextColor(105, 27, 49);
+        pdf.text('Resumen Narrativo', margen, currentY);
+        currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+
+        
+        pdf.setTextColor(0, 0, 0);
+        const textoResumen = pdf.splitTextToSize(this.datos[i].RN, anchoDisponible); // Divide el texto según el ancho disponible
+        pdf.text(textoResumen, margen, currentY);
+    
+        // Calcular la altura total usada por el texto dividido
+        const alturaTextoResumen = textoResumen.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+        currentY += alturaTextoResumen + 4;
+    
+      
+    
+        
+        // Título del Indicador
+        pdf.setTextColor(105, 27, 49);
+        pdf.text('Indicador', margen, currentY);
+    
+        currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+
+        // Indicador
+        pdf.setTextColor(0, 0, 0);
+        const textoIndicador = pdf.splitTextToSize(this.datos[i].Indicador, anchoDisponible);
+        pdf.text(textoIndicador, margen, currentY);
+    
+        // Calcular la altura total usada por el texto dividido
+        const alturaTextoIndicador = textoIndicador.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+        currentY += alturaTextoIndicador + 4;
+
+
+
+        // Titulo medio de Verificacion
+        pdf.setTextColor(105, 27, 49);
+        pdf.text('Medio de Verificación', margen, currentY);
+
+        currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+
+        pdf.setTextColor(0, 0, 0);
+        const textoMedioVer = pdf.splitTextToSize(this.datos[i].MV, anchoDisponible);
+        pdf.text(textoMedioVer, margen, currentY);
+        const alturaTextoMV = textoMedioVer.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+
+        currentY += alturaTextoMV + 4;
+
+
+        pdf.setTextColor(105, 27, 49);
+        pdf.text('Fórmula de cálculo', margen, currentY);
+        currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+
+        pdf.setTextColor(0, 0, 0);
+        const textoFormula = pdf.splitTextToSize(this.datos[i].formula, anchoDisponible);
+        pdf.text(textoFormula, margen, currentY);
+        const AlturaTxtFormula = textoFormula.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+
+        
+
+
+        // Salto de página si la posición actual supera el límite de la página
+        if (i < this.datos.length - 1) {
+          pdf.addPage(); // Agregar nueva página
+          currentY = 10; // Reiniciar la posición Y en la nueva página
+        }
+      }
+    
+      // Agregar firmas al final del documento
+      this.pdfGenerator.addSignatures(pdf, this.firmas, 10);
+    
+      // Generar el PDF
+      this.pdfGenerator.generateBlobWithLoading(pdf);
+    }    
 }
