@@ -1,4 +1,4 @@
-import { NgModule, CUSTOM_ELEMENTS_SCHEMA  } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA, OnInit, AfterViewInit  } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MainLayoutComponent } from './main-layout/main-layout.component';
 import { NavComponent } from './nav/nav.component';
@@ -12,13 +12,14 @@ import { ModalCedulaEvidenciaComponent } from './modal-cedula-evidencia/modal-ce
 import { FormsModule } from '@angular/forms';
 import { ModalMetasAlcanzadasComponent } from './modal-metas-alcanzadas/modal-metas-alcanzadas.component';
 import { ModalMirFirmadaComponent } from './modal-mir-firmada/modal-mir-firmada.component';
-import { Modal } from 'bootstrap';
+
 import { ModalCausaEfectoComponent } from './modal-causa-efecto/modal-causa-efecto.component';
 import { ModalSeguimientoEvaluacionComponent } from './modal-seguimiento-evaluacion/modal-seguimiento-evaluacion.component';
 import { FichaIndicadorComponent } from './ficha-indicador/ficha-indicador.component';
 import { ModalConfirmationComponent } from './modal-confirmation/modal-confirmation.component';
 import { ModalReducirFileComponent } from './modal-reducir-file/modal-reducir-file.component';
 import { ModalFirmasComponent } from './modal-firmas/modal-firmas.component';
+import { ModalInicioComponent } from './modal-inicio/modal-inicio.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { ModalFirmasComponent } from './modal-firmas/modal-firmas.component';
     FichaIndicadorComponent,
     ModalConfirmationComponent,
     ModalReducirFileComponent,
-    ModalFirmasComponent
+    ModalFirmasComponent,
+    ModalInicioComponent
   ],
   imports: [
     CommonModule,
@@ -59,8 +61,11 @@ import { ModalFirmasComponent } from './modal-firmas/modal-firmas.component';
     ModalSeguimientoEvaluacionComponent,
     FichaIndicadorComponent,
     ModalConfirmationComponent,
-    ModalFirmasComponent
+    ModalFirmasComponent,
+    ModalInicioComponent
   ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class MatrizSeguimientoModule {}
+export class MatrizSeguimientoModule{
+  
+}

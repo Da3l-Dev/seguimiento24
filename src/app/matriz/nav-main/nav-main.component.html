@@ -86,18 +86,18 @@
           Resultados por Indicador (SED 2 -RR1)
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="border: 1px solid #fff;" *ngIf="trimActivo">
-          <a class="dropdown-item" (click)="generarPdfResulIndicador()"  role="button">(SED 2 -RR1) 1er. Trimestre 
+          <a class="dropdown-item" (click)="generarPdfResulIndicador(1)"  role="button">(SED 2 -RR1) 1er. Trimestre 
             <span class="badge badge-pill badge-light" *ngIf="trimActivo.trim1">¡Disponible Ahora!</span></a>
 
-          <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador2.php" target="_blank">(SED 2 -RR1) 2do. Trimestre
+          <a class="dropdown-item" (click)="generarPdfResulIndicador(2)"  role="button">(SED 2 -RR1) 2do. Trimestre
             <span class="badge badge-pill badge-light" *ngIf="trimActivo.trim2">¡Disponible Ahora!</span>
           </a>
 
-          <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador3.php" target="_blank">(SED 2 -RR1) 3er. Trimestre
+          <a class="dropdown-item" (click)="generarPdfResulIndicador(3)"  role="button">(SED 2 -RR1) 3er. Trimestre
             <span class="badge badge-pill badge-light" *ngIf="trimActivo.trim3">¡Disponible Ahora!</span>
           </a>
 
-          <a class="dropdown-item" href="../reportes/ejecutaVistaIndicador4.php" target="_blank">(SED 2 -RR1) 4to. Trimestre
+          <a class="dropdown-item" (click)="generarPdfResulIndicador(4)"  role="button">(SED 2 -RR1) 4to. Trimestre
             <span class="badge badge-pill badge-light" *ngIf="trimActivo.trim4">¡Disponible Ahora!</span>
           </a>
         </div>

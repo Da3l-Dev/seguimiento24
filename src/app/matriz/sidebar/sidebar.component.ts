@@ -1,4 +1,4 @@
-import { Component, Renderer2 } from '@angular/core';
+import { AfterContentInit, AfterViewInit, Component, Renderer2 } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { DatosProyectosService } from '../../services/datos-proyectos.service';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ import { forkJoin } from 'rxjs';
 import { ToastrService } from 'ngx-toastr';
 import { FilesServicesService } from '../../services/files-services.service';
 import * as bootstrap from 'bootstrap';
+import { Chart, registerables } from 'chart.js';
 
 
 
@@ -20,7 +21,17 @@ import * as bootstrap from 'bootstrap';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss']
 })
-export class SidebarComponent {
+export class SidebarComponent implements AfterViewInit{
+
+  ngAfterViewInit(): void {
+    this.abrirModalPrincipal()
+  }
+
+  private chartInstance: Chart | null = null;
+
+
+  metasProgramadas: number[] = []; // Para almacenar metas programadas
+  metasAlcanzadas: number[] = [];  // Para almacenar metas alcanzadas
 
   // Asignacion de los modelos para poder asignar datos
   proyectoModel: Indicador | null = null;
@@ -53,10 +64,14 @@ export class SidebarComponent {
     private renderer: Renderer2,
     private filesService: FilesServicesService,
     private sharedata: SharedDataService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+
   ) {}
+  
 
   ngOnInit(): void {
+    Chart.register(...registerables); 
+
     this.loading = true; // Indicador de carga para bloquear la interacción
 
     
@@ -105,6 +120,8 @@ export class SidebarComponent {
       }
     );
   }
+
+
 
   // Función para filtrar y asignar datos al modelo
   setDataArea(idNivelIndicador: number, idComponente: number | null = null, idActividad: number | null = null): void {
@@ -302,14 +319,89 @@ export class SidebarComponent {
           (metasAlcanzadas.MetaAlcanzadaTrim4 ?? 0),
     }
 
+    
+
     // Compartir los modelos de datos para usar en otros componentes
     this.sharedata.setProyectoModel(this.proyectoModel);
     this.sharedata.setVariablesModel(this.variablesModel);
     this.sharedata.setMetasProgModel(this.metasProgramadasModel);
     this.sharedata.setSeguimientoModel(this.seguimientoModel);
     this.sharedata.setMetasAlcanzadasModel(this.metasAlcanzadasModel);
+
+    this.renderChart();
   }
 
+
+  
+   /**
+   * Función para crear o actualizar una gráfica de las metas Programadas y alzandas en los trimestres
+   */
+   renderChart(): void {
+    const canvas = document.getElementById('myChart') as HTMLCanvasElement | null;
+
+    if (!canvas) {
+      console.error('No se encontró el canvas con id "myChart".');
+      return;
+    }
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) {
+      console.error('No se pudo obtener el contexto 2D del canvas.');
+      return;
+    }
+
+    // Limpia la gráfica existente antes de crear una nueva
+    if (this.chartInstance) {
+      this.chartInstance.destroy();
+    }
+
+    this.sharedata.metasAlcanzadasModel$.subscribe( data => {
+      if(data){
+        this.metasAlcanzadas = [data.M1 ?? 0, data.M2 ?? 0, data.M3 ?? 0, data.M4 ?? 0];
+      }
+    });
+
+    this.sharedata.metasProgModel$.subscribe( data => {
+      if (data){
+        this.metasProgramadas = [data.m1_p ?? 0, data.m2_p ?? 0, data.m3_p ?? 0, data.m4_p ?? 0]
+      }
+    });
+
+    // Crear la gráfica
+    this.chartInstance = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['ENE - MAR', 'ABR - JUN', 'JUL - SEP', 'OCT - DIC'], // Etiquetas dinámicas
+        datasets: [
+          {
+            label: 'Meta programada',
+            data: this.metasProgramadas,
+            backgroundColor: 'rgba(221, 201, 163, 0.3)', // Color del fondo con transparencia
+            borderColor: '#ddc9a3', // Mismo color que el fondo pero sin transparencia
+            borderWidth: 1
+          },
+          {
+            label: 'Meta Alcanzada',
+            data: this.metasAlcanzadas,
+            backgroundColor: 'rgba(105, 27, 49, 0.3)', // Color del fondo con transparencia
+            borderColor: '#691B31', // Mismo color que el fondo pero sin transparencia
+            borderWidth: 1
+          }
+        ]             
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+  
   selectComponent(idIndicador: number, idComponente: number | null = null, idActividad: number | null = null): void {
     this.selectedIndicadorId = idIndicador;
     this.selectedComponenteId = idComponente;
@@ -346,6 +438,16 @@ export class SidebarComponent {
       modalInstance.show();
     }
   }
+
+  abrirModalPrincipal(): void {
+    console.log('Abriendo Modal');
+      const modalElement = document.getElementById('ModalMsg');
+      console.log(modalElement);
+      if(modalElement) {
+            const modalInstance = new bootstrap.Modal(modalElement);
+            modalInstance.show();
+          }
+    } 
 
   abrirModalFirmas(): void{
     console.log('Abriendo Modal');

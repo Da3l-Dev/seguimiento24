@@ -6,5 +6,4 @@ import { Component } from '@angular/core';
   styleUrl: './card-avance-grafica.component.scss'
 })
 export class CardAvanceGraficaComponent {
-
 }

@@ -58,9 +58,15 @@ export class NavComponent implements OnInit {
 
   // Cerrar sesión
   logout(): void {
+    // Llamar al servicio de logout para invalidar la sesión en el servidor
     this.userService.logoutUser().subscribe(() => {
-      this.router.navigate(['/seguimiento']);
+      // Limpiar datos locales
+      localStorage.clear();
+      sessionStorage.clear();
+  
+      // Redirigir y recargar completamente la aplicación
+      window.location.href = '/seguimiento'; // Navega y recarga
     });
-  }
+  } 
 
 }

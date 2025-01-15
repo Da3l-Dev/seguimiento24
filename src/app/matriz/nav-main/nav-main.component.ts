@@ -5,8 +5,7 @@ import { SharedDataService } from '../../services/shared-data.service';
 import { DatosProyectosService } from '../../services/datos-proyectos.service';
 import { FirmasServiceService } from '../../services/firmas-service.service';
 import { PdfGeneratorService } from '../../services/pdf-generator-service.service';
-import { Column } from 'jspdf-autotable';
-import { text } from 'stream/consumers';
+import { Chart, registerables } from 'chart.js';
 
 
 @Component({
@@ -23,6 +22,8 @@ export class NavMainComponent implements OnInit {
   variables: any[] = [];
   metasAlcanzadas: any[] = [];
   trimActivo: any[] = [];
+
+  metaProgramada: any[] = [];
   idArea: number = 0;
   idProyecto: number = 0;
   year: number = 2024;
@@ -52,6 +53,7 @@ export class NavMainComponent implements OnInit {
 
     /**
      * Permite generar el pdf de la cedula de evidencias
+     * @param trimestre trimestre actual seleccionado
      */
 
     // Funcion Crear pdf Cedula de Evidencias
@@ -271,7 +273,7 @@ export class NavMainComponent implements OnInit {
 
     /**
      * Permite crear el pdf de las mir del proyecto
-     * @param trimestre 
+     * @param trimestre trimestre actual seleccionado
      */
     async generarPdfSeguimiento( trimestre: number): Promise<void>{
       try{
@@ -282,8 +284,11 @@ export class NavMainComponent implements OnInit {
           format: [216, 356]       // Medidas del tamaño oficio en mm [ancho, alto]
         });
 
+        // Vista de carga del archivo PDF
         this.pdfGenerator.showLoadingScreen();
 
+
+        // Obtener Firmas
         this.firmas = await new Promise<any[]>((resolve, reject) => {
           this.firmasService.getFirmasProyecto(this.idProyecto).subscribe(
             (data) => resolve(data),
@@ -291,6 +296,7 @@ export class NavMainComponent implements OnInit {
           )
         })
 
+        // Obtener datos de los indicadores del Area
         this.datosProyecto = await new Promise<any[]>((resolve, reject) => {
           this.proyectoData.getMirProyecto(this.idArea).subscribe(
             (data) => resolve(data),
@@ -298,19 +304,9 @@ export class NavMainComponent implements OnInit {
           );
         });
 
-        this.firmasService.getFirmasProyecto(this.idProyecto).subscribe(data => {
-          this.firmas = data;
-        });
-
         
+        // Titulo para definir el trimestre actual
         let trimTitle = '';
-
-        
-
-        // Definir las longitudes de la hoja Oficio de manera horizontal
-        const achoHoja = 356;
-        const altoHoja = 216;
-
 
         
         // Bucle para recorres todos los elementos de la consulta para poder reportar en el pdf
@@ -326,7 +322,7 @@ export class NavMainComponent implements OnInit {
           let efecto = '';
 
 
-        // Switch para determinar el trimestre actual y los dato dependiendo de este mismo
+        // Switch para determinar el trimestre actual y los dato asociados
 
           switch(trimestre){
 
@@ -445,6 +441,7 @@ export class NavMainComponent implements OnInit {
                 }
               }
               break;
+
             // Datos Anuales
             case 5:
               metaProgramada = this.datosProyecto[i].ma_p;
@@ -470,6 +467,7 @@ export class NavMainComponent implements OnInit {
           let currentY = 5; 
 
   
+          // Crear encabezado del pdf
           currentY = this.pdfGenerator.addHeader(pdf, this.cUnidadOperante, trimTitle, '/img/encabezadosPDF/encabezadosed1.jpg' )
           currentY += 10; // Altura del logo + margen inferior dinámico
   
@@ -526,125 +524,360 @@ export class NavMainComponent implements OnInit {
             
     }
 
+    // Métodos para calcular y formatear el porcentaje
+    getPorcentaje(avance: number, programado: number ): string {
+        if ((avance === undefined || avance === 0 || avance === null) ||( programado === undefined || programado === 0  || programado === null)) {
+          return '--';
+        }
+        const porcentaje = (avance / programado) * 100;
+        return `${porcentaje.toFixed(2)}%`;
+    }
+      
+  
+
     /**
-     * Permite generar el resultado de los indicadores 
+     * Permite generar el resultado de los indicadores trimestralmente
+     * @param trimestre trimestre actual seleccionado
      */
-    async generarPdfResulIndicador() {
-      const pdf = new jsPDF('p', 'mm', 'a4'); // PDF en formato A4 Vertical
-      const margen = 10; // Definir el margen izquierdo y derecho
-      const anchoDisponible = pdf.internal.pageSize.width - 2 * margen; // Calcular el ancho disponible
-      let currentY; // Mantener la posición actual en el eje Y
-    
-      // Obtener datos
-      this.datos = await new Promise<any[]>((resolve, reject) => {
-        this.proyectoData.getDataProyects(this.idArea, this.year).subscribe(
+    async generarPdfResulIndicador(trimestre: number) {
+
+      this.pdfGenerator.showLoadingScreen();
+
+
+      let seguimiento: any[] = [];
+  
+      // Inizializacion del pdf
+      const pdf = new jsPDF('p', 'mm', 'legal');
+      const margen = 10; // margen de la hoja
+      const anchoDisponible = pdf.internal.pageSize.width - 2 * margen; // Acho disponible de la hoja
+
+      let currentY; // variable para recorrer el alto de la hoja
+
+      let textTrim= '';
+      let tipoIndicador ='';
+      let seguimientoRN, seguimientoMeta, seguimientoJust, seguimientoMV, seguimientoH, seguimientoApM;
+      
+
+  
+      this.metaProgramada = await new Promise<any[]>((resolve, reject) => {
+        this.proyectoData.getMetasProg(this.idArea, this.year).subscribe( 
+          (data) => resolve(data),
+          (error) => reject(error)
+        )
+      });
+
+     
+
+      this.metasAlcanzadas = await new Promise<any[]>((resolve, reject) => {
+        this.proyectoData.getMetasAlcanzadas(this.idArea).subscribe(
           (data) => resolve(data),
           (error) => reject(error)
         );
       });
-    
-      this.pdfGenerator.showLoadingScreen();
-    
-      for (let i = 0; i < this.datos.length; i++) {
-        this.firmas = await new Promise<any[]>((resolve, reject) => {
-          this.firmasService.getFirmasProyecto(this.idProyecto).subscribe(
-            (data) => resolve(data),
-            (error) => reject(error)
-          );
-        });
-    
-        // Agregar encabezado
-        currentY = this.pdfGenerator.addHeader(
-          pdf,
-          this.cUnidadOperante,
-          'Primer Trimestre',
-          '/img/encabezadosPDF/encabezadosed3.jpg'
-        );
-    
-        // Título de la sección
-        pdf.setFontSize(7);
-        pdf.setTextColor(163, 163, 163);
-        pdf.text('DATOS DE MIR', margen, currentY);
-    
-        currentY += 6; // Añadir espacio después del título
-    
-        // Resumen Narrativo
 
-        // Título del Resumen Narrativo
-        pdf.setFont('Helvetica', 'normal');
-        pdf.setFontSize(9);
-
-
-        pdf.setTextColor(105, 27, 49);
-        pdf.text('Resumen Narrativo', margen, currentY);
-        currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
-
-        
-        pdf.setTextColor(0, 0, 0);
-        const textoResumen = pdf.splitTextToSize(this.datos[i].RN, anchoDisponible); // Divide el texto según el ancho disponible
-        pdf.text(textoResumen, margen, currentY);
-    
-        // Calcular la altura total usada por el texto dividido
-        const alturaTextoResumen = textoResumen.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
-        currentY += alturaTextoResumen + 4;
-    
       
+
+
+      // Obtener datos
+      this.datos = await new Promise<any[]>((resolve, reject) => {
+          this.proyectoData.getDataProyects(this.idArea, this.year).subscribe(
+              (data) => resolve(data),
+              (error) => reject(error)
+          );
+      });
+  
+      // Obtener firmas
+      this.firmas = await new Promise<any[]>((resolve, reject) => {
+          this.firmasService.getFirmasProyecto(this.idProyecto).subscribe(
+              (data) => resolve(data),
+              (error) => reject(error)
+          );
+      });
+  
+      // Obtener Seguimiento 
+      seguimiento = await new Promise<any[]>((resolve, reject) => {
+          this.proyectoData.getSeguimiento(this.idArea).subscribe(
+              (data) => resolve(data),
+              (error) => reject(error)
+          );
+      });
+  
+
+      // Mostrar pantalla de carga mientra se renderiza pdf
     
-        
-        // Título del Indicador
-        pdf.setTextColor(105, 27, 49);
-        pdf.text('Indicador', margen, currentY);
-    
-        currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
 
-        // Indicador
-        pdf.setTextColor(0, 0, 0);
-        const textoIndicador = pdf.splitTextToSize(this.datos[i].Indicador, anchoDisponible);
-        pdf.text(textoIndicador, margen, currentY);
-    
-        // Calcular la altura total usada por el texto dividido
-        const alturaTextoIndicador = textoIndicador.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
-        currentY += alturaTextoIndicador + 4;
+      // Bucle que recorre todos los datos de indicadores del Area o Direccion
+      for (let i = 0; i < this.datos.length; i++) {
 
-
-
-        // Titulo medio de Verificacion
-        pdf.setTextColor(105, 27, 49);
-        pdf.text('Medio de Verificación', margen, currentY);
-
-        currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
-
-        pdf.setTextColor(0, 0, 0);
-        const textoMedioVer = pdf.splitTextToSize(this.datos[i].MV, anchoDisponible);
-        pdf.text(textoMedioVer, margen, currentY);
-        const alturaTextoMV = textoMedioVer.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
-
-        currentY += alturaTextoMV + 4;
-
-
-        pdf.setTextColor(105, 27, 49);
-        pdf.text('Fórmula de cálculo', margen, currentY);
-        currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
-
-        pdf.setTextColor(0, 0, 0);
-        const textoFormula = pdf.splitTextToSize(this.datos[i].formula, anchoDisponible);
-        pdf.text(textoFormula, margen, currentY);
-        const AlturaTxtFormula = textoFormula.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
-
-        
-
-
-        // Salto de página si la posición actual supera el límite de la página
-        if (i < this.datos.length - 1) {
-          pdf.addPage(); // Agregar nueva página
-          currentY = 10; // Reiniciar la posición Y en la nueva página
+        // Definir el tipo de indicador que esta analizado
+        switch(this.datos[i].idNivelIndicador){
+          case 1:
+              tipoIndicador = 'Fin';
+              break;
+            case 2:
+              tipoIndicador = 'Propósito'
+              break;
+            case 3:
+              tipoIndicador = 'Componente';
+              break;
+            case 4:
+              tipoIndicador = 'Actividad'
+              break;
         }
+
+        // Busqueda del seguimiento del indicador
+          const elementSeguimiento = seguimiento.find(
+            (seguimiento) => seguimiento.ejercicio === this.year && seguimiento.idIndica === this.datos[i].idIndicador
+        );
+
+        // Busqueda de metas programadas 
+        const elementMetaProgramada = this.metaProgramada.find((metaProg) => metaProg.idIndica === this.datos[i].idIndicador);
+
+
+        // Busqueda de metas Alcanzadas
+        const elementMetaAlcanzada = this.metasAlcanzadas.find((metaAlcanzada) => metaAlcanzada.idIndica === this.datos[i].idIndicador && metaAlcanzada.ejercicio === this.year);
+
+
+        // Establece los datos de seguimiento del indicador dependiendo el trimestre que se consulte
+        switch(trimestre){
+          case 1:
+            seguimientoRN = elementSeguimiento.resumenTrim1 ?? 'Ninguna';
+            seguimientoMeta = elementSeguimiento.metaTrim1 ?? 'Ninguna';
+            seguimientoJust = elementSeguimiento.justificaTrim1 ?? 'Ninguna';
+            seguimientoMV = elementSeguimiento.mediosTrim1 ?? 'Ninguna';
+            seguimientoH = elementSeguimiento.hallazgosTrim1 ?? 'Ninguna';
+            seguimientoApM = elementSeguimiento.mejoraTrim1 ?? 'Ninguna';
+            textTrim = 'Primer Trimestre ' + this.year;
+            break;
+
+          case 2:
+            seguimientoRN = elementSeguimiento.resumenTrim2 ?? 'Ninguna';
+            seguimientoMeta = elementSeguimiento.metaTrim2 ?? 'Ninguna';
+            seguimientoJust = elementSeguimiento.justificaTrim2 ?? 'Ninguna';
+            seguimientoMV = elementSeguimiento.mediosTrim2 ?? 'Ninguna';
+            seguimientoH = elementSeguimiento.hallazgosTrim2 ?? 'Ninguna';
+            seguimientoApM = elementSeguimiento.mejoraTrim2 ?? 'Ninguna';
+            textTrim = 'Segundo Trimestre ' + this.year;
+            break;
+          case 3:
+            seguimientoRN = elementSeguimiento.resumenTrim3 ?? 'Ninguna';
+            seguimientoMeta = elementSeguimiento.metaTrim3 ?? 'Ninguna';
+            seguimientoJust = elementSeguimiento.justificaTrim3 ?? 'Ninguna';
+            seguimientoMV = elementSeguimiento.mediosTrim3 ?? 'Ninguna';
+            seguimientoH = elementSeguimiento.hallazgosTrim3 ?? 'Ninguna';
+            seguimientoApM = elementSeguimiento.mejoraTrim3 ?? 'Ninguna';
+            textTrim = 'Tercer Trimestre ' + this.year;
+            break;
+          case 4:
+            seguimientoRN = elementSeguimiento.resumenTrim4 ?? 'Ninguna';
+            seguimientoMeta = elementSeguimiento.metaTrim4 ?? 'Ninguna';
+            seguimientoJust = elementSeguimiento.justificaTrim4 ?? 'Ninguna';
+            seguimientoMV = elementSeguimiento.mediosTrim4 ?? 'Ninguna';
+            seguimientoH = elementSeguimiento.hallazgosTrim4 ?? 'Ninguna';
+            seguimientoApM = elementSeguimiento.mejoraTrim4 ?? 'Ninguna';
+            textTrim = 'Cuarto Trimestre ' + this.year;
+            break;
+        }
+
+          // Agregar encabezado al PDF
+          currentY = this.pdfGenerator.addHeader(
+              pdf,
+              this.cUnidadOperante,
+              textTrim,
+              '/img/encabezadosPDF/encabezadosed3.jpg'
+          );
+  
+          // Título de la sección
+          pdf.setFontSize(7);
+          pdf.setTextColor(163, 163, 163);
+          pdf.text('DATOS DE MIR', margen, currentY);
+          currentY += 6;
+  
+          // Resumen Narrativo
+          pdf.setFont('Helvetica', 'normal');
+          pdf.setFontSize(9);
+          pdf.setTextColor(105, 27, 49);
+          pdf.text('Resumen Narrativo', margen, currentY);
+          currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+  
+          pdf.setTextColor(0, 0, 0);
+          const textoResumen = pdf.splitTextToSize(this.datos[i].RN, anchoDisponible);
+          pdf.text(textoResumen, margen, currentY);
+  
+          const alturaTextoResumen = textoResumen.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+          currentY += alturaTextoResumen + 4;
+  
+          // Indicador
+          pdf.setTextColor(105, 27, 49);
+          pdf.text('Indicador', margen, currentY);
+          currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+  
+          pdf.setTextColor(0, 0, 0);
+          const textoIndicador = pdf.splitTextToSize(this.datos[i].Indicador, anchoDisponible);
+          pdf.text(textoIndicador, margen, currentY);
+  
+          const alturaTextoIndicador = textoIndicador.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+          currentY += alturaTextoIndicador + 4;
+  
+          // Medio de Verificación
+          pdf.setTextColor(105, 27, 49);
+          pdf.text('Medio de Verificación', margen, currentY);
+          currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+  
+          pdf.setTextColor(0, 0, 0);
+          const textoMedioVer = pdf.splitTextToSize(this.datos[i].MV, anchoDisponible);
+          pdf.text(textoMedioVer, margen, currentY);
+  
+          const alturaTextoMV = textoMedioVer.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+          currentY += alturaTextoMV + 4;
+  
+          // Fórmula de cálculo
+          pdf.setTextColor(105, 27, 49);
+          pdf.text('Fórmula de cálculo', margen, currentY);
+          currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+  
+          pdf.setTextColor(0, 0, 0);
+          const textoFormula = pdf.splitTextToSize(this.datos[i].formula, anchoDisponible);
+          pdf.text(textoFormula, margen, currentY);
+  
+          const alturaTextoFormula = textoFormula.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+          currentY += alturaTextoFormula + 5;
+  
+          // Tabla Plana para mostrar contenido especial
+          const header = [
+              this.datos[i].numCA,
+              this.datos[i].cUniMedida,
+              this.datos[i].cUniMedible,
+              this.datos[i].cDimension,
+              this.datos[i].cSentidoIndicador,
+              this.datos[i].cMeta,
+              this.datos[i].cFreMed
+          ];
+          const data = [[ tipoIndicador, 'Unidad Medida', 'Unidad Medible', 'Dimensión a Medir', 'Sentido del Indicador', 'Clasificación de Meta', 'Frecuencia de Medición']];
+          currentY = this.pdfGenerator.addTablePlane(pdf, currentY, header, data, 10, [105, 27, 49]) + 5;
+
+
+          // Segunda tabla pocisionada en la otra mitad del ancho disponible 
+          const headTbMetas = ['', '1°', '2°', '3°', '4°', 'Anual'];
+
+
+
+          const metaAlcanzadaAnual = elementMetaAlcanzada.MetaAlcanzadaTrim1  + elementMetaAlcanzada.MetaAlcanzadaTrim2  + elementMetaAlcanzada.MetaAlcanzadaTrim3  + elementMetaAlcanzada.MetaAlcanzadaTrim4;
+
+          const dataTbMetas = [ ['Meta Programada', elementMetaProgramada.m1_p ?? '--', elementMetaProgramada.m2_p ?? '--', elementMetaProgramada.m3_p ?? '--', elementMetaProgramada.m4_p ?? '--', elementMetaProgramada.ma_p ?? '--'], 
+                                ['Meta Alcanzada', elementMetaAlcanzada.MetaAlcanzadaTrim1 ?? '--', elementMetaAlcanzada.MetaAlcanzadaTrim2 ?? '--', elementMetaAlcanzada.MetaAlcanzadaTrim3 ?? '--', elementMetaAlcanzada.MetaAlcanzadaTrim4 ?? '--', metaAlcanzadaAnual], 
+                                ['% de Avance ', this.getPorcentaje(elementMetaAlcanzada.MetaAlcanzadaTrim1, elementMetaProgramada.m1_p), 
+                                                this.getPorcentaje(elementMetaAlcanzada.MetaAlcanzadaTrim2, elementMetaProgramada.m2_p), 
+                                                this.getPorcentaje(elementMetaAlcanzada.MetaAlcanzadaTrim3, elementMetaProgramada.m3_p), 
+                                                this.getPorcentaje(elementMetaAlcanzada.MetaAlcanzadaTrim4, elementMetaProgramada.m4_p), 
+                                                this.getPorcentaje(metaAlcanzadaAnual,elementMetaProgramada.ma_p)],
+                                []
+                              ]
+
+          const margenDerecho = (pdf.internal.pageSize.width / 2) - margen;
+
+          await this.pdfGenerator.renderizarGrafica(pdf, margenDerecho + 10, currentY, elementMetaProgramada, elementMetaAlcanzada);
+
+          currentY = this.pdfGenerator.addTableMetas(pdf, currentY, headTbMetas, dataTbMetas, margen, margenDerecho + 5 ) + 8;
+  
+          // Carga de los datos de seguimiento del indicador
+          if (elementSeguimiento) {
+
+              // Seguimiento Resumen Narrativo
+              pdf.setTextColor(105, 27, 49);
+              pdf.text('Resumen Narrativo', margen, currentY);
+              currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+  
+              pdf.setTextColor(0, 0, 0);
+              const textoRM = pdf.splitTextToSize(seguimientoRN, anchoDisponible);
+              pdf.text(textoRM, margen, currentY);
+  
+              const alturaTextoRM = textoRM.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+              currentY += alturaTextoRM + 4;
+  
+
+              // Seguimiento Meta 
+              pdf.setTextColor(105, 27, 49);
+              pdf.text('Meta', margen, currentY);
+              currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+  
+              pdf.setTextColor(0, 0, 0);
+              const textoMeta = pdf.splitTextToSize(seguimientoMeta, anchoDisponible);
+              pdf.text(textoMeta, margen, currentY);
+  
+              const alturaTextoMeta = textoMeta.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+              currentY += alturaTextoMeta + 4;
+
+              
+              // Seguimiento Justificación de causas y efectos
+              pdf.setTextColor(105, 27, 49);
+              pdf.text('Justificación de causas y efectos', margen, currentY)
+              currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+
+              pdf.setTextColor(0, 0, 0);
+              const textoJCE = pdf.splitTextToSize(seguimientoJust, anchoDisponible);
+              pdf.text(textoJCE, margen, currentY);
+
+              const alturaTextJusti = textoJCE.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+
+              currentY += alturaTextJusti + 4;
+
+              // Seguimiento Medios de verificación
+
+              pdf.setTextColor(105, 27, 49);
+              pdf.text('Medios de verificación', margen, currentY);
+              currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+
+              pdf.setTextColor(0, 0, 0);
+              const textoMV = pdf.splitTextToSize(seguimientoMV, anchoDisponible);
+              pdf.text(textoMV, margen, currentY);
+              
+              const alturaMV = textoMV.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+
+              currentY += alturaMV + 4;
+
+              // Seguimiento Otros hallazgos encontrados
+              pdf.setTextColor(105, 27, 49);
+              pdf.text('Otros hallazgos encontrados', margen, currentY);
+              currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+
+              pdf.setTextColor(0, 0, 0);
+              const textoHallazgos = pdf.splitTextToSize(seguimientoH, anchoDisponible);
+              pdf.text(textoHallazgos, margen, currentY);
+
+              const altoHallazgos = textoHallazgos.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+
+
+              currentY += altoHallazgos + 4;
+
+      
+
+              // Seguimiento Aspectos susceptibles de mejora
+              pdf.setTextColor(105, 27, 49);
+              pdf.text('Aspectos susceptibles de mejora', margen, currentY);
+              currentY += pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4 + 1;
+
+              pdf.setTextColor(0, 0, 0);
+              const textoAspec = pdf.splitTextToSize(seguimientoApM, anchoDisponible);
+              pdf.text(textoAspec,margen, currentY);
+
+              const alturaApec = textoAspec.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+
+              currentY += alturaApec + 3;
+          }
+  
+          // Cargar firmas del archivo de seguimiento por parte del area de Evaluacion
+          this.pdfGenerator.addSignaturesSeguimiento(pdf,margen);
+  
+          // Verificar si se requiere nueva página
+          if (i < this.datos.length - 1) {
+              pdf.addPage();
+              currentY = margen;
+          }
       }
-    
-      // Agregar firmas al final del documento
-      this.pdfGenerator.addSignatures(pdf, this.firmas, 10);
-    
-      // Generar el PDF
+  
+      // Generar PDF
       this.pdfGenerator.generateBlobWithLoading(pdf);
-    }    
+  }
+  
 }

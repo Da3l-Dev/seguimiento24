@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { jsPDF } from 'jspdf';
 import 'jspdf-autotable';
+import { Chart, registerables } from 'chart.js';
 
 @Injectable({
   providedIn: 'root',
@@ -172,6 +173,158 @@ export class PdfGeneratorService {
   }
 
   /**
+   * Agrega una tabla al PDF.
+   * @param pdf jsPDF instance
+   * @param startY Posición Y inicial
+   * @param headers Encabezados de la tabla
+   * @param data Datos de la tabla
+   * @param margenIzquierdo margen izquierdo la tabla
+   * @param margenDerecho margen derecho la tabla
+   */
+
+  addTableMetas(
+    pdf: jsPDF,
+    startY: number,
+    headers: string[],
+    data: any[][],
+    margenIzquierdo: number,
+    margenDerecho: number
+  ): number {
+    (pdf as any).autoTable({
+      head: [headers],
+      body: data,
+      startY,
+      theme: 'grid',
+      tableLineColor: [105, 105, 105],
+      tableLineWidth: 0.2,
+      didDrawCell: (data: { row?: any; table?: any; column?: any; cell?: any; doc?: any; }) => {
+        const { cell, doc } = data;
+      
+        // Verifica si está en la fila que deseas pintar (-1)
+        if (data.row.index === data.table.body.length - 1) {
+          // Obtén el valor de la fila anterior (-2)
+          const value = data.table.body[data.row.index - 1]?.raw[data.column.index]; // Valor de la celda de la fila -2
+          
+      
+          let fillColor: number[] = [255, 255, 255]; // Color por defecto (blanco)
+      
+          // Condición para determinar el color según el porcentaje
+          if (typeof value === 'string' && value.includes('%')) {
+            const porcentaje = parseFloat(value.replace('%', ''));
+
+            if(porcentaje > 115){
+              fillColor = [153, 95, 255];
+            }
+            else if (porcentaje >= 85 && porcentaje <= 115) {
+              fillColor = [102, 255, 95]; // Verde para porcentajes >= 90
+            } else if (porcentaje >= 65 && porcentaje < 85) {
+              fillColor = [248, 236, 49]; // Amarillo para porcentajes >= 70
+            } else if (porcentaje < 65) {
+              fillColor = [248, 55, 55]; // Naranja para porcentajes >= 50
+            }
+          }
+      
+          // Calcular el centro de la celda
+          const centerX = cell.x + cell.width / 2;
+          const centerY = cell.y + cell.height / 2;
+      
+          // Dibuja un círculo en el centro de la celda
+          doc.setFillColor(...fillColor);
+          doc.circle(centerX, centerY, 3, 'F'); // Radio = 3, estilo = 'F' para relleno
+        }
+      },            
+      headStyles: {
+        fillColor: [87, 87, 87],
+        textColor: [255, 255, 255], // Texto blanco
+        fontSize: 10, // Tamaño de fuente
+        cellPadding: 2, // Padding en las celdas
+        halign: 'center',
+      },
+      bodyStyles: {
+        minCellHeight: 10,
+        textColor: [0, 0, 0],
+        fontSize: 10, 
+        cellPadding: 1,
+        halign: 'center',
+        fontStyle: "italic", 
+        font: "times"
+      },
+      margin: { top: 0, left: margenIzquierdo, right: margenDerecho },
+    });
+  
+    return (pdf as any).lastAutoTable.finalY; // Devuelve la última posición Y
+  }
+  
+
+
+  /**
+   * Agrega una tabla al PDF.
+   * @param pdf jsPDF instance
+   * @param startY Posición Y inicial
+   * @param headers Encabezados de la tabla
+   * @param data Datos de la tabla
+   * @param margin Margen establecidos de la tabla
+   * @param fieldColor Color de contenido de la tabla en RGB [0,0,0]
+   */
+
+  addTablePlane(pdf: jsPDF, startY: number, headers: string[], data: any[][], margin: number, fieldColor: [number, number, number]): number{
+    (pdf as any).autoTable({
+      head: [headers],
+      body: data,
+      startY,
+      theme: 'plain',
+      headStyles: {
+        fontSize: 9, // Tamaño de fuente
+        halign: 'center', // Alineación horizontal
+        fontStyle: 'normal',
+      },
+      bodyStyles: {
+        textColor: fieldColor,
+        fontSize: 7, // Tamaño de fuente para las celdas
+        halign: 'center', // Alineación horizontal
+        cellPadding: 1,
+        fontStyle: 'normal', // Solo un valor
+      },
+      margin: { top: 0, left: margin, right: margin },
+    });
+
+    return (pdf as any).lastAutoTable.finalY; // Devuelve la última posición Y
+  }
+
+  /**
+   * Agrega una tabla al PDF.
+   * @param pdf jsPDF instance
+   * @param startY Posición Y inicial
+   * @param headers Encabezados de la tabla
+   * @param data Datos de la tabla
+   * @param margin Margen establecidos de la tabla
+   * @param fieldColor Color de contenido de la tabla en RGB [0,0,0]
+   */
+  addTableText(pdf: jsPDF, startY: number, headers: string[], data: any[][], margin: number, fieldColor: [number, number, number]): number{
+    (pdf as any).autoTable({
+      head: [headers],
+      body: data,
+      startY,
+      theme: 'plain',
+      headStyles: {
+        fontSize: 9, // Tamaño de fuente
+        halign: 'left', // Alineación horizontal
+        fontStyle: 'normal',
+      },
+      bodyStyles: {
+        textColor: fieldColor,
+        fontSize: 7, // Tamaño de fuente para las celdas
+        halign: 'left', // Alineación horizontal
+        cellPadding: 2,
+        fontStyle: 'normal', // Solo un valor
+      },
+      margin: { top: 0, left: margin, right: margin },
+    });
+
+    return (pdf as any).lastAutoTable.finalY; // Devuelve la última posición Y
+  }
+
+  /**
    * Agrega las firmas al pie del PDF.
    * @param pdf jsPDF instance
    * @param firmas Array de firmas [{ nombre: string, puesto: string }]
@@ -216,5 +369,180 @@ export class PdfGeneratorService {
     });
 
     pdf.setTextColor(0,0,0);
+  } 
+
+  /**
+   * Agrega las firmas al pie del PDF.
+   * @param pdf jsPDF instance
+   * @param firmas Array de firmas [{ nombre: string, puesto: string }]
+   * @param startY Posición Y inicial para las firmas
+   */
+  addSignaturesSeguimiento(pdf: jsPDF, margin: number): void {
+    const headTb = ['Vo. Bo', 'REVISÓ', 'ELABORÓ'];
+    const data = [
+      [
+        'SELENE MUÑOZ ORTEGA \n DIRECTORA GENERAL DE EVALUACIÓN',
+        'EURÍDICE DEL ÁNGEL PÉREZ \n DIRECTORA DE EVALUACIÓN PROGRAMÁTICA PRESUPUESTAL',
+        'CAROLINA NAVA GONZÁLEZ \n SUBDIR. SIST. DE INDIC. DEL PROCESO PROGRAMÁTICO',
+      ],
+    ];
+  
+    // Posición inicial
+    let yPosition = pdf.internal.pageSize.height - 35;
+  
+    // Dibujar la tabla de firmas
+    yPosition = this.addTablePlane(pdf, yPosition, headTb, data, margin, [0, 0, 0]) + 3;
+  
+    // Añadir texto dividido en 60-40
+    const anchoPagina = pdf.internal.pageSize.width; // Ancho disponible
+    const ancho60 = (anchoPagina * 80) / 100; // 60% del ancho
+    const ancho40 = (anchoPagina * 20) / 100; // 40% del ancho
+  
+
+    const texto60 =
+      '*CRITERIOS DE VALORACIÓN: CARACTERÍSTICAS (REELEVANTE: Está directamente relacionado con algún aspecto fundamental del objetivo del programa, los resultados obtenidos y su desempeño. PERTINENTE: Tiene suficientes elementos para emitir un juicio sobre el desempeño del programa y si la información que proporciona el indicador es apropiada para describir los logros del programa.  CONFIABLE: Tiene medios de verificación y métodos de cálculo claros.)';
+    const texto40 =
+      'CATEGORÍAS (ADECUADA: Se tienen todas las características establecidas. MODERADA: Se tienen dos características establecidas. OPORTUNIDAD DE MEJORA: Se tiene al menos una característica establecida.)';
+  
+    // Posiciones iniciales
+    const xStart60 = margin;
+    const xStart40 = ancho60; // Deja un espacio de 5 entre las columnas
+  
+    // Dividir texto y dibujar cada bloque
+    const textoDividido60 = pdf.splitTextToSize(texto60, ancho60 + margin);
+    const textoDividido40 = pdf.splitTextToSize(texto40, ancho40 + 60);
+  
+    // Dibujar texto 60%
+    let maxHeight = 0; // Altura máxima entre los bloques
+    pdf.setFontSize(6);
+    pdf.text(textoDividido60, xStart60, yPosition, { align: 'left' });
+    maxHeight = textoDividido60.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4;
+  
+    // Dibujar texto 40%
+    pdf.text(textoDividido40, xStart40 - 35, yPosition, { align: 'left' });
+  
+    // Ajustar la altura máxima para asegurar que no se superponen
+    maxHeight = Math.max(
+      maxHeight,
+      textoDividido40.length * pdf.getLineHeightFactor() * pdf.getFontSize() / 72 * 25.4
+    );
+  
+    // Actualizar la posición para el siguiente contenido si es necesario
+    yPosition += maxHeight + 5; // Deja espacio adicional después de los bloques
   }  
+
+
+  async renderizarGrafica(
+    pdf: jsPDF,
+    posicionX: number,
+    posicionY: number,
+    metaProg: any = { m1_p: 0, m2_p: 0, m3_p: 0, m4_p: 0 },
+    metaAlcanzada: any = { MetaAlcanzadaTrim1: 0, MetaAlcanzadaTrim2: 0, MetaAlcanzadaTrim3: 0, MetaAlcanzadaTrim4: 0 }
+  ): Promise<void> {
+    return new Promise((resolve, reject) => {
+      try {
+        // Crear un canvas temporal con alta resolución
+        const canvas = document.createElement('canvas') as HTMLCanvasElement;
+        canvas.width = 400; // Alta resolución
+        canvas.height = 200; // Alta resolución
+        canvas.style.display = 'none'; // Ocultar el canvas temporalmente
+        document.body.appendChild(canvas);
+
+        const ctx = canvas.getContext('2d');
+        if (!ctx) {
+          canvas.remove();
+          reject(new Error('No se pudo obtener el contexto 2D del canvas.'));
+          return;
+        }
+  
+        // Configurar la gráfica con opciones mínimas y fuentes ajustadas
+        const chart = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: ['ENE - MAR', 'ABR - JUN', 'JUL - SEP', 'OCT - DIC'],
+            datasets: [
+              {
+                label: 'Meta programada',
+                data: [metaProg.m1_p, metaProg.m2_p, metaProg.m3_p, metaProg.m4_p],
+                backgroundColor: 'rgba(221, 201, 163)',
+                borderColor: '#ddc9a3',
+                borderWidth: 1,
+              },
+              {
+                label: 'Meta Alcanzada',
+                data: [metaAlcanzada.MetaAlcanzadaTrim1, metaAlcanzada.MetaAlcanzadaTrim2, 
+                       metaAlcanzada.MetaAlcanzadaTrim3, metaAlcanzada.MetaAlcanzadaTrim4],
+                backgroundColor: 'rgba(105, 27, 49)',
+                borderColor: '#691B31',
+                borderWidth: 1,
+              },
+            ],
+          },
+          options: {
+            responsive: false,
+            maintainAspectRatio: false,
+            animation: false, // Deshabilitar animaciones para mejorar el rendimiento
+            plugins: {
+              legend: {
+                display: true,
+                labels: {
+
+                  font: {
+                    size: 12, // Tamaño ajustado de fuente para la leyenda
+                  },
+                  color: '#000000',
+                },
+              },
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  font: {
+                    size: 11, // Tamaño ajustado de fuente para las etiquetas del eje Y
+                  },
+                  color: '#000000',
+                },
+              },
+              x: {
+                ticks: {
+                  font: {
+                    size: 11, // Tamaño ajustado de fuente para las etiquetas del eje X
+                  },
+                  color: '#000000',
+                },
+              },
+            },
+          },
+        });
+  
+        // Renderizar la gráfica
+        chart.render();
+  
+        // Convertir el canvas a imagen de alta calidad
+        const imageData = canvas.toDataURL('image/png', 1.0); // Calidad máxima (1.0)
+  
+        if (imageData) {
+        
+          // Añadir la imagen al PDF
+          pdf.addImage(imageData, 'PNG', posicionX + 10, posicionY - 5 , 90, 60);
+          console.log('Gráfica renderizada correctamente en el PDF.');
+        } else {
+          pdf.setFontSize(10);
+          pdf.text('Gráfica no disponible', posicionX, posicionY + 10);
+          console.warn('No se pudo obtener la imagen de la gráfica.');
+        }
+  
+        // Destruir el gráfico y limpiar el canvas
+        chart.destroy();
+        canvas.remove();
+        resolve();
+      } catch (error) {
+        console.error('Error inesperado al renderizar la gráfica:', error);
+        reject(error);
+      }
+    });
+  }
+  
+  
 }
