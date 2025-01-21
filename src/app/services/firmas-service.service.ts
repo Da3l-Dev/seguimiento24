@@ -8,7 +8,7 @@ import { map, Observable } from 'rxjs';
 })
 export class FirmasServiceService {
 
-  private baseUrl = 'http://localhost/firmas';
+  private baseUrl = 'http://18.116.81.206/firmas';
 
   constructor( private http: HttpClient) { }
 

@@ -18,7 +18,7 @@ export class SeguimientoComponent {
   onSubmit(): void {
     this.userService.authUser(this.username, this.password).subscribe(
       (response) => {
-        console.log('Respuesta de la API:', response); // Verifica la respuesta de la API
+        console.log('Respuesta de la API:', response.status); // Verifica la respuesta de la API
         if (response.status === 'success') {
             this.router.navigateByUrl('/matrizSeguimiento');// Redirige al dashboard protegido
         } else {

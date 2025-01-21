@@ -19,6 +19,7 @@ export class AuthGuard implements CanActivate {
   canActivate(): Observable<boolean> {
     return this.userService.checkAuth().pipe(
       tap(isAuth => {
+        console.log(isAuth);
         if (!isAuth) {
           console.log('Usuario no autenticado, redirigiendo a /seguimiento');
           this.router.navigate(['/seguimiento']);

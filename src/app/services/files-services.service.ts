@@ -6,7 +6,7 @@ import { map, Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class FilesServicesService {
-  private baseUrl = 'http://localhost/files'; // URL base del servidor
+  private baseUrl = 'http://18.116.81.206/files'; // URL base del servidor
   constructor(private http: HttpClient) {}
 
   /**

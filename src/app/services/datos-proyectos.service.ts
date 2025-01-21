@@ -9,7 +9,7 @@ import { tap, map } from 'rxjs/operators';
 })
 
 export class DatosProyectosService {
-  private baseUrl = 'http://localhost/proyecto';  // URL base de la API
+  private baseUrl = 'http://18.116.81.206/proyecto';  // URL base de la API
 
   constructor(private http: HttpClient) {}
 
