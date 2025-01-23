@@ -17,7 +17,7 @@ import { User } from '../matriz/model/user.model';
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost';
+  private apiUrl = 'http://18.116.81.206';
   private isAuthenticated = new BehaviorSubject<boolean>(false);
   
   // Datos del usuario
