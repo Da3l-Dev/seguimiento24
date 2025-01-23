@@ -159,7 +159,7 @@ export class NavMainComponent implements OnInit {
           }
 
           // Generadar header del pdf
-          let currentY = this.pdfGenerator.addHeader(pdf,this.cUnidadOperante,textTrim, '/img/encabezadosPDF/encabecedula.jpg'); // Reinicia la posición vertical en cada página
+          let currentY = this.pdfGenerator.addHeader(pdf,this.cUnidadOperante,textTrim, 'img/encabezadosPDF/encabecedula.jpg'); // Reinicia la posición vertical en cada página
 
           currentY += 2;
 
@@ -468,7 +468,7 @@ export class NavMainComponent implements OnInit {
 
   
           // Crear encabezado del pdf
-          currentY = this.pdfGenerator.addHeader(pdf, this.cUnidadOperante, trimTitle, '/img/encabezadosPDF/encabezadosed1.jpg' )
+          currentY = this.pdfGenerator.addHeader(pdf, this.cUnidadOperante, trimTitle, 'img/encabezadosPDF/encabezadosed1.jpg' )
           currentY += 10; // Altura del logo + margen inferior dinámico
   
           
@@ -684,7 +684,7 @@ export class NavMainComponent implements OnInit {
               pdf,
               this.cUnidadOperante,
               textTrim,
-              '/img/encabezadosPDF/encabezadosed3.jpg'
+              'img/encabezadosPDF/encabezadosed3.jpg'
           );
   
           // Título de la sección
