@@ -65,7 +65,7 @@ export class NavComponent implements OnInit {
       sessionStorage.clear();
   
       // Redirigir y recargar completamente la aplicación
-      window.location.href = '/seguimiento'; // Navega y recarga
+      window.location.href = 'seguimiento24/seguimiento'; // Navega y recarga
     });
   } 
 

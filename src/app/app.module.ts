@@ -14,12 +14,14 @@ import { FormsModule } from '@angular/forms';
 import { MatrizSeguimientoModule } from './matriz/matriz-seguimiento.module'; // Importa MatrizSeguimientoModule
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AdimComponent } from './adim/adim.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     SeguimientoComponent,
+    AdimComponent,
   ],
   imports: [
     BrowserModule,
