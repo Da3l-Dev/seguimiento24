@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AdimComponent } from './adim.component';
+import { VistaAdminComponent } from './vista-admin.component';
 
-describe('AdimComponent', () => {
-  let component: AdimComponent;
-  let fixture: ComponentFixture<AdimComponent>;
+describe('VistaAdminComponent', () => {
+  let component: VistaAdminComponent;
+  let fixture: ComponentFixture<VistaAdminComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [AdimComponent]
+      imports: [VistaAdminComponent]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(AdimComponent);
+    fixture = TestBed.createComponent(VistaAdminComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

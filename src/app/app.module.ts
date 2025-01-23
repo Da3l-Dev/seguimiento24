@@ -14,14 +14,13 @@ import { FormsModule } from '@angular/forms';
 import { MatrizSeguimientoModule } from './matriz/matriz-seguimiento.module'; // Importa MatrizSeguimientoModule
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AdimComponent } from './adim/adim.component';
+import { AdminSeguimientoModule } from './adim/admin-seguimiento.module';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
     SeguimientoComponent,
-    AdimComponent,
   ],
   imports: [
     BrowserModule,
@@ -29,6 +28,7 @@ import { AdimComponent } from './adim/adim.component';
     AppRoutingModule,
     FormsModule,
     MatrizSeguimientoModule,
+    AdminSeguimientoModule,
     BrowserAnimationsModule, // Necesario para Toastr
     ToastrModule.forRoot({
       preventDuplicates: true
