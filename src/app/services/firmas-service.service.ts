@@ -2,13 +2,14 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FirmasServiceService {
 
-  private baseUrl = 'http://18.116.81.206/firmas';
+  private baseUrl = environment.apiUrl + '/firmas';
 
   constructor( private http: HttpClient) { }
 

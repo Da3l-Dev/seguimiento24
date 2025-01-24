@@ -3,13 +3,14 @@ import { Injectable } from '@angular/core';
 import { response } from 'express';
 import { Observable } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
+import { environment } from '../../environment';
 
 @Injectable({
   providedIn: 'root'
 })
 
 export class DatosProyectosService {
-  private baseUrl = 'http://18.116.81.206/proyecto';  // URL base de la API
+  private baseUrl = environment.apiUrl + '/proyecto';  // URL base de la API
 
   constructor(private http: HttpClient) {}
 

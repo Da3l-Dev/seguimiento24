@@ -1,12 +1,13 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
+import { environment } from '../../environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class FilesServicesService {
-  private baseUrl = 'http://18.116.81.206/files'; // URL base del servidor
+  private baseUrl = environment.apiUrl + '/files'; // URL base del servidor
   constructor(private http: HttpClient) {}
 
   /**

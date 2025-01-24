@@ -11,13 +11,14 @@ import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { tap, map } from 'rxjs/operators';
 import { User } from '../matriz/model/user.model';
+import { environment } from '../../environment';
  // Importa la interfaz User
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://18.116.81.206';
+  private apiUrl = environment.apiUrl;
   private isAuthenticated = new BehaviorSubject<boolean>(false);
   
   // Datos del usuario

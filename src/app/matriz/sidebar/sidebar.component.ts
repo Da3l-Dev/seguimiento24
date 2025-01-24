@@ -13,6 +13,7 @@ import { ToastrService } from 'ngx-toastr';
 import { FilesServicesService } from '../../services/files-services.service';
 import * as bootstrap from 'bootstrap';
 import { Chart, registerables } from 'chart.js';
+import { environment } from '../../../environment';
 
 
 
@@ -57,6 +58,7 @@ export class SidebarComponent implements AfterViewInit{
   selectedIndicadorId: number | null = null;
   loading: boolean | undefined;
   serverStatus: string | undefined;
+  uri: string = '';
 
   constructor(
     private userService: UserService,
@@ -80,6 +82,7 @@ export class SidebarComponent implements AfterViewInit{
         this.cUnidadOperante = user.cUnidadOperante;
         this.idArea = user.idArea;
         this.obtenerRutasMir();
+        this.uri = environment.apiUrl;
       }
     });
 

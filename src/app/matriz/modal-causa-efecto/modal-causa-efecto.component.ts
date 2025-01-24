@@ -4,6 +4,7 @@ import { metasAlcanzadas } from '../model/metasAlcanzadas.model';
 import { ToastrService } from 'ngx-toastr';
 import { Indicador } from '../model/indicador.model';
 import * as bootstrap from 'bootstrap';
+import { environment } from '../../../environment';
 
 @Component({
   selector: 'app-modal-causa-efecto',
@@ -70,8 +71,8 @@ export class ModalCausaEfectoComponent implements OnInit{
         this.causa = this.metasAlcanzadas?.C1 ?? "";
         this.efecto = this.metasAlcanzadas?.E1 ?? "";
         this.evidencia = this.metasAlcanzadas?.EV1 ?? "";
-        this.ruta = this.metasAlcanzadas?.R1 ?? "";
-        console.log(this.ruta);
+        this.ruta = environment.apiUrl +'/'+ (this.metasAlcanzadas?.R1 ?? "");
+        
         break;
       case 2:
         this.trimSelect = idSelected;
@@ -80,7 +81,7 @@ export class ModalCausaEfectoComponent implements OnInit{
         this.causa = this.metasAlcanzadas?.C2 ?? "";
         this.efecto = this.metasAlcanzadas?.E2 ?? "";
         this.evidencia = this.metasAlcanzadas?.EV2 ?? "";
-        this.ruta = this.metasAlcanzadas?.R2 ?? "";
+        this.ruta =  environment.apiUrl +'/'+ (this.metasAlcanzadas?.R2 ?? "");
         console.log(this.ruta);
         break;
       case 3:
@@ -90,7 +91,7 @@ export class ModalCausaEfectoComponent implements OnInit{
         this.causa = this.metasAlcanzadas?.C3 ?? "";
         this.efecto = this.metasAlcanzadas?.E3 ?? "";
         this.evidencia = this.metasAlcanzadas?.EV3 ?? "";
-        this.ruta = this.metasAlcanzadas?.R3 ?? "";
+        this.ruta = environment.apiUrl +'/'+ (this.metasAlcanzadas?.R3 ?? "");
         console.log(this.ruta);
         break;
       case 4:
@@ -100,7 +101,7 @@ export class ModalCausaEfectoComponent implements OnInit{
         this.causa = this.metasAlcanzadas?.C4 ?? "";
         this.efecto = this.metasAlcanzadas?.E4 ?? "";
         this.evidencia = this.metasAlcanzadas?.EV4 ?? "";
-        this.ruta = this.metasAlcanzadas?.R4 ?? "";
+        this.ruta = environment.apiUrl +'/'+ (this.metasAlcanzadas?.R4 ?? "");
         console.log(this.ruta);
         break;
       case 5:
