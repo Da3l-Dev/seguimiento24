@@ -12,7 +12,7 @@ export class SeguimientoComponent {
   username: string = '';
   password: string = '';
   errorMessage: string = '';
-
+  isRedirecting: boolean = false;
   constructor(private userService: UserService, private router: Router) {}
   
   onSubmit(): void {
@@ -20,7 +20,15 @@ export class SeguimientoComponent {
       (response) => {
         console.log('Respuesta de la API:', response.status); // Verifica la respuesta de la API
         if (response.status === 'success') {
-            this.router.navigateByUrl('/matrizSeguimiento');// Redirige al dashboard protegido
+          this.userService.getUserData().subscribe(data => {
+            if (data?.tipoUsuario === 5 && !this.isRedirecting) {
+              this.isRedirecting = true; // Activa el flag para evitar bucles
+              this.router.navigate(['/matrizSeguimiento']);
+            } else if( data?.tipoUsuario === 3 && !this.isRedirecting){
+              this.isRedirecting = true;
+              this.router.navigate(['/admin']);
+            }
+          });
         } else {
           this.errorMessage = response.message;
         }

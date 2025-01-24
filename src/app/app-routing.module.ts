@@ -11,7 +11,7 @@ import { VistaAdminComponent } from './adim/vista-admin/vista-admin.component';
 const routes: Routes = [
   { path: 'siplaneva', component: HomeComponent },
   { path: 'seguimiento', component: SeguimientoComponent },
-  { path: 'admin', component: VistaAdminComponent},
+  { path: 'admin', component: VistaAdminComponent, canActivate: [AuthGuard]},
   { path: 'matrizSeguimiento', component: MainLayoutComponent, canActivate: [AuthGuard] },
   { path: '', redirectTo: 'seguimiento24/siplaneva', pathMatch: 'full' } // Redirección al inicio como predeterminado
 ];
