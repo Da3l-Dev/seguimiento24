@@ -4,6 +4,8 @@ import { MatrizSeguimientoModule } from "../matriz/matriz-seguimiento.module";
 import { NavComponent } from "../matriz/nav/nav.component";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+
 
 @NgModule({
   declarations: [
@@ -13,6 +15,7 @@ import { RouterModule } from "@angular/router";
     CommonModule,
     RouterModule,
     MatrizSeguimientoModule,
+    BrowserAnimationsModule,
   ],
   exports: [
   ],
