@@ -1,3 +1,16 @@
 <app-nav></app-nav>
-<h1>Aqui va la vista de los administradores</h1>
+<div class="card flex justify-content-center" style="padding: 1rem;">
+    <p-autoComplete  
+    [(ngModel)]="areaSeleccionada"
+    [dropdown]="true"
+    [showClear]="true"
+    [suggestions]="areasFiltradas"
+    (completeMethod)="filtarAreas($event)"
+    styleClass="my-custom-autocomplete"
+    />
 
+</div>
+
+<div id="chart">
+
+</div>

@@ -15,6 +15,7 @@ import { MatrizSeguimientoModule } from './matriz/matriz-seguimiento.module'; //
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AdminSeguimientoModule } from './adim/admin-seguimiento.module';
+import { ButtonModule } from 'primeng/button';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { AdminSeguimientoModule } from './adim/admin-seguimiento.module';
     FormsModule,
     MatrizSeguimientoModule,
     AdminSeguimientoModule,
+    ButtonModule,
     BrowserAnimationsModule, // Necesario para Toastr
     ToastrModule.forRoot({
       preventDuplicates: true

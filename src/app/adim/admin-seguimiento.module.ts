@@ -5,6 +5,9 @@ import { NavComponent } from "../matriz/nav/nav.component";
 import { CommonModule } from "@angular/common";
 import { RouterModule } from "@angular/router";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
+import { ButtonModule } from 'primeng/button';
+import { FormsModule } from '@angular/forms';
+import { AutoCompleteModule } from 'primeng/autocomplete';
 
 
 @NgModule({
@@ -16,6 +19,9 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
     RouterModule,
     MatrizSeguimientoModule,
     BrowserAnimationsModule,
+    ButtonModule,
+    FormsModule,
+    AutoCompleteModule,
   ],
   exports: [
   ],
@@ -23,5 +29,6 @@ import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 })
 
 export class AdminSeguimientoModule{
+
 
 }
